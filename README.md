@@ -13,7 +13,7 @@
   - gapple cooldown
   - give  coins whenver u goal
   - Leveling System
-  - Tag system (Iron, Gold, Diamond, Amethyst, Godlike, bridge #1, bridge #2, bridge #3)    (can be unlock if u reach certain amount pf wins)
+  - Prestige system (Iron, Gold, Diamond, Amethyst, Godlike, bridge #1, bridge #2, bridge #3)    (can be unlock if u reach certain amount pf wins)
 
 * PARTY SYSTEM
 

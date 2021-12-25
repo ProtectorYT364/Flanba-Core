@@ -14,6 +14,10 @@
   - give  coins whenver u goal
   - Leveling System
   - Tag system (Iron, Gold, Diamond, Amethyst, Godlike, bridge #1, bridge #2, bridge #3)    (can be unlock if u reach certain amount pf wins)
+
+* PARTY SYSTEM
+
+  - Devide the number of players in a party into 2, (example: ifthe player has 50 members it's gonna devide into 2, 25 for red, and 25 for blue.   If the party has odd number, always prioritize RED TEAM (example: party has 49 members, 25 for RED, and 24 for BLUE TEAM)
   
 * STORE
 

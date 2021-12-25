@@ -8,11 +8,9 @@
 declare(strict_types=1);
 
 
-namespace flanbacore\listener;
+namespace flanbacore\form\queue;
 
 
-use pocketmine\event\Listener;
-
-class MatchListener implements Listener {
+class RankedQueueForm {
 
 }

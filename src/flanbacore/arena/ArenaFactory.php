@@ -13,4 +13,22 @@ namespace flanbacore\arena;
 
 class ArenaFactory {
 
+    /** @var Arena[] */
+    static private array $arenas = [];
+
+    static public function init(): void {
+        // TODO
+    }
+
+    /**
+     * @return Arena[]
+     */
+    static public function getArenas(): array {
+        return self::$arenas;
+    }
+
+    static private function addArena(Arena $arena): void {
+
+    }
+
 }

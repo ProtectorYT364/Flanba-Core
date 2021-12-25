@@ -11,6 +11,8 @@ declare(strict_types=1);
 namespace flanbacore\listener;
 
 
-class PartyListener {
+use pocketmine\event\Listener;
+
+class PartyListener implements Listener {
 
 }

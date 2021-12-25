@@ -8,9 +8,9 @@
 declare(strict_types=1);
 
 
-namespace flanbacore\match;
+namespace flanbacore\form\queue;
 
 
-class MatchHearbeat {
+class UnrankedQueueForm {
 
 }

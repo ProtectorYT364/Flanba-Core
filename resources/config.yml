@@ -1,0 +1,5 @@
+# The seconds that will the match wait to start
+starting-seconds: 5
+
+# The seconds that will the match wait to end
+ending-seconds: 5

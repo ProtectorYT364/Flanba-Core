@@ -13,4 +13,19 @@ namespace flanbacore\match;
 
 class MatchManager {
 
+    /** @var FlanbaMatch[] */
+    private array $matches = [];
+
+    public function __construct() {
+        // TODO: Add matches
+    }
+
+    public function getMatches(): array {
+        return $this->matches;
+    }
+
+    private function addMatch(FlanbaMatch $match): void {
+        $this->matches[$match->getId()] = $match;
+    }
+
 }

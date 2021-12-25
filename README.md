@@ -34,4 +34,13 @@
   - coatume
   - ^^^ Can be unlock if u reach ceratin level
 
+* RANKS
+
+  - All Basic Ranks stuff 
+
+
+        NameTag Prefix:     [Prestige] [Name with custom color]  }
+                               CPS: 28 | Ping: 69                } Show up when they're in combat . If not in combat do this ANDROID | TOUCH
+        
+        Chat Prefix:   [Prestige] [Rank] [name]: [msg]
 # WILL ADD MORE SOON

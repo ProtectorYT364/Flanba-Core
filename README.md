@@ -9,8 +9,8 @@
   - Safezone
   - height limit
   - customizable inventory 
-  - bow cooldown
-  - gapple cooldown
+  - bow cooldown (with moving xp bar as counter)
+  - gapple cooldown (moving xp bar)
   - give  coins whenver u goal
   - Leveling System
   - Prestige system (Iron, Gold, Diamond, Amethyst, Godlike, bridge #1, bridge #2, bridge #3)    (can be unlock if u reach certain amount pf wins)

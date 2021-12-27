@@ -17,6 +17,13 @@
   - Prestige system (Iron, Gold, Diamond, Amethyst, Godlike, bridge #1, bridge #2, bridge #3)    (can be unlock if u reach certain amount pf wins)
   - Buyable goal design, (kind like hypixel where u can buy fire goal, pig spawner goal, etc.)
 
+
+* Leaderboards
+
+  - Goals Leaderboards
+  - wins Leaderboards
+  - best winstreaks leaderboard
+
 * PARTY SYSTEM
 
   - Party Vs Party (This works by doin /p duel (Party Name)  yes, they can set their party name

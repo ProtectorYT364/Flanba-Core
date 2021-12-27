@@ -42,4 +42,8 @@ class ColorUtils {
         return $message;
     }
 
+    static public function colorToString(string $color): string {
+        return strtolower(str_replace(["{", "}"], ["", ""], $color));
+    }
+
 }

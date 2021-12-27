@@ -11,8 +11,10 @@ declare(strict_types=1);
 namespace flanbacore;
 
 
+use flanbacore\listener\ItemListener;
 use flanbacore\listener\MatchListener;
 use flanbacore\listener\PartyListener;
+use flanbacore\listener\QueueListener;
 use flanbacore\listener\SessionListener;
 use flanbacore\match\MatchHeartbeat;
 use flanbacore\match\MatchManager;
@@ -22,6 +24,7 @@ use flanbacore\provider\presets\YamlProvider;
 use flanbacore\provider\Provider;
 use flanbacore\queue\QueueManager;
 use flanbacore\session\SessionFactory;
+use muqsit\invmenu\InvMenuHandler;
 use pocketmine\command\Command;
 use pocketmine\event\Listener;
 use pocketmine\plugin\PluginBase;
@@ -40,16 +43,22 @@ class FlanbaCore extends PluginBase {
         self::setInstance($this);
 
         $this->saveDefaultConfig();
+        $this->saveResource("scoreboard.yml");
     }
 
     protected function onEnable(): void {
+        if(!InvMenuHandler::isRegistered()) {
+            InvMenuHandler::register($this);
+        }
         $this->initProvider();
 
         $this->match_manager = new MatchManager();
         $this->queue_manager = new QueueManager();
 
+        $this->registerListener(new ItemListener());
         $this->registerListener(new MatchListener());
         $this->registerListener(new PartyListener());
+        $this->registerListener(new QueueListener());
         $this->registerListener(new SessionListener());
 
         $this->getScheduler()->scheduleRepeatingTask(new MatchHeartbeat(), 20); // 1 second
@@ -62,7 +71,7 @@ class FlanbaCore extends PluginBase {
     }
 
     private function initProvider(): void {
-        $provider = strtolower($this->getConfig()->get("provider") ?? "");
+        $provider = strtolower($this->getConfig()->get("provider"));
 
         $this->provider = match($provider) {
             "sqlite", "sqlite3" => new SqliteProvider(),

@@ -17,10 +17,11 @@ use flanbacore\utils\ConfigGetter;
 
 class FlanbaMatch {
 
-    private const WAITING_STAGE = 0;
-    private const STARTING_STAGE = 1;
-    private const PLAYING_STAGE = 2;
-    private const ENDING_STAGE = 3;
+    public const WAITING_STAGE = 0;
+    private const COUNTDOWN_STAGE = 1;
+    private const STARTING_STAGE = 2;
+    private const PLAYING_STAGE = 3;
+    public const ENDING_STAGE = 4;
 
     private string $id;
     private int $stage = self::WAITING_STAGE;
@@ -28,8 +29,9 @@ class FlanbaMatch {
 
     private Arena $arena;
 
-    /** @var Session[] */
-    private array $players = [];
+    private Team $first_team;
+    private Team $second_team;
+
     /** @var Session[] */
     private array $spectators = [];
 
@@ -37,22 +39,34 @@ class FlanbaMatch {
         $this->id = $id;
         $this->arena = $arena;
 
-        $this->countdown = ConfigGetter::getStartingSeconds() + 1;
+        $this->countdown = ConfigGetter::getCountdownSecconds();
     }
 
     public function getId(): string {
         return $this->id;
     }
 
+    public function getStage(): int {
+        return $this->stage;
+    }
+
     public function getArena(): Arena {
         return $this->arena;
+    }
+
+    public function getFirstTeam(): Team {
+        return $this->first_team;
+    }
+
+    public function getSecondTeam(): Team {
+        return $this->second_team;
     }
 
     /**
      * @return Session[]
      */
     public function getPlayers(): array {
-        return $this->players;
+        return array_merge($this->first_team->getMembers(), $this->second_team->getMembers());
     }
 
     /**
@@ -66,23 +80,37 @@ class FlanbaMatch {
      * @return Session[]
      */
     public function getPlayersAndSpectators(): array {
-        return array_merge($this->players, $this->spectators);
+        return array_merge($this->getPlayers(), $this->spectators);
+    }
+
+    public function addSession(Session $session): void {
+
     }
 
     public function tick(): void {
         switch($this->stage) {
+            case self::COUNTDOWN_STAGE:
+                $this->countdown--;
+                if($this->countdown <= 0) {
+                    foreach($this->getPlayers() as $session) {
+                        // Teleport to waiting lobby
+                    }
+                    $this->stage = self::STARTING_STAGE;
+                    $this->countdown = ConfigGetter::getStartingSeconds();
+                } else {
+                    $this->broadcastPopup("{YELLOW}The match will start in {WHITE}$this->countdown {YELLOW}seconds...");
+                }
+                break;
             case self::STARTING_STAGE:
                 $this->countdown--;
                 if($this->countdown <= 0) {
-                    foreach($this->players as $session) {
+                    foreach($this->getPlayers() as $session) {
                         // Give kit and more stuff
                     }
                     $this->stage = self::PLAYING_STAGE;
-                    $this->countdown = ConfigGetter::getEndingSeconds() + 6;
+                    $this->countdown = ConfigGetter::getEndingSeconds();
                 } else {
-                    foreach($this->players as $session) {
-                        $session->popup("{YELLOW}Starting in {WHITE}$this->countdown {YELLOW}seconds...");
-                    }
+                    $this->broadcastPopup("{YELLOW}Starting in {WHITE}$this->countdown {YELLOW}seconds...");
                 }
                 break;
 
@@ -95,14 +123,24 @@ class FlanbaMatch {
                         // Remove session from the match
                     }
                 }
+                break;
+        }
+    }
+
+    private function broadcastPopup(string $popup): void {
+        foreach($this->getPlayers() as $session) {
+            $session->popup($popup);
+        }
+    }
+
+    private function broadcastMessage(string $message): void {
+        foreach($this->getPlayers() as $session) {
+            $session->message($message);
         }
     }
 
     private function reset(): void {
-        $this->players = [];
-        $this->spectators = [];
         $this->arena->reset();
-
         $this->countdown = ConfigGetter::getStartingSeconds();
         $this->stage = self::WAITING_STAGE;
     }

@@ -13,4 +13,22 @@ namespace flanbacore\queue;
 
 class QueueManager {
 
+    /** @var Queue[] */
+    private array $queues = [];
+
+    public function __construct() {
+        $this->addQueue(new TheBridgeQueue());
+    }
+
+    /**
+     * @return Queue[]
+     */
+    public function getQueues(): array {
+        return $this->queues;
+    }
+
+    private function addQueue(Queue $queue): void {
+        $this->queues[$queue->getId()] = $queue;
+    }
+
 }

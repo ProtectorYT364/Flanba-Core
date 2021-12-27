@@ -15,12 +15,12 @@ use flanbacore\session\SessionFactory;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerQuitEvent;
 
-class MatchListener implements Listener {
+class QueueListener implements Listener {
 
     public function onQuit(PlayerQuitEvent $event): void {
         $session = SessionFactory::getSession($event->getPlayer());
-        if($session->hasMatch()) {
-            $session->setMatch(null);
+        if($session->hasQueue()) {
+            $session->setQueue(null);
         }
     }
 

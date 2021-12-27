@@ -1,0 +1,29 @@
+# The scoreboard name
+scoreboard-name: "{DARK_PURPLE}» {LIGHT_PURPLE}Practice {DARK_PURPLE}«"
+
+lobby:
+  "{DARK_GRAY}~~~~~~~~~~~~~",
+  "{LIGHT_PURPLE}Online: {WHITE}{online_players}",
+  " ",
+  "{LIGHT_PURPLE}Your ping: {WHITE}{ping}",
+  "  ", # Double because you can't put a same line
+  "{LIGHT_PURPLE}K: {WHITE}{kills} {LIGHT_PURPLE}D: {WHITE}{deaths}",
+  "{LIGHT_PURPLE}KDR: {WHITE}{kdr} {LIGHT_PURPLE}Elo: {WHITE}{elo}",
+  "{LIGHT_PURPLE}Killstreak: {WHITE}{current_kill_streak} {GRAY}{best_kill_streak}",
+  "{DARK_GRAY}~~~~~~~~~~~~~{RESET}"
+
+the-bridge:
+  "{DARK_GRAY}~~~~~~~~~~~~~",
+  "{LIGHT_PURPLE}Mode: {DARK_PURPLE}The Bridge {GRAY}(Duel)",
+  " ",
+  "{LIGHT_PURPLE}Map: {WHITE}{map}",
+  "{LIGHT_PURPLE}Fighting: {WHITE}{fighting}",
+  "  ",
+  "{LIGHT_PURPLE}Score: {BOLD}{RED}{red_score} {WHITE}: {BOLD}{BLUE}{blue_score}",
+  "   ",
+  "{LIGHT_PURPLE}flanba.com",
+  "{WHITE}{DARK_GRAY}~~~~~~~~~~~~~"
+
+
+
+

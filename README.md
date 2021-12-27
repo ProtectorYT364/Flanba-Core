@@ -19,7 +19,7 @@
 
 * PARTY SYSTEM
 
-  - Party Vs Party
+  - Party Vs Party (This works by doin /p duel (Party Name)  yes, they can set their party name
   - Devide the number of players in a party into 2, (example: ifthe player has 50 members it's gonna devide into 2, 25 for red, and 25 for blue.   If the party has odd number, always prioritize RED TEAM (example: party has 49 members, 25 for RED, and 24 for BLUE TEAM)
   - they can't hit each other if they're pn the same team.
   

@@ -24,6 +24,7 @@ use flanbacore\provider\presets\YamlProvider;
 use flanbacore\provider\Provider;
 use flanbacore\queue\QueueManager;
 use flanbacore\session\SessionFactory;
+use flanbacore\utils\ConfigGetter;
 use muqsit\invmenu\InvMenuHandler;
 use pocketmine\command\Command;
 use pocketmine\event\Listener;
@@ -50,6 +51,8 @@ class FlanbaCore extends PluginBase {
         if(!InvMenuHandler::isRegistered()) {
             InvMenuHandler::register($this);
         }
+        ConfigGetter::init();
+
         $this->initProvider();
 
         $this->match_manager = new MatchManager();

@@ -13,6 +13,7 @@ namespace flanbacore\item\presets;
 
 use flanbacore\form\queue\UnrankedQueueForm;
 use flanbacore\item\FlanbaItem;
+use flanbacore\session\SessionFactory;
 use pocketmine\item\ItemIds;
 use pocketmine\item\ItemUseResult;
 use pocketmine\math\Vector3;
@@ -27,7 +28,12 @@ class UnrankedQueueItem extends FlanbaItem {
     // TODO: Add InvMenu form instead simple form
 
     public function onClickAir(Player $player, Vector3 $directionVector): ItemUseResult {
-        $player->sendForm(new UnrankedQueueForm());
+        $session = SessionFactory::getSession($player);
+        if(!$session->hasQueue()) {
+            $player->sendForm(new UnrankedQueueForm());
+        } else {
+            $session->message("{RED}You already are in a queue!");
+        }
         return ItemUseResult::SUCCESS();
     }
 

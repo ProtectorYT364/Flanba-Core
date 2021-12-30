@@ -13,6 +13,7 @@ namespace flanbacore\session;
 
 use flanbacore\FlanbaCore;
 use flanbacore\match\FlanbaMatch;
+use flanbacore\match\Team;
 use flanbacore\queue\Queue;
 use flanbacore\utils\ColorUtils;
 use pocketmine\network\mcpe\protocol\ClientboundPacket;
@@ -23,7 +24,7 @@ class Session {
     private Player $player;
 
     private FlanbaMatch|null $match = null;
-    private Queue|null $queue = null;
+    private Team|null $team = null;
 
     public function __construct(Player $player) {
         $this->player = $player;
@@ -41,12 +42,12 @@ class Session {
         return $this->match !== null;
     }
 
-    public function getQueue(): ?Queue {
-        return $this->queue;
+    public function getTeam(): ?Team {
+        return $this->team;
     }
 
-    public function hasQueue(): bool {
-        return $this->queue !== null;
+    public function hasTeam(): bool {
+        return $this->team !== null;
     }
 
     public function setMatch(?FlanbaMatch $match): void {
@@ -54,9 +55,12 @@ class Session {
         $this->match = $match;
     }
 
-    public function setQueue(?Queue $queue): void {
-        $this->queue?->removeSession($this);
-        $this->queue = $queue;
+    public function setTeam(?Team $team): void {
+        $this->team = $team;
+    }
+
+    public function setImmobile(bool $immobile = true): void {
+        $this->player->setImmobile($immobile);
     }
 
     public function sendDataPacket(ClientboundPacket $packet): void {

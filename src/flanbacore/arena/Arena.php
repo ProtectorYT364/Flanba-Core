@@ -23,19 +23,15 @@ class Arena {
     private World $world;
     private Claim $claim;
 
-    private array $positions;
+    private Position $red_position;
+    private Position $blue_position;
 
-    /**
-     * @param string $id
-     * @param World $world
-     * @param Claim $claim
-     * @param Position[] $positions
-     */
-    public function __construct(string $id, World $world, Claim $claim, array $positions) {
+    public function __construct(string $id, World $world, Claim $claim, Position $red_position, Position $blue_position) {
         $this->id = $id;
         $this->world = $world;
         $this->claim = $claim;
-        $this->positions = $positions;
+        $this->red_position = $red_position;
+        $this->blue_position = $blue_position;
     }
 
     public function getId(): string {
@@ -50,17 +46,16 @@ class Arena {
         return $this->claim;
     }
 
-    /**
-     * @return Position[]
-     */
-    public function getPositions(): array {
-        return $this->positions;
+    public function getRedPosition(): Position {
+        return $this->red_position;
+    }
+
+    public function getBluePosition(): Position {
+        return $this->blue_position;
     }
 
     public function reset(): void {
-        $positions = $this->positions;
         $world_name = $this->world->getFolderName();
-
         $world_manager = Server::getInstance()->getWorldManager();
         $world_manager->unloadWorld($this->world);
         $world_manager->loadWorld($world_name, true);
@@ -70,9 +65,8 @@ class Arena {
         $this->world->stopTime();
         $this->world->setAutoSave(false);
 
-        foreach($positions as $position) {
-            $position->world = $this->world;
-        }
+        $this->red_position->world = $this->world;
+        $this->blue_position->world = $this->world;
     }
 
 }

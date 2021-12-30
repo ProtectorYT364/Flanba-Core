@@ -1,8 +1,11 @@
+# Provider
+provider: "sqlite"
+
 # The seconds that will the match wait to start the starting stage
 countdown-seconds: 10
 
-# The seconds that will the match wait to start
-starting-seconds: 5
+# The seconds that will the match wait to open the cages
+opening-cages-seconds: 5
 
 # The seconds that will the match wait to end
 ending-seconds: 5

@@ -16,20 +16,29 @@ use pocketmine\utils\Config;
 
 class ConfigGetter {
 
-    static private function get(string $key) {
-        return FlanbaCore::getInstance()->getConfig()->get($key);
+    static private array $config_data;
+    static private array $scoreboard_data;
+
+    static public function init(): void {
+        $plugin = FlanbaCore::getInstance();
+        self::$config_data = $plugin->getConfig()->getAll();
+        self::$scoreboard_data = (new Config($plugin->getDataFolder() . "scoreboard.yml", Config::YAML))->getAll();
     }
 
-    static private function getScoreboardConfig(string $key) {
-        return (new Config(FlanbaCore::getInstance()->getDataFolder() . "scoreboard.yml"))->get($key);
+    static private function get(string $key): mixed {
+        return self::$config_data[$key] ?? null;
     }
 
-    static public function getCountdownSecconds(): int {
+    static private function getScoreboardConfig(string $key): mixed {
+        return self::$scoreboard_data[$key] ?? null;
+    }
+
+    static public function getCountdownSeconds(): int {
         return self::get("countdown-seconds") + 1;
     }
 
-    static public function getStartingSeconds(): int {
-        return self::get("starting-seconds") + 1;
+    static public function getOpeningCagesSeconds(): int {
+        return self::get("opening-cages-seconds") + 1;
     }
 
     static public function getEndingSeconds(): int {

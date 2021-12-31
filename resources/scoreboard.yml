@@ -1,27 +1,4 @@
 # The scoreboard title
 scoreboard-title: "{DARK_PURPLE}» {LIGHT_PURPLE}Practice {DARK_PURPLE}«"
 
-lobby:
-  "{DARK_GRAY}~~~~~~~~~~~~~",
-  "{LIGHT_PURPLE}Online: {WHITE}{online_players}",
-  " ",
-  "{LIGHT_PURPLE}Your ping: {WHITE}{ping}",
-  "  ", # Double because you can't put a same line
-  "{LIGHT_PURPLE}K: {WHITE}{kills} {LIGHT_PURPLE}D: {WHITE}{deaths}",
-  "{LIGHT_PURPLE}KDR: {WHITE}{kdr} {LIGHT_PURPLE}Elo: {WHITE}{elo}",
-  "{LIGHT_PURPLE}Killstreak: {WHITE}{current_kill_streak} {GRAY}{best_kill_streak}",
-  "{DARK_GRAY}~~~~~~~~~~~~~{RESET}<´-"
-the-bridge:
-  "{BOLD}{YELLOW}The Bridge",
-  "{GRAY}{date}",
-  " ",
-  "{WHITE}Time left: {GREEN}{time_left}",
-  "  ",
-  "{RED}[R] {red_score}",
-  "{BLUE}[B] {blue_score}",
-  "   ",
-  "{WHITE}Mode: {GREEN}The Bridge Duel",
-  "{WHITE}Kills: {GREEN}{kills}",
-  "{WHITE}Goals: {GREEN}{goals}",
-  "    ",
-  "{YELLOW}flanba.com"
+# Removed because I have an issue, and I don't know how to fix it

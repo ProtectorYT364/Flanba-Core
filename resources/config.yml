@@ -1,4 +1,8 @@
+# Lobby world name
+lobby-world: "lobby"
+
 # Provider
+# Available providers: sqlite, json, yaml
 provider: "sqlite"
 
 # The seconds that will the match wait to start the starting stage

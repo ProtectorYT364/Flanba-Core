@@ -11,6 +11,18 @@ declare(strict_types=1);
 namespace sergittos\flanbacore\kit;
 
 
-class Kit {
+use pocketmine\block\utils\DyeColor;
+use pocketmine\item\Armor;
+
+abstract class Kit {
+
+    abstract public function getColor(): DyeColor;
+
+    /**
+     * @return Armor[]
+     */
+    abstract public function getArmorContents(): array;
+
+
 
 }

@@ -8,9 +8,12 @@
 declare(strict_types=1);
 
 
-namespace sergittos\flanbacore\utils\claim;
+namespace sergittos\flanbacore\event;
 
 
-class Claim {
+/*
+ * Only called when a session has been killed during a match
+ */
+class SessionDeathEvent extends SessionEvent {
 
 }

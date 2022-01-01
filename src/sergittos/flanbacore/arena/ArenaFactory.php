@@ -11,13 +11,32 @@ declare(strict_types=1);
 namespace sergittos\flanbacore\arena;
 
 
+use pocketmine\Server;
+use pocketmine\world\World;
+use sergittos\flanbacore\FlanbaCore;
+use sergittos\flanbacore\match\team\TeamSettings;
+
 class ArenaFactory {
 
     /** @var Arena[] */
     static private array $arenas = [];
 
     static public function init(): void {
-        // TODO
+        foreach(json_decode(file_get_contents(FlanbaCore::getInstance()->getDataFolder() . "arenas.json"), true) as $arena_data) {
+            $world_name = $arena_data["world_name"];
+            $world_manager = Server::getInstance()->getWorldManager();
+            $world_manager->loadWorld($world_name, true);
+
+            $world = $world_manager->getWorldByName($world_name);
+            $world->setAutoSave(false);
+            $world->setTime(World::TIME_DAY);
+            $world->stopTime();
+
+            self::addArena(new Arena(
+                $arena_data["id"], $arena_data["time_left"], $world,
+                TeamSettings::fromData($arena_data["red_settings"], $world), TeamSettings::fromData($arena_data["blue_settings"], $world)
+            ));
+        }
     }
 
     /**
@@ -28,7 +47,7 @@ class ArenaFactory {
     }
 
     static private function addArena(Arena $arena): void {
-
+        self::$arenas[$arena->getId()] = $arena;
     }
 
 }

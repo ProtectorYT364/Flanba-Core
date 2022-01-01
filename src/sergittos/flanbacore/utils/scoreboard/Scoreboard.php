@@ -16,20 +16,15 @@ use pocketmine\network\mcpe\protocol\SetDisplayObjectivePacket;
 use pocketmine\network\mcpe\protocol\SetScorePacket;
 use pocketmine\network\mcpe\protocol\types\ScorePacketEntry;
 use sergittos\flanbacore\session\Session;
+use sergittos\flanbacore\utils\ColorUtils;
 use sergittos\flanbacore\utils\ConfigGetter;
 
 abstract class Scoreboard {
 
-    protected string $id;
     protected Session|null $session = null;
 
-    public function __construct(string $id, ?Session $session) {
-        $this->id = $id;
+    public function __construct(?Session $session) {
         $this->session = $session;
-    }
-
-    public function getId(): string {
-        return $this->id;
     }
 
     public function getSession(): Session {
@@ -66,7 +61,7 @@ abstract class Scoreboard {
         $packet = new SetDisplayObjectivePacket();
         $packet->displaySlot = "sidebar";
         $packet->objectiveName = $this->session->getUsername();
-        $packet->displayName = ConfigGetter::getScoreboardTitle();
+        $packet->displayName = ColorUtils::translate(ConfigGetter::getScoreboardTitle());
         $packet->criteriaName = "dummy";
         $packet->sortOrder = 0;
         $this->session->sendDataPacket($packet);

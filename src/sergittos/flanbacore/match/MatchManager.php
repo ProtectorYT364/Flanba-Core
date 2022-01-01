@@ -11,15 +11,23 @@ declare(strict_types=1);
 namespace sergittos\flanbacore\match;
 
 
+
+use sergittos\flanbacore\arena\ArenaFactory;
+
 class MatchManager {
 
     /** @var FlanbaMatch[] */
     private array $matches = [];
 
     public function __construct() {
-        // TODO: Add matches
+        foreach(ArenaFactory::getArenas() as $arena) {
+            $this->addMatch(new FlanbaMatch($arena));
+        }
     }
 
+    /**
+     * @return FlanbaMatch[]
+     */
     public function getMatches(): array {
         return $this->matches;
     }

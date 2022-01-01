@@ -12,18 +12,13 @@ namespace sergittos\flanbacore\utils\scoreboard\presets;
 
 
 use pocketmine\Server;
-use sergittos\flanbacore\session\Session;
 use sergittos\flanbacore\utils\scoreboard\Scoreboard;
 
 class LobbyScoreboard extends Scoreboard {
 
-    public function __construct(?Session $session) {
-        parent::__construct("lobby", $session);
-    }
-
     public function getLines(): array {
         return [
-            " {DARK_GRAY}--------------",
+            " {DARK_GRAY}---------------",
             " {LIGHT_PURPLE}Online: {WHITE}" . count(Server::getInstance()->getOnlinePlayers()),
             " ",
             " {LIGHT_PURPLE}Your ping: {WHITE}" . $this->session->getPing(),
@@ -31,7 +26,7 @@ class LobbyScoreboard extends Scoreboard {
             " {LIGHT_PURPLE}K: {WHITE}3 {LIGHT_PURPLE}D: {WHITE}1", // {kills} {deaths}
             " {LIGHT_PURPLE}KDR: {WHITE}3.8 {LIGHT_PURPLE}Elo: {WHITE}1000", // {kdr} {elo}
             " {LIGHT_PURPLE}Killstreak: {WHITE}4 {GRAY}9", // {current_kill_streak} {best_kill_streak}
-            " {DARK_GRAY}--------------{DARK_GRAY}"
+            " {DARK_GRAY}---------------{DARK_GRAY}"
         ];
     }
 

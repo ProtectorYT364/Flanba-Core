@@ -46,4 +46,11 @@ class ColorUtils {
         return strtolower(str_replace(["{", "}"], ["", ""], $color));
     }
 
+    static public function colorToId(string $color): int {
+        return match($color) {
+            "{RED}" => 14,
+            "{BLUE}" => 11
+        };
+    }
+
 }

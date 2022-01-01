@@ -1,12 +1,24 @@
 # Lobby world name
 lobby-world: "lobby"
 
+# The scoreboard title
+scoreboard-title: "{BOLD}{YELLOW}The Bridge"
+
+# The knockback that the players will have when they are being hit
+knockback: 0.389
+
+# Attack cooldown (in ticks) (1 tick = 0.05 seconds)
+attack-cooldown: 10 # 0.5 seconds
+
 # Provider
 # Available providers: sqlite, json, yaml
 provider: "sqlite"
 
 # The seconds that will the match wait to start the starting stage
-countdown-seconds: 10
+countdown-seconds: 5
+
+# The seconds that will the match wait to start
+starting-seconds: 5
 
 # The seconds that will the match wait to open the cages
 opening-cages-seconds: 5

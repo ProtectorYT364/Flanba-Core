@@ -1,0 +1,61 @@
+[
+
+  {
+    "id": "tb1",
+    "world_name": "tb1",
+    "time_left": 15,
+    "red_settings": {
+      "team_area": {
+        "first_position": {
+          "x": 21, "z": -12
+        },
+        "second_position": {
+          "x": 49, "z": 12
+        }
+      },
+      "goal_area": {
+        "first_position": {
+          "x": 32, "y": 88, "z": 3
+        },
+        "second_position": {
+          "x": 38, "y": 89, "z": -3
+        }
+      },
+      "waiting_point": {
+        "x": 34, "y": 101, "z": 0
+      },
+      "spawn_point": {
+        "x": 32, "y": 106, "z": 0
+      }
+    },
+    "blue_settings": {
+      "team_area": {
+        "first_position": {
+          "x": -21, "z": 12
+        },
+        "second_position": {
+          "x": -49, "z": -12
+        }
+      },
+      "goal_area": {
+        "first_position": {
+          "x": -38, "y": 88, "z": -3
+        },
+        "second_position": {
+          "x": -32, "y": 89, "z": 3
+        }
+      },
+      "waiting_point": {
+        "x": -34, "y": 101, "z": 0
+      },
+      "spawn_point": {
+        "x": -32, "y": 106, "z": 0
+      }
+    }
+  }
+
+]
+
+
+
+

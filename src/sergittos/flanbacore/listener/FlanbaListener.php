@@ -11,14 +11,15 @@ declare(strict_types=1);
 namespace sergittos\flanbacore\listener;
 
 
+use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\Listener;
-use pocketmine\event\player\PlayerJoinEvent;
-use sergittos\flanbacore\session\SessionFactory;
+use sergittos\flanbacore\utils\ConfigGetter;
 
 class FlanbaListener implements Listener {
 
-    public function onJoin(PlayerJoinEvent $event): void {
-        SessionFactory::getSession($event->getPlayer())->teleportToLobby();
+    public function onFight(EntityDamageByEntityEvent $event): void {
+        $event->setKnockBack(ConfigGetter::getKnockback());
+        $event->setAttackCooldown(ConfigGetter::getAttackCooldown());
     }
 
 }

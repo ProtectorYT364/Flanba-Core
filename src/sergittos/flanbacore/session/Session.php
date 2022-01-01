@@ -18,7 +18,7 @@ use pocketmine\Server;
 use sergittos\flanbacore\FlanbaCore;
 use sergittos\flanbacore\item\presets\GameSelectorItem;
 use sergittos\flanbacore\match\FlanbaMatch;
-use sergittos\flanbacore\match\Team;
+use sergittos\flanbacore\match\team\Team;
 use sergittos\flanbacore\utils\ColorUtils;
 use sergittos\flanbacore\utils\ConfigGetter;
 use sergittos\flanbacore\utils\scoreboard\presets\LobbyScoreboard;
@@ -70,12 +70,22 @@ class Session {
     }
 
     public function setTeam(?Team $team): void {
+        $this->team?->removeMember($this);
         $this->team = $team;
     }
 
     public function setScoreboard(?Scoreboard $scoreboard): void {
         $this->scoreboard = $scoreboard;
         $scoreboard?->show();
+    }
+
+    public function updateScoreboard(): void {
+        $this->setScoreboard($this->scoreboard);
+    }
+
+    public function teleportToTeamSpawnPoint(): void {
+        $this->player->teleport($this->team->getSpawnPoint());
+        // Set kit
     }
 
     public function teleportToLobby(): void {
@@ -118,12 +128,16 @@ class Session {
         return $this->player->getName();
     }
 
-    public function popup(string $text): void {
-        $this->player->sendPopup(ColorUtils::translate($text));
+    public function popup(string $popup): void {
+        $this->player->sendPopup(ColorUtils::translate($popup));
     }
 
-    public function message(string $text): void {
-        $this->player->sendMessage(ColorUtils::translate($text));
+    public function title(string $title, string $subtitle = ""): void {
+        $this->player->sendTitle(ColorUtils::translate($title), ColorUtils::translate($subtitle));
+    }
+
+    public function message(string $message): void {
+        $this->player->sendMessage(ColorUtils::translate($message));
     }
 
     public function save(): void {

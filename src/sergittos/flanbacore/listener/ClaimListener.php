@@ -16,6 +16,7 @@ use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\world\Position;
+use sergittos\flanbacore\match\team\Team;
 use sergittos\flanbacore\session\Session;
 use sergittos\flanbacore\session\SessionFactory;
 
@@ -35,7 +36,17 @@ class ClaimListener implements Listener {
     }
 
     private function checkLand(Session $session, Position $position): bool {
-        return $session->hasTeam() and $session->getTeam()->getArea()->isInside($position);
+        if(!$session->hasMatch()) {
+            return false;
+        }
+        $match = $session->getMatch();
+        /** @var Team $team */
+        foreach([$match->getRedTeam(), $match->getBlueTeam()] as $team) {
+            if($team->getArea()->isInside($position)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

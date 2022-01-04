@@ -4,8 +4,10 @@
     "id": "tb1",
     "world_name": "tb1",
     "time_left": 15,
+    "height_limit": 100,
+    "void_limit": 70,
     "red_settings": {
-      "team_area": {
+      "safe_zone": {
         "first_position": {
           "x": 21, "z": -12
         },
@@ -29,7 +31,7 @@
       }
     },
     "blue_settings": {
-      "team_area": {
+      "safe_zone": {
         "first_position": {
           "x": -21, "z": 12
         },

@@ -31,7 +31,7 @@ class Team {
 
     public function __construct(TeamSettings $settings, string $color) {
         $this->settings = $settings;
-        $this->name = ColorUtils::colorToString($color);
+        $this->name = strtolower(str_replace(["{", "}"], ["", ""], $color));
         $this->color = $color;
     }
 
@@ -56,7 +56,7 @@ class Team {
     }
 
     public function getColor(): string {
-        return ColorUtils::translate($this->color);
+        return $this->color;
     }
 
     public function getScoreNumber(): int {

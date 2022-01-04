@@ -13,6 +13,7 @@ namespace sergittos\flanbacore\listener;
 
 use pocketmine\block\GlazedTerracotta;
 use pocketmine\event\block\BlockBreakEvent;
+use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\Listener;
@@ -55,6 +56,9 @@ class MatchListener implements Listener {
             $death_event->call();
             $event->cancel();
         }
+        if($event->getCause() === EntityDamageEvent::CAUSE_FALL) {
+            $event->cancel();
+        }
     }
 
     public function onMove(PlayerMoveEvent $event): void {
@@ -62,12 +66,20 @@ class MatchListener implements Listener {
         if(!$session->hasMatch()) {
             return;
         }
-
         $match = $session->getMatch();
+        $position = $player->getPosition();
+        if($position->getY() <= $match->getArena()->getVoidLimit()) {
+            $session->teleportToTeamSpawnPoint();
+            return;
+        }
+
+        if($match->getStage() !== $match::PLAYING_STAGE) {
+            return;
+        }
         $players = $match->getPlayers();
         $session_team = $session->getTeam();
         foreach($match->getTeams() as $team) {
-            if(!$team->getGoalArea()->isInside($player->getPosition(), true)) {
+            if(!$team->getGoalArea()->isInside($position, true)) {
                 continue;
             }
             if($session_team->getColor() === $team->getColor()) {
@@ -77,18 +89,7 @@ class MatchListener implements Listener {
             $session_team->addScore();
             $color = $session_team->getColor();
             if($session_team->getScoreNumber() >= 5) {
-                $match->setWinnerTeam($session_team);
-                $match->setLoserTeam($team);
-                $match->setStage($match::ENDING_STAGE);
-
-                foreach($players as $player) {
-                    $player->title(
-                        $color . strtoupper($session_team->getName()) . " WINS!",
-                        $color . $session_team->getScoreNumber() . " {WHITE}- " .
-                        $team->getColor() . $team->getScoreNumber()
-                    );
-                    $player->teleportToTeamSpawnPoint();
-                }
+                $match->finish($session_team, $team);
                 return;
             } else {
                 $match->setSessionScored($session);
@@ -99,6 +100,7 @@ class MatchListener implements Listener {
             $countdown--;
             $match->setCountdown($countdown);
             foreach($players as $player) {
+                $player->setImmobile();
                 $player->teleportToTeamSpawnPoint();
                 $player->updateScoreboard();
                 $match->broadcastTitle(
@@ -108,11 +110,22 @@ class MatchListener implements Listener {
 
                 // TODO: Clean this
             }
+            $match->updatePlayersScoreboard();
         }
     }
 
     public function onBreak(BlockBreakEvent $event): void {
         if($event->getBlock()->getId() !== ItemIds::TERRACOTTA) {
+            $event->cancel();
+        }
+    }
+
+    public function onPlace(BlockPlaceEvent $event): void {
+        $session = SessionFactory::getSession($event->getPlayer());
+        if(!$session->hasMatch()) {
+            return;
+        }
+        if($event->getBlock()->getPosition()->getY() >= $session->getMatch()->getArena()->getHeightLimit()) {
             $event->cancel();
         }
     }

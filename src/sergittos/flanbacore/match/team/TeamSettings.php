@@ -34,7 +34,7 @@ class TeamSettings {
         return new self(
             new Position($data["waiting_point"]["x"], $data["waiting_point"]["y"], $data["waiting_point"]["z"], $world),
             new Position($data["spawn_point"]["x"], $data["spawn_point"]["y"], $data["spawn_point"]["z"], $world),
-            Claim::fromData($data["team_area"], $world), Claim::fromData($data["goal_area"], $world)
+            Claim::fromData($data["safe_zone"], $world), Claim::fromData($data["goal_area"], $world)
         );
     }
 

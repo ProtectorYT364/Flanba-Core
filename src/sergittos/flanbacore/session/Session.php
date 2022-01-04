@@ -11,12 +11,17 @@ declare(strict_types=1);
 namespace sergittos\flanbacore\session;
 
 
+use pocketmine\block\utils\DyeColor;
 use pocketmine\network\mcpe\protocol\ClientboundPacket;
 use pocketmine\player\GameMode;
 use pocketmine\player\Player;
 use pocketmine\Server;
 use sergittos\flanbacore\FlanbaCore;
 use sergittos\flanbacore\item\presets\GameSelectorItem;
+use sergittos\flanbacore\item\presets\LeaveMatchItem;
+use sergittos\flanbacore\kit\Kit;
+use sergittos\flanbacore\kit\KitFactory;
+use sergittos\flanbacore\kit\TheBridgeKit;
 use sergittos\flanbacore\match\FlanbaMatch;
 use sergittos\flanbacore\match\team\Team;
 use sergittos\flanbacore\utils\ColorUtils;
@@ -30,6 +35,7 @@ class Session {
 
     private FlanbaMatch|null $match = null;
     private Team|null $team = null;
+    private Kit|null $kit = null;
     private Scoreboard|null $scoreboard = null;
 
     public function __construct(Player $player) {
@@ -56,12 +62,12 @@ class Session {
         return $this->team !== null;
     }
 
-    public function getScoreboard(): ?Scoreboard {
-        return $this->scoreboard;
+    public function getKit(): ?Kit {
+        return $this->kit;
     }
 
-    public function hasScoreboard(): bool {
-        return $this->scoreboard !== null;
+    public function hasKit(): bool {
+        return $this->kit !== null;
     }
 
     public function setMatch(?FlanbaMatch $match): void {
@@ -74,6 +80,15 @@ class Session {
         $this->team = $team;
     }
 
+    private function setKit(?Kit $kit): void {
+        if($kit !== null) {
+            $this->clearInventory();
+            $this->player->getInventory()->setContents($kit->getItems());
+            $this->player->getArmorInventory()->setContents($kit->getArmorContents());
+        }
+        $this->kit = $kit;
+    }
+
     public function setScoreboard(?Scoreboard $scoreboard): void {
         $this->scoreboard = $scoreboard;
         $scoreboard?->show();
@@ -83,9 +98,16 @@ class Session {
         $this->setScoreboard($this->scoreboard);
     }
 
+    public function setTheBridgeKit(DyeColor $color): void {
+        $kit = KitFactory::getKitById(Kit::THE_BRIDGE);
+        $kit->setColor($color);
+        $this->setKit($kit);
+    }
+
     public function teleportToTeamSpawnPoint(): void {
-        $this->player->teleport($this->team->getSpawnPoint());
-        // Set kit
+        $this->player->teleport($this->team->getWaitingPoint()); // TODO: Change the position to the spawnpoint
+        $this->player->setHealth($this->player->getMaxHealth()); // TODO: Make a function for this?
+        $this->setTheBridgeKit(ColorUtils::colorToDyeColor($this->getTeam()->getColor()));
     }
 
     public function teleportToLobby(): void {
@@ -98,6 +120,11 @@ class Session {
         $this->setScoreboard(new LobbyScoreboard($this));
 
         $this->player->teleport(Server::getInstance()->getWorldManager()->getWorldByName(ConfigGetter::getLobbyWorldName())->getSafeSpawn());
+    }
+
+    public function addLeaveMatchItem(): void {
+        $this->clearInventory();
+        $this->player->getInventory()->setItem(8, new LeaveMatchItem());
     }
 
     private function setLobbyItems(): void {

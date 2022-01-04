@@ -11,6 +11,8 @@ declare(strict_types=1);
 namespace sergittos\flanbacore\utils;
 
 
+use pocketmine\block\utils\DyeColor;
+use pocketmine\data\bedrock\DyeColorIdMap;
 use pocketmine\utils\TextFormat;
 
 class ColorUtils {
@@ -42,14 +44,11 @@ class ColorUtils {
         return $message;
     }
 
-    static public function colorToString(string $color): string {
-        return strtolower(str_replace(["{", "}"], ["", ""], $color));
-    }
-
-    static public function colorToId(string $color): int {
+    static public function colorToDyeColor(string $color): DyeColor {
+        $map = DyeColorIdMap::getInstance();
         return match($color) {
-            "{RED}" => 14,
-            "{BLUE}" => 11
+            "{RED}" => $map->fromId(14),
+            "{BLUE}" => $map->fromId(11)
         };
     }
 

@@ -17,9 +17,9 @@ use sergittos\flanbacore\utils\ColorUtils;
 
 class FlanbaItem extends Item {
 
-    public function __construct(string $name, int $id) {
+    public function __construct(string $name, int $id, int $meta = 0) {
         $this->setCustomName($name = ColorUtils::translate($name));
-        parent::__construct(new ItemIdentifier($id, 0), $name);
+        parent::__construct(new ItemIdentifier($id, $meta), $name);
         $this->getNamedTag()->setString("flanba", "flanba");
     }
 

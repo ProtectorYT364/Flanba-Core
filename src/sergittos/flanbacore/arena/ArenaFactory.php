@@ -33,7 +33,7 @@ class ArenaFactory {
             $world->stopTime();
 
             self::addArena(new Arena(
-                $arena_data["id"], $arena_data["time_left"], $world,
+                $arena_data["id"], $arena_data["time_left"], $arena_data["height_limit"], $arena_data["void_limit"], $world,
                 TeamSettings::fromData($arena_data["red_settings"], $world), TeamSettings::fromData($arena_data["blue_settings"], $world)
             ));
         }

@@ -19,14 +19,18 @@ class Arena {
 
     private string $id;
     private int $time_left;
+    private int $height_limit;
+    private int $void_limit;
     private World $world;
 
     private TeamSettings $red_team_settings;
     private TeamSettings $blue_team_settings;
 
-    public function __construct(string $id, int $time_left, World $world, TeamSettings $red_team_settings, TeamSettings $blue_team_settings) {
+    public function __construct(string $id, int $time_left, int $height_limit, int $void_limit, World $world, TeamSettings $red_team_settings, TeamSettings $blue_team_settings) {
         $this->id = $id;
         $this->time_left = $time_left;
+        $this->height_limit = $height_limit;
+        $this->void_limit = $void_limit;
         $this->world = $world;
         $this->red_team_settings = $red_team_settings;
         $this->blue_team_settings = $blue_team_settings;
@@ -38,6 +42,14 @@ class Arena {
 
     public function getTimeLeft(): int {
         return $this->time_left;
+    }
+
+    public function getHeightLimit(): int {
+        return $this->height_limit;
+    }
+
+    public function getVoidLimit(): int {
+        return $this->void_limit;
     }
 
     public function getWorld(): World {

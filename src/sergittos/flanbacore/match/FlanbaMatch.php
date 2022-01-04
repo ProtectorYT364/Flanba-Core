@@ -12,8 +12,11 @@ namespace sergittos\flanbacore\match;
 
 
 use sergittos\flanbacore\arena\Arena;
+use sergittos\flanbacore\kit\Kit;
+use sergittos\flanbacore\kit\KitFactory;
 use sergittos\flanbacore\match\team\Team;
 use sergittos\flanbacore\session\Session;
+use sergittos\flanbacore\utils\ColorUtils;
 use sergittos\flanbacore\utils\ConfigGetter;
 use sergittos\flanbacore\utils\scoreboard\presets\match\CountdownScoreboard;
 use sergittos\flanbacore\utils\scoreboard\presets\match\PlayingScoreboard;
@@ -25,7 +28,7 @@ class FlanbaMatch {
     private const COUNTDOWN_STAGE = 1;
     private const STARTING_STAGE = 2;
     public const OPENING_CAGES_STAGE= 3;
-    private const PLAYING_STAGE = 4;
+    public const PLAYING_STAGE = 4;
     public const ENDING_STAGE = 5;
 
     private string $id;
@@ -36,8 +39,6 @@ class FlanbaMatch {
 
     private Team $red_team;
     private Team $blue_team;
-    private Team|null $winner_team = null;
-    private Team|null $loser_team = null;
 
     private Session $session_scored;
 
@@ -84,14 +85,6 @@ class FlanbaMatch {
 
     public function setStage(int $stage): void {
         $this->stage = $stage;
-    }
-
-    public function setWinnerTeam(?Team $winner_team): void {
-        $this->winner_team = $winner_team;
-    }
-
-    public function setLoserTeam(?Team $loser_team): void {
-        $this->loser_team = $loser_team;
     }
 
     public function setSessionScored(Session $session_scored): void {
@@ -148,8 +141,9 @@ class FlanbaMatch {
                 $team = $teams[1];
             }
             $team->addMember($session);
-            $session->setTeam($team);
             $session->setMatch($this);
+            $session->setTeam($team);
+            $session->addLeaveMatchItem();
             $session->getPlayer()->teleport($team->getWaitingPoint());
 
             if($this->getPlayersCount() >= 2) {
@@ -160,6 +154,7 @@ class FlanbaMatch {
             } else {
                 $session->setScoreboard(new WaitingPlayersScoreboard($session, $this));
             }
+            $this->broadcastMessage("{GRAY}{$session->getUsername()} {YELLOW}has joined ({AQUA}{$this->getPlayersCount()}{YELLOW}/{AQUA}2{YELLOW})!");
         }
 
         // TODO: Clean this
@@ -167,6 +162,7 @@ class FlanbaMatch {
 
     public function removeSession(Session $session): void {
         if($this->isPlaying($session)) {
+            $this->finish($this->red_team->hasMember($session) ? $this->blue_team : $this->red_team, $session->getTeam());
             $session->setTeam(null);
         }
     }
@@ -181,25 +177,22 @@ class FlanbaMatch {
 
     public function tick(): void {
         // TODO: Clean this
-
-        if($this->stage !== self::ENDING_STAGE) {
-            $this->updatePlayersScoreboard();
-            if($this->stage !== self::WAITING_STAGE and $this->stage !== self::COUNTDOWN_STAGE) {
-                $this->time_left--;
-                if($this->time_left <= 0) {
-                    $this->countdown = ConfigGetter::getEndingSeconds();
-                    $this->stage = self::ENDING_STAGE;
-                }
+        if($this->stage !== self::WAITING_STAGE and $this->stage !== self::COUNTDOWN_STAGE and $this->stage !== self::ENDING_STAGE) {
+            $this->time_left--;
+            if($this->time_left <= 0) {
+                $this->countdown = ConfigGetter::getEndingSeconds();
+                $this->stage = self::ENDING_STAGE;
             }
         }
         $players = $this->getPlayers();
         switch($this->stage) {
             case self::COUNTDOWN_STAGE:
-                if($this->countdown <= 0) {
+                if($this->countdown <= 1) {
                     foreach($players as $session) {
-                        $session->getPlayer()->teleport($session->getTeam()->getSpawnPoint());
+                        $session->teleportToTeamSpawnPoint();
                         $session->setImmobile(); // TODO: Change this to a cage
                         $session->setScoreboard(new PlayingScoreboard($session, $this));
+                        $session->setTheBridgeKit(ColorUtils::colorToDyeColor($session->getTeam()->getColor()));
                         $session->title(" ", "{GRAY}Cages open in {GREEN}5s{GRAY}...");
                     }
                     $this->stage = self::STARTING_STAGE;
@@ -213,6 +206,7 @@ class FlanbaMatch {
                     $this->broadcastTitle("{$color}{$this->countdown}");
                     $this->broadcastMessage("{YELLOW}The game starts in {RED}$this->countdown {YELLOW}seconds!");
                 }
+                $this->updatePlayersScoreboard();
                 break;
 
             case self::STARTING_STAGE:
@@ -224,6 +218,11 @@ class FlanbaMatch {
                 } else {
                     $this->broadcastSubTitle("{GRAY}Cages open in {GREEN}{$this->countdown}s{GRAY}...");
                 }
+                $this->updatePlayersScoreboard();
+                break;
+
+            case self::PLAYING_STAGE:
+                $this->updatePlayersScoreboard();
                 break;
 
             case self::OPENING_CAGES_STAGE:
@@ -238,6 +237,7 @@ class FlanbaMatch {
                         "{GRAY}Cages open in {GREEN}{$this->countdown}s{GRAY}..."
                     );
                 }
+                $this->updatePlayersScoreboard();
                 break;
 
             case self::ENDING_STAGE:
@@ -251,6 +251,12 @@ class FlanbaMatch {
                     }
                 }
                 break;
+        }
+    }
+
+    public function updatePlayersScoreboard(): void {
+        foreach($this->getPlayers() as $session) {
+            $session->updateScoreboard();
         }
     }
 
@@ -270,12 +276,6 @@ class FlanbaMatch {
         }
     }
 
-    private function updatePlayersScoreboard(): void {
-        foreach($this->getPlayers() as $session) {
-            $session->updateScoreboard();
-        }
-    }
-
     private function start(): void {
         foreach($this->getPlayers() as $session) {
             $session->title(" ", "{GREEN}Fight!");
@@ -292,6 +292,20 @@ class FlanbaMatch {
         $this->arena->reset();
         $this->stage = self::WAITING_STAGE;
         $this->countdown = ConfigGetter::getCountdownSeconds();
+    }
+
+    public function finish(Team $winner_team, Team $loser_team): void {
+        $color = $winner_team->getColor();
+        foreach($this->getPlayers() as $player) {
+            $player->title(
+                $color . strtoupper($winner_team->getName()) . " WINS!",
+                $color . $winner_team->getScoreNumber() . " {WHITE}- " .
+                $loser_team->getColor() . $loser_team->getScoreNumber()
+            );
+            $player->updateScoreboard();
+            $player->teleportToTeamSpawnPoint();
+        }
+        $this->stage = self::ENDING_STAGE;
     }
 
 }

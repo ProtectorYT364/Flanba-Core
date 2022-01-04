@@ -21,6 +21,7 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\utils\ServerException;
 use pocketmine\utils\SingletonTrait;
 use sergittos\flanbacore\arena\ArenaFactory;
+use sergittos\flanbacore\kit\KitFactory;
 use sergittos\flanbacore\listener\ClaimListener;
 use sergittos\flanbacore\listener\FlanbaListener;
 use sergittos\flanbacore\listener\ItemListener;
@@ -54,14 +55,12 @@ class FlanbaCore extends PluginBase {
     }
 
     protected function onEnable(): void {
-        $this->doMuqsitThings();
-
         ConfigGetter::init();
         $this->getServer()->getWorldManager()->loadWorld(ConfigGetter::getLobbyWorldName(), true);
 
-        $this->initProvider();
-
         ArenaFactory::init();
+        KitFactory::init();
+        $this->initProvider();
         $this->match_manager = new MatchManager();
         $this->queue_manager = new QueueManager();
 
@@ -74,6 +73,7 @@ class FlanbaCore extends PluginBase {
         $this->registerListener(new SessionListener());
 
         $this->getScheduler()->scheduleRepeatingTask(new MatchHeartbeat(), 20); // 1 second
+        $this->doMuqsitThings();
     }
 
     protected function onDisable(): void {

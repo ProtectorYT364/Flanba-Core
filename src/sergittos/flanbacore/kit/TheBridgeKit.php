@@ -11,22 +11,17 @@ declare(strict_types=1);
 namespace sergittos\flanbacore\kit;
 
 
-use pocketmine\block\utils\DyeColor;
-use pocketmine\data\bedrock\DyeColorIdMap;
+use pocketmine\block\BlockFactory;
+use pocketmine\block\BlockLegacyIds;
+use pocketmine\block\VanillaBlocks;
+use pocketmine\item\enchantment\EnchantmentInstance;
+use pocketmine\item\enchantment\VanillaEnchantments;
 use pocketmine\item\VanillaItems;
-use sergittos\flanbacore\match\team\Team;
-use sergittos\flanbacore\utils\ColorUtils;
 
 class TheBridgeKit extends Kit {
 
-    private Team $team;
-
-    public function __construct(Team $team) {
-        $this->team = $team;
-    }
-
-    public function getColor(): DyeColor {
-        return DyeColorIdMap::getInstance()->fromId(ColorUtils::colorToId($this->team->getColor()));
+    public function getId(): int {
+        return self::THE_BRIDGE;
     }
 
     public function getArmorContents(): array {
@@ -35,6 +30,23 @@ class TheBridgeKit extends Kit {
             VanillaItems::LEATHER_TUNIC(),
             VanillaItems::LEATHER_PANTS(),
             VanillaItems::LEATHER_BOOTS()
+        ];
+    }
+
+    public function getItems(): array {
+        $terracotta = BlockFactory::getInstance()->get(BlockLegacyIds::TERRACOTTA, 0)->asItem();
+        $blocks = $terracotta->setCount($terracotta->getMaxStackSize());
+        $air = VanillaBlocks::AIR()->asItem();
+        return [
+            VanillaItems::IRON_SWORD(),
+            VanillaItems::BOW(),
+            VanillaItems::DIAMOND_PICKAXE()->addEnchantment(new EnchantmentInstance(VanillaEnchantments::EFFICIENCY(), 2)),
+            $blocks,
+            $blocks,
+            VanillaItems::GOLDEN_APPLE()->setCount(8),
+            $air,
+            $air,
+            VanillaItems::ARROW()
         ];
     }
 

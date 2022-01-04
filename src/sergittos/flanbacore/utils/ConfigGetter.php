@@ -19,8 +19,7 @@ class ConfigGetter {
     static private array $config_data;
 
     static public function init(): void {
-        $plugin = FlanbaCore::getInstance();
-        self::$config_data = $plugin->getConfig()->getAll();
+        self::$config_data = FlanbaCore::getInstance()->getConfig()->getAll();
     }
 
     static private function get(string $key): mixed {
@@ -40,7 +39,7 @@ class ConfigGetter {
     }
 
     static public function getCountdownSeconds(): int {
-        return self::get("countdown-seconds");
+        return self::get("countdown-seconds") + 1;
     }
 
     static public function getStartingSeconds(): int {

@@ -25,11 +25,12 @@ class TheBridgeKit extends Kit {
     }
 
     public function getArmorContents(): array {
+        $unbreaking = new EnchantmentInstance(VanillaEnchantments::UNBREAKING(), 10);
         return [
-            VanillaItems::LEATHER_CAP(),
-            VanillaItems::LEATHER_TUNIC(),
-            VanillaItems::LEATHER_PANTS(),
-            VanillaItems::LEATHER_BOOTS()
+            VanillaItems::LEATHER_CAP()->addEnchantment($unbreaking),
+            VanillaItems::LEATHER_TUNIC()->addEnchantment($unbreaking),
+            VanillaItems::LEATHER_PANTS()->addEnchantment($unbreaking),
+            VanillaItems::LEATHER_BOOTS()->addEnchantment($unbreaking)
         ];
     }
 

@@ -31,7 +31,7 @@ class LeaveMatchItem extends FlanbaItem {
             $session->message("{RED}You must be on a match to do this!");
             return ItemUseResult::FAIL();
         }
-        $session->setMatch(null);
+        $session->setMatch(null, false);
         $session->teleportToLobby();
         return ItemUseResult::SUCCESS();
     }

@@ -16,6 +16,7 @@ use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\world\Position;
+use sergittos\flanbacore\match\FlanbaMatch;
 use sergittos\flanbacore\match\team\Team;
 use sergittos\flanbacore\session\Session;
 use sergittos\flanbacore\session\SessionFactory;
@@ -23,6 +24,12 @@ use sergittos\flanbacore\session\SessionFactory;
 class ClaimListener implements Listener {
 
     public function onPlace(BlockPlaceEvent $event): void {
+        if($this->checkLand(SessionFactory::getSession($event->getPlayer()), $event->getBlock()->getPosition())) {
+            $event->cancel();
+        }
+    }
+
+    public function onBreak(BlockBreakEvent $event): void {
         if($this->checkLand(SessionFactory::getSession($event->getPlayer()), $event->getBlock()->getPosition())) {
             $event->cancel();
         }
@@ -40,9 +47,11 @@ class ClaimListener implements Listener {
             return false;
         }
         $match = $session->getMatch();
-        /** @var Team $team */
-        foreach([$match->getRedTeam(), $match->getBlueTeam()] as $team) {
+        $stage = $match->getStage();
+        foreach($match->getTeams() as $team) {
             if($team->getArea()->isInside($position)) {
+                return true;
+            } elseif($stage === FlanbaMatch::WAITING_STAGE or $stage === FlanbaMatch::COUNTDOWN_STAGE) {
                 return true;
             }
         }

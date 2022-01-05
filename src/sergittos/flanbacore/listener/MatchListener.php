@@ -22,6 +22,7 @@ use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\item\ItemIds;
 use pocketmine\player\Player;
 use sergittos\flanbacore\event\SessionDeathEvent;
+use sergittos\flanbacore\match\FlanbaMatch;
 use sergittos\flanbacore\session\SessionFactory;
 
 class MatchListener implements Listener {
@@ -67,13 +68,18 @@ class MatchListener implements Listener {
             return;
         }
         $match = $session->getMatch();
+        $stage = $match->getStage();
         $position = $player->getPosition();
         if($position->getY() <= $match->getArena()->getVoidLimit()) {
-            $session->teleportToTeamSpawnPoint();
+            if($stage === FlanbaMatch::WAITING_STAGE or $stage === FlanbaMatch::COUNTDOWN_STAGE) {
+                $session->teleportToTeamSpawnPoint(false);
+            } else {
+                $session->teleportToTeamSpawnPoint(true);
+            }
             return;
         }
 
-        if($match->getStage() !== $match::PLAYING_STAGE) {
+        if($stage !== $match::PLAYING_STAGE) {
             return;
         }
         $players = $match->getPlayers();
@@ -114,12 +120,6 @@ class MatchListener implements Listener {
         }
     }
 
-    public function onBreak(BlockBreakEvent $event): void {
-        if($event->getBlock()->getId() !== ItemIds::TERRACOTTA) {
-            $event->cancel();
-        }
-    }
-
     public function onPlace(BlockPlaceEvent $event): void {
         $session = SessionFactory::getSession($event->getPlayer());
         if(!$session->hasMatch()) {
@@ -133,7 +133,11 @@ class MatchListener implements Listener {
     public function onQuit(PlayerQuitEvent $event): void {
         $session = SessionFactory::getSession($event->getPlayer());
         if($session->hasMatch()) {
-            $session->setMatch(null);
+            $finish = false;
+            if($session->getMatch()->getStage() !== FlanbaMatch::WAITING_STAGE) {
+                $finish = true;
+            }
+            $session->setMatch(null, $finish);
         }
     }
 

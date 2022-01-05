@@ -21,7 +21,6 @@ use sergittos\flanbacore\item\presets\GameSelectorItem;
 use sergittos\flanbacore\item\presets\LeaveMatchItem;
 use sergittos\flanbacore\kit\Kit;
 use sergittos\flanbacore\kit\KitFactory;
-use sergittos\flanbacore\kit\TheBridgeKit;
 use sergittos\flanbacore\match\FlanbaMatch;
 use sergittos\flanbacore\match\team\Team;
 use sergittos\flanbacore\utils\ColorUtils;
@@ -70,8 +69,8 @@ class Session {
         return $this->kit !== null;
     }
 
-    public function setMatch(?FlanbaMatch $match): void {
-        $this->match?->removeSession($this);
+    public function setMatch(?FlanbaMatch $match, bool $finish): void {
+        $this->match?->removeSession($this, $finish); // TODO: Fix this
         $this->match = $match;
     }
 
@@ -80,11 +79,11 @@ class Session {
         $this->team = $team;
     }
 
-    private function setKit(?Kit $kit): void {
+    private function setKit(?Kit $kit, DyeColor $color): void {
         if($kit !== null) {
             $this->clearInventory();
-            $this->player->getInventory()->setContents($kit->getItems());
-            $this->player->getArmorInventory()->setContents($kit->getArmorContents());
+            $this->player->getInventory()->setContents($kit->getItems($color));
+            $this->player->getArmorInventory()->setContents($kit->getArmorContents($color));
         }
         $this->kit = $kit;
     }
@@ -99,15 +98,15 @@ class Session {
     }
 
     public function setTheBridgeKit(DyeColor $color): void {
-        $kit = KitFactory::getKitById(Kit::THE_BRIDGE);
-        $kit->setColor($color);
-        $this->setKit($kit);
+        $this->setKit(KitFactory::getKitById(Kit::THE_BRIDGE), $color);
     }
 
-    public function teleportToTeamSpawnPoint(): void {
+    public function teleportToTeamSpawnPoint(bool $give_kit = true): void {
         $this->player->teleport($this->team->getWaitingPoint()); // TODO: Change the position to the spawnpoint
         $this->player->setHealth($this->player->getMaxHealth()); // TODO: Make a function for this?
-        $this->setTheBridgeKit(ColorUtils::colorToDyeColor($this->getTeam()->getColor()));
+        if($give_kit) {
+            $this->setTheBridgeKit(ColorUtils::colorToDyeColor($this->getTeam()->getColor()));
+        }
     }
 
     public function teleportToLobby(): void {

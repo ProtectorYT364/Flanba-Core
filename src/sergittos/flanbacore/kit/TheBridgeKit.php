@@ -13,7 +13,10 @@ namespace sergittos\flanbacore\kit;
 
 use pocketmine\block\BlockFactory;
 use pocketmine\block\BlockLegacyIds;
+use pocketmine\block\utils\DyeColor;
 use pocketmine\block\VanillaBlocks;
+use pocketmine\data\bedrock\DyeColorIdMap;
+use pocketmine\item\Dye;
 use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\item\enchantment\VanillaEnchantments;
 use pocketmine\item\VanillaItems;
@@ -24,18 +27,19 @@ class TheBridgeKit extends Kit {
         return self::THE_BRIDGE;
     }
 
-    public function getArmorContents(): array {
+    public function getArmorContents(DyeColor $color): array {
         $unbreaking = new EnchantmentInstance(VanillaEnchantments::UNBREAKING(), 10);
+        $color = $color->getRgbValue();
         return [
-            VanillaItems::LEATHER_CAP()->addEnchantment($unbreaking),
-            VanillaItems::LEATHER_TUNIC()->addEnchantment($unbreaking),
-            VanillaItems::LEATHER_PANTS()->addEnchantment($unbreaking),
-            VanillaItems::LEATHER_BOOTS()->addEnchantment($unbreaking)
+            VanillaItems::LEATHER_CAP()->setCustomColor($color)->addEnchantment($unbreaking),
+            VanillaItems::LEATHER_TUNIC()->setCustomColor($color)->addEnchantment($unbreaking),
+            VanillaItems::LEATHER_PANTS()->setCustomColor($color)->addEnchantment($unbreaking),
+            VanillaItems::LEATHER_BOOTS()->setCustomColor($color)->addEnchantment($unbreaking)
         ];
     }
 
-    public function getItems(): array {
-        $terracotta = BlockFactory::getInstance()->get(BlockLegacyIds::TERRACOTTA, 0)->asItem();
+    public function getItems(DyeColor $color): array {
+        $terracotta = BlockFactory::getInstance()->get(BlockLegacyIds::TERRACOTTA, DyeColorIdMap::getInstance()->toId($color))->asItem();
         $blocks = $terracotta->setCount($terracotta->getMaxStackSize());
         $air = VanillaBlocks::AIR()->asItem();
         return [

@@ -14,7 +14,9 @@ namespace sergittos\flanbacore\kit;
 use pocketmine\block\BlockLegacyIds;
 use pocketmine\block\utils\DyeColor;
 use pocketmine\block\VanillaBlocks;
+use pocketmine\data\bedrock\DyeColorIdMap;
 use pocketmine\item\Armor;
+use pocketmine\item\Durable;
 use pocketmine\item\Item;
 use pocketmine\item\ItemIdentifier;
 use pocketmine\item\ItemIds;
@@ -30,29 +32,15 @@ abstract class Kit {
     /**
      * @return Armor[]
      */
-    abstract public function getArmorContents(): array;
+    abstract public function getArmorContents(DyeColor $color): array;
 
     /**
      * @return Item[]
      */
-    abstract public function getItems(): array; // TODO: Change the function name?
+    abstract public function getItems(DyeColor $color): array; // TODO: Change the function name?
 
     public function getColor(): DyeColor {
         return $this->color;
-    }
-
-    public function setColor(DyeColor $color): void {
-        foreach($this->getArmorContents() as $armor) {
-            $armor->setCustomColor($color->getRgbValue());
-
-        }
-        $items = $this->getItems();
-        foreach($items as $item) {
-            if($item->getId() === BlockLegacyIds::TERRACOTTA) {
-                // TODO: Change item color
-            }
-        }
-        $this->color = $color;
     }
 
 }

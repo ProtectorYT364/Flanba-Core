@@ -25,7 +25,7 @@ use sergittos\flanbacore\utils\scoreboard\presets\match\WaitingPlayersScoreboard
 class FlanbaMatch {
 
     public const WAITING_STAGE = 0;
-    private const COUNTDOWN_STAGE = 1;
+    public const COUNTDOWN_STAGE = 1;
     private const STARTING_STAGE = 2;
     public const OPENING_CAGES_STAGE= 3;
     public const PLAYING_STAGE = 4;
@@ -141,7 +141,7 @@ class FlanbaMatch {
                 $team = $teams[1];
             }
             $team->addMember($session);
-            $session->setMatch($this);
+            $session->setMatch($this, false);
             $session->setTeam($team);
             $session->addLeaveMatchItem();
             $session->getPlayer()->teleport($team->getWaitingPoint());
@@ -160,9 +160,11 @@ class FlanbaMatch {
         // TODO: Clean this
     }
 
-    public function removeSession(Session $session): void {
+    public function removeSession(Session $session, bool $finish = true): void {
         if($this->isPlaying($session)) {
-            $this->finish($this->red_team->hasMember($session) ? $this->blue_team : $this->red_team, $session->getTeam());
+            if($finish) {
+                $this->finish($this->red_team->hasMember($session) ? $this->blue_team : $this->red_team, $session->getTeam());
+            }
             $session->setTeam(null);
         }
     }
@@ -244,10 +246,12 @@ class FlanbaMatch {
                 $this->countdown--;
                 if($this->countdown <= 0) {
                     $this->reset();
+                    echo "reset done\n";
                 } elseif($this->countdown === 6) {
                     foreach($this->getPlayersAndSpectators() as $session) {
-                        $session->setMatch(null);
+                        $session->setMatch(null, false);
                         $session->teleportToLobby();
+                        echo "teleport has been done\n";
                     }
                 }
                 break;
@@ -302,9 +306,10 @@ class FlanbaMatch {
                 $color . $winner_team->getScoreNumber() . " {WHITE}- " .
                 $loser_team->getColor() . $loser_team->getScoreNumber()
             );
-            $player->updateScoreboard();
             $player->teleportToTeamSpawnPoint();
+            $player->updateScoreboard();
         }
+        $this->countdown = ConfigGetter::getEndingSeconds();
         $this->stage = self::ENDING_STAGE;
     }
 

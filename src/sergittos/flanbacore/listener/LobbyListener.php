@@ -18,13 +18,17 @@ use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerJoinEvent;
+use pocketmine\event\player\PlayerMoveEvent;
 use sergittos\flanbacore\session\SessionFactory;
 use sergittos\flanbacore\utils\ConfigGetter;
 
 class LobbyListener implements Listener {
 
     public function onJoin(PlayerJoinEvent $event): void {
-        SessionFactory::getSession($event->getPlayer())->teleportToLobby();
+        SessionFactory::getSession($player = $event->getPlayer())->teleportToLobby();
+        $hunger_manager = $player->getHungerManager();
+        $hunger_manager->setFood($hunger_manager->getMaxFood());
+        $hunger_manager->setEnabled(false);
     }
 
     public function onDamage(EntityDamageEvent $event): void {

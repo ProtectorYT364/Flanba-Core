@@ -246,12 +246,10 @@ class FlanbaMatch {
                 $this->countdown--;
                 if($this->countdown <= 0) {
                     $this->reset();
-                    echo "reset done\n";
                 } elseif($this->countdown === 6) {
                     foreach($this->getPlayersAndSpectators() as $session) {
                         $session->setMatch(null, false);
                         $session->teleportToLobby();
-                        echo "teleport has been done\n";
                     }
                 }
                 break;

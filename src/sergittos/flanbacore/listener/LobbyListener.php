@@ -56,12 +56,6 @@ class LobbyListener implements Listener {
         }
     }
 
-    public function onChat(PlayerChatEvent $event): void {
-        foreach(FlanbaCore::getInstance()->getQueueManager()->getQueues() as $queue) {
-            $queue->addSession(SessionFactory::getSession($event->getPlayer()));
-        }
-    }
-
     public function onMove(PlayerMoveEvent $event): void {
         $hunger_manager = $event->getPlayer()->getHungerManager();
         $hunger_manager->setFood($hunger_manager->getMaxFood());

@@ -192,6 +192,7 @@ class FlanbaMatch {
                 if($this->countdown <= 1) {
                     foreach($players as $session) {
                         $session->teleportToTeamSpawnPoint();
+                        $session->updateNameTag();
                         $session->setImmobile(); // TODO: Change this to a cage
                         $session->setScoreboard(new PlayingScoreboard($session, $this));
                         $session->setTheBridgeKit(ColorUtils::colorToDyeColor($session->getTeam()->getColor()));

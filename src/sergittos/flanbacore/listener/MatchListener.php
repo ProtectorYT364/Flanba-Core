@@ -16,6 +16,7 @@ use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
+use pocketmine\event\entity\EntityRegainHealthEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\event\player\PlayerQuitEvent;
@@ -52,13 +53,22 @@ class MatchListener implements Listener {
             return;
         }
         $session = SessionFactory::getSession($entity);
+        $session->updateNameTag();
+        if($event->getCause() === EntityDamageEvent::CAUSE_FALL) {
+            $event->cancel();
+            return;
+        }
         if($session->hasMatch() and $entity->getHealth() - $event->getFinalDamage() <= 0) {
             $death_event = new SessionDeathEvent($session);
             $death_event->call();
             $event->cancel();
         }
-        if($event->getCause() === EntityDamageEvent::CAUSE_FALL) {
-            $event->cancel();
+    }
+
+    public function onRegainHealth(EntityRegainHealthEvent $event): void {
+        $entity = $event->getEntity();
+        if($entity instanceof Player) {
+            SessionFactory::getSession($entity)->updateNameTag();
         }
     }
 

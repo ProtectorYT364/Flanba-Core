@@ -55,8 +55,11 @@ abstract class Queue {
     }
 
     private function getRandomMatch(): ?FlanbaMatch {
-        foreach(FlanbaCore::getInstance()->getMatchManager()->getMatches() as $match) {
-            if($match->getStage() === $match::WAITING_STAGE) {
+        $matches = FlanbaCore::getInstance()->getMatchManager()->getMatches();
+        shuffle($matches);
+
+        foreach($matches as $match) {
+            if($match->getStage() === FlanbaMatch::WAITING_STAGE) {
                 return $match;
             }
         }

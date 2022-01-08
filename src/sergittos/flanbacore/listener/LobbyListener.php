@@ -16,16 +16,20 @@ use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerMoveEvent;
+use sergittos\flanbacore\FlanbaCore;
 use sergittos\flanbacore\session\SessionFactory;
 use sergittos\flanbacore\utils\ConfigGetter;
 
 class LobbyListener implements Listener {
 
     public function onJoin(PlayerJoinEvent $event): void {
-        SessionFactory::getSession($player = $event->getPlayer())->teleportToLobby();
+        $session = SessionFactory::getSession($player = $event->getPlayer());
+        $session->teleportToLobby();
+        $session->updateNameTag();
         $hunger_manager = $player->getHungerManager();
         $hunger_manager->setFood($hunger_manager->getMaxFood());
         $hunger_manager->setEnabled(false);
@@ -52,6 +56,12 @@ class LobbyListener implements Listener {
     public function onInteract(PlayerInteractEvent $event): void {
         if($event->getAction() === PlayerInteractEvent::RIGHT_CLICK_BLOCK and $this->checkLobby($event->getPlayer())) {
             $event->cancel();
+        }
+    }
+
+    public function onChat(PlayerChatEvent $event): void {
+        foreach(FlanbaCore::getInstance()->getQueueManager()->getQueues() as $queue) {
+            $queue->addSession(SessionFactory::getSession($event->getPlayer()));
         }
     }
 

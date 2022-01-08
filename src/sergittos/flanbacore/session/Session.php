@@ -97,6 +97,18 @@ class Session {
         $this->setScoreboard($this->scoreboard);
     }
 
+    public function updateNameTag(): void {
+        $username = $this->getUsername();
+        if($this->hasMatch() and $this->hasTeam()) {
+            $this->player->setNameTag(ColorUtils::translate(
+                $this->team->getColor() . $username . "\n" .
+                "{WHITE}{BOLD}" . (int) $this->player->getHealth() . " {RED}❤"
+            ));
+        } else {
+            $this->player->setNameTag(ColorUtils::translate("{GRAY}$username"));
+        }
+    }
+
     public function setTheBridgeKit(DyeColor $color): void {
         $this->setKit(KitFactory::getKitById(Kit::THE_BRIDGE), $color);
     }
@@ -104,6 +116,7 @@ class Session {
     public function teleportToTeamSpawnPoint(bool $give_kit = true): void {
         $this->player->teleport($this->team->getWaitingPoint()); // TODO: Change the position to the spawnpoint
         $this->player->setHealth($this->player->getMaxHealth()); // TODO: Make a function for this?
+        $this->updateNameTag();
         if($give_kit) {
             $this->setTheBridgeKit(ColorUtils::colorToDyeColor($this->getTeam()->getColor()));
         }
@@ -116,6 +129,7 @@ class Session {
         $this->player->getEffects()->clear();
         $this->player->setGamemode(GameMode::SURVIVAL());
         $this->setLobbyItems();
+        $this->updateNameTag();
         $this->setScoreboard(new LobbyScoreboard($this));
 
         $this->player->teleport(Server::getInstance()->getWorldManager()->getWorldByName(ConfigGetter::getLobbyWorldName())->getSafeSpawn());
@@ -131,6 +145,7 @@ class Session {
 
         $inventory = $this->player->getInventory();
         $inventory->setItem(4, new GameSelectorItem());
+
     }
 
     private function clearInventory(): void {
@@ -147,7 +162,7 @@ class Session {
     }
 
     public function getPing(): int {
-        return $this->player->getNetworkSession()->getPing();
+        return $this->player->getNetworkSession()->getPing() ?? 0;
     }
 
     public function getUsername(): string {

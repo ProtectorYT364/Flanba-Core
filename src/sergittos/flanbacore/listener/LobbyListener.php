@@ -27,12 +27,9 @@ use sergittos\flanbacore\utils\ConfigGetter;
 class LobbyListener implements Listener {
 
     public function onJoin(PlayerJoinEvent $event): void {
-        $session = SessionFactory::getSession($player = $event->getPlayer());
+        $session = SessionFactory::getSession($event->getPlayer());
         $session->teleportToLobby();
         $session->updateNameTag();
-        $hunger_manager = $player->getHungerManager();
-        $hunger_manager->setFood($hunger_manager->getMaxFood());
-        $hunger_manager->setEnabled(false);
     }
 
     public function onDamage(EntityDamageEvent $event): void {
@@ -63,6 +60,11 @@ class LobbyListener implements Listener {
         foreach(FlanbaCore::getInstance()->getQueueManager()->getQueues() as $queue) {
             $queue->addSession(SessionFactory::getSession($event->getPlayer()));
         }
+    }
+
+    public function onMove(PlayerMoveEvent $event): void {
+        $hunger_manager = $event->getPlayer()->getHungerManager();
+        $hunger_manager->setFood($hunger_manager->getMaxFood());
     }
 
     private function checkLobby(Entity $entity): bool {

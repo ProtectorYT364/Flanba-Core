@@ -16,16 +16,13 @@ use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerItemUseEvent;
 use pocketmine\item\Item;
 use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
-use pocketmine\network\mcpe\protocol\LevelSoundEventPacketV1;
-use pocketmine\network\mcpe\protocol\LevelSoundEventPacketV2;
-use pocketmine\network\mcpe\protocol\PlaySoundPacket;
 use pocketmine\network\mcpe\protocol\types\LevelSoundEvent;
 
 class ItemListener implements Listener {
 
     public function onTransaction(InventoryTransactionEvent $event): void {
         foreach($event->getTransaction()->getActions() as $action) {
-            if($this->hasFlanbaTag($action->getSourceItem()) !== null) {
+            if($this->hasFlanbaTag($action->getSourceItem())) {
                 $event->cancel();
             }
         }

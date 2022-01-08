@@ -25,3 +25,9 @@ opening-cages-seconds: 5
 
 # The seconds that will the match wait to end
 ending-seconds: 5
+
+# The cooldown that has the bow
+bow-cooldown: 3
+
+# The cooldown that has the gapple
+gapple-cooldown: 5

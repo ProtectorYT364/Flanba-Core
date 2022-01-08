@@ -11,20 +11,25 @@ declare(strict_types=1);
 namespace sergittos\flanbacore\listener;
 
 
-use pocketmine\block\GlazedTerracotta;
-use pocketmine\event\block\BlockBreakEvent;
+use pocketmine\entity\projectile\Arrow;
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityRegainHealthEvent;
+use pocketmine\event\entity\EntityShootBowEvent;
+use pocketmine\event\entity\ProjectileHitBlockEvent;
 use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerItemConsumeEvent;
 use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\event\player\PlayerQuitEvent;
-use pocketmine\item\ItemIds;
+use pocketmine\item\GoldenApple;
 use pocketmine\player\Player;
 use sergittos\flanbacore\event\SessionDeathEvent;
 use sergittos\flanbacore\match\FlanbaMatch;
 use sergittos\flanbacore\session\SessionFactory;
+use sergittos\flanbacore\utils\cooldown\BowCooldown;
+use sergittos\flanbacore\utils\cooldown\Cooldown;
+use sergittos\flanbacore\utils\cooldown\GappleCooldown;
 
 class MatchListener implements Listener {
 
@@ -69,6 +74,45 @@ class MatchListener implements Listener {
         $entity = $event->getEntity();
         if($entity instanceof Player) {
             SessionFactory::getSession($entity)->updateNameTag();
+        }
+    }
+
+    public function onConsume(PlayerItemConsumeEvent $event): void {
+        $session = SessionFactory::getSession($player = $event->getPlayer());
+        if(!$session->hasMatch()) {
+            return;
+        }
+        if($event->getItem() instanceof GoldenApple) {
+            if($session->hasCooldown(Cooldown::GAPPLE)) {
+                $event->cancel();
+                return;
+            }
+            $player->setHealth($player->getMaxHealth());
+            $player->getEffects()->clear();
+            $session->addCooldown(new GappleCooldown());
+        }
+    }
+
+    public function onShoot(EntityShootBowEvent $event): void {
+        $entity = $event->getEntity();
+        if(!$entity instanceof Player) {
+            return;
+        }
+        $session = SessionFactory::getSession($entity);
+        if(!$session->hasMatch()) {
+            return;
+        }
+        if($session->hasCooldown(Cooldown::BOW)) {
+            $event->cancel();
+            return;
+        }
+        $session->addCooldown(new BowCooldown());
+    }
+
+    public function onHitBlock(ProjectileHitBlockEvent $event): void {
+        $entity = $event->getEntity();
+        if($entity instanceof Arrow) {
+            $entity->kill();
         }
     }
 

@@ -25,6 +25,7 @@ use sergittos\flanbacore\match\FlanbaMatch;
 use sergittos\flanbacore\match\team\Team;
 use sergittos\flanbacore\utils\ColorUtils;
 use sergittos\flanbacore\utils\ConfigGetter;
+use sergittos\flanbacore\utils\cooldown\Cooldown;
 use sergittos\flanbacore\utils\scoreboard\presets\LobbyScoreboard;
 use sergittos\flanbacore\utils\scoreboard\Scoreboard;
 
@@ -36,6 +37,9 @@ class Session {
     private Team|null $team = null;
     private Kit|null $kit = null;
     private Scoreboard|null $scoreboard = null;
+
+    /** @var Cooldown[] */
+    private array $cooldowns = [];
 
     public function __construct(Player $player) {
         $this->player = $player;
@@ -49,24 +53,43 @@ class Session {
         return $this->match;
     }
 
-    public function hasMatch(): bool {
-        return $this->match !== null;
-    }
-
     public function getTeam(): ?Team {
         return $this->team;
-    }
-
-    public function hasTeam(): bool {
-        return $this->team !== null;
     }
 
     public function getKit(): ?Kit {
         return $this->kit;
     }
 
+    public function getScoreboard(): ?Scoreboard {
+        return $this->scoreboard;
+    }
+
+    /**
+     * @return Cooldown[]
+     */
+    public function getCooldowns(): array {
+        return $this->cooldowns;
+    }
+
+    public function getCooldownById(string $id): ?Cooldown {
+        return $this->cooldowns[$id] ?? null;
+    }
+
+    public function hasMatch(): bool {
+        return $this->match !== null;
+    }
+
+    public function hasTeam(): bool {
+        return $this->team !== null;
+    }
+
     public function hasKit(): bool {
         return $this->kit !== null;
+    }
+
+    public function hasCooldown(string $id): bool {
+        return array_key_exists($id, $this->cooldowns);
     }
 
     public function setMatch(?FlanbaMatch $match, bool $finish): void {
@@ -88,6 +111,10 @@ class Session {
         $this->kit = $kit;
     }
 
+    public function setTheBridgeKit(DyeColor $color): void {
+        $this->setKit(KitFactory::getKitById(Kit::THE_BRIDGE), $color);
+    }
+
     public function setScoreboard(?Scoreboard $scoreboard): void {
         $this->scoreboard = $scoreboard;
         $scoreboard?->show();
@@ -95,6 +122,20 @@ class Session {
 
     public function updateScoreboard(): void {
         $this->setScoreboard($this->scoreboard);
+    }
+
+    public function addCooldown(Cooldown $cooldown): void {
+        $this->cooldowns[$cooldown->getId()]  = $cooldown;
+        $cooldown->setSession($this);
+        $this->message("{RED}>> " . $cooldown->getId() . " is now on cooldown.");
+    }
+
+    public function removeCooldown(Cooldown $cooldown): void {
+        $id = $cooldown->getId();
+        if($this->hasCooldown($id)) {
+            unset($this->cooldowns[$id]);
+            $this->message("{GREEN}>> " . $cooldown->getId() . " is out of cooldown");
+        }
     }
 
     public function updateNameTag(): void {
@@ -109,13 +150,10 @@ class Session {
         }
     }
 
-    public function setTheBridgeKit(DyeColor $color): void {
-        $this->setKit(KitFactory::getKitById(Kit::THE_BRIDGE), $color);
-    }
-
     public function teleportToTeamSpawnPoint(bool $give_kit = true): void {
         $this->player->teleport($this->team->getWaitingPoint()); // TODO: Change the position to the spawnpoint
         $this->player->setHealth($this->player->getMaxHealth()); // TODO: Make a function for this?
+        $this->player->getEffects()->clear();
         $this->updateNameTag();
         if($give_kit) {
             $this->setTheBridgeKit(ColorUtils::colorToDyeColor($this->getTeam()->getColor()));
@@ -126,7 +164,7 @@ class Session {
         $hunger_manager = $this->player->getHungerManager();
         $hunger_manager->setFood($hunger_manager->getMaxFood());
         $this->player->setHealth($this->player->getMaxHealth());
-        $this->player->getEffects()->clear();
+        $this->player->getEffects()->clear(); // TODO: Make a function for this?
         $this->player->setGamemode(GameMode::SURVIVAL());
         $this->setLobbyItems();
         $this->updateNameTag();

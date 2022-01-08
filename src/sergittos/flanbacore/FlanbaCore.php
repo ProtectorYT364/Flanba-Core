@@ -29,7 +29,7 @@ use sergittos\flanbacore\listener\LobbyListener;
 use sergittos\flanbacore\listener\MatchListener;
 use sergittos\flanbacore\listener\PartyListener;
 use sergittos\flanbacore\listener\SessionListener;
-use sergittos\flanbacore\match\MatchHeartbeat;
+use sergittos\flanbacore\listener\SlotsListener;
 use sergittos\flanbacore\match\MatchManager;
 use sergittos\flanbacore\provider\presets\JsonProvider;
 use sergittos\flanbacore\provider\presets\SqliteProvider;
@@ -71,8 +71,9 @@ class FlanbaCore extends PluginBase {
         $this->registerListener(new MatchListener());
         $this->registerListener(new PartyListener());
         $this->registerListener(new SessionListener());
+        $this->registerListener(new SlotsListener());
 
-        $this->getScheduler()->scheduleRepeatingTask(new MatchHeartbeat(), 20); // 1 second
+        $this->getScheduler()->scheduleRepeatingTask(new FlanbaHeartbeat(), 20); // 1 second
         $this->doMuqsitThings();
     }
 

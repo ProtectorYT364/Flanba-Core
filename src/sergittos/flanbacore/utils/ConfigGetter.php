@@ -30,8 +30,16 @@ class ConfigGetter {
         return self::get("lobby-world");
     }
 
+    static public function getScoreboardTitle(): string {
+        return self::get("scoreboard-title");
+    }
+
     static public function getKnockback(): float {
         return (float) self::get("knockback");
+    }
+
+    static public function getProvider(): string {
+        return self::get("provider");
     }
 
     static public function getAttackCooldown(): int {
@@ -54,8 +62,12 @@ class ConfigGetter {
         return self::get("ending-seconds") + 6;
     }
 
-    static public function getScoreboardTitle(): string {
-        return self::get("scoreboard-title");
+    static public function getBowCooldownSeconds(): int {
+        return self::get("bow-cooldown");
+    }
+
+    static public function getGappleCooldownSeconds(): int {
+        return self::get("gapple-cooldown");
     }
 
 }

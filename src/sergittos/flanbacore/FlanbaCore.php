@@ -17,7 +17,10 @@ use pocketmine\command\Command;
 use pocketmine\event\Listener;
 use pocketmine\network\mcpe\NetworkSession;
 use pocketmine\network\mcpe\protocol\ContainerClosePacket;
+use pocketmine\network\mcpe\raklib\RakLibInterface;
 use pocketmine\plugin\PluginBase;
+use pocketmine\scheduler\Task;
+use pocketmine\Server;
 use pocketmine\utils\ServerException;
 use pocketmine\utils\SingletonTrait;
 use sergittos\flanbacore\arena\ArenaFactory;
@@ -97,6 +100,19 @@ class FlanbaCore extends PluginBase {
             ->interceptOutgoing(function(ContainerClosePacket $packet, NetworkSession $session) use (&$send): bool {
                 return $send;
             });
+
+        $this->getScheduler()->scheduleRepeatingTask(new class extends Task {
+
+            public function onRun(): void {
+                foreach(Server::getInstance()->getNetwork()->getInterfaces() as $interface) {
+                    if($interface instanceof RakLibInterface) {
+                        $interface->setPacketLimit(PHP_INT_MAX);
+                        $this->getHandler()?->cancel();
+                    }
+                }
+            }
+
+        }, 20);
     }
 
     private function initProvider(): void {

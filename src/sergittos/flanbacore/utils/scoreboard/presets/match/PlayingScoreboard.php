@@ -27,18 +27,18 @@ class PlayingScoreboard extends Scoreboard {
     public function getLines(): array {
         $team = $this->session->getTeam();
         return [
-            " {GRAY}" . date("d/m/y"),
+            "{GRAY}" . date("d/m/y"),
             " ",
-            " {WHITE}Time left: {GREEN}" . gmdate("i:s", $this->match->getTimeLeft()),
+            "{WHITE}Time left: {GREEN}" . gmdate("i:s", $this->match->getTimeLeft()),
             "  ",
-            " {RED}[R] {BOLD}" . $this->match->getRedTeam()->getScore(),
-            " {BLUE}[B] {BOLD}" . $this->match->getBlueTeam()->getScore(),
+            "{RED}[R] {BOLD}" . $this->match->getRedTeam()->getScore(),
+            "{BLUE}[B] {BOLD}" . $this->match->getBlueTeam()->getScore(),
             "   ",
-            " {WHITE}Mode: {GREEN}The Bridge Duel",
-            " {WHITE}Kills: {GREEN}" . $team->getKills(),
-            " {WHITE}Goals: {GREEN}" . $team->getScoreNumber(),
+            "{WHITE}Mode: {GREEN}The Bridge Duel",
+            "{WHITE}Kills: {GREEN}" . $team->getKills(),
+            "{WHITE}Goals: {GREEN}" . $team->getScoreNumber(),
             "    ",
-            " {YELLOW}play.flanba.com"
+            "{YELLOW}play.flanba.com"
         ];
     }
 

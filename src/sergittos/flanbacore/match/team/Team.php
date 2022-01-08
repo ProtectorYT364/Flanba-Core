@@ -105,4 +105,9 @@ class Team {
         unset($this->members[array_search($member, $this->members, true)]);
     }
 
+    public function reset(): void {
+        $this->score = 0;
+        $this->kills = 0;
+    }
+
 }

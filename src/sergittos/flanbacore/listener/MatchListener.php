@@ -89,6 +89,7 @@ class MatchListener implements Listener {
             }
             $player->setHealth($player->getMaxHealth());
             $player->getEffects()->clear();
+            $session->updateNameTag();
             $session->addCooldown(new GappleCooldown());
         }
     }

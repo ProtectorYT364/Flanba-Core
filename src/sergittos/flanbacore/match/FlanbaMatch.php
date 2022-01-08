@@ -295,6 +295,10 @@ class FlanbaMatch {
         $this->arena->reset();
         $this->stage = self::WAITING_STAGE;
         $this->countdown = ConfigGetter::getCountdownSeconds();
+        $this->time_left = $this->arena->getTimeLeft();
+
+        $this->red_team->reset();
+        $this->blue_team->reset();
     }
 
     public function finish(Team $winner_team, Team $loser_team): void {

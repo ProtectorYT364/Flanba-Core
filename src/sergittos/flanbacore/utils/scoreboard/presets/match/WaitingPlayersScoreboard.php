@@ -26,14 +26,14 @@ class WaitingPlayersScoreboard extends Scoreboard {
 
     public function getLines(): array {
         return [
-            "{GRAY}" . date("d/m/y") . "   ",
+            " {GRAY}" . date("d/m/y"),
             " ",
-            "{WHITE}Map: {GREEN}" . $this->match->getArena()->getWorld()->getDisplayName() . "   ",
-            "{WHITE}Players: {GREEN}" . $this->match->getPlayersCount() . "/2   ",
+            " {WHITE}Map: {GREEN}" . $this->match->getArena()->getWorld()->getDisplayName(),
+            " {WHITE}Players: {GREEN}" . $this->match->getPlayersCount(),
             "  ",
-            "{WHITE}Waiting...   ",
+            " {WHITE}Waiting...",
             "   ",
-            "{YELLOW}play.flanba.com   "
+            " {YELLOW}play.flanba.com"
         ];
     }
 

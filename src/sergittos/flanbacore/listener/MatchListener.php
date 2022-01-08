@@ -23,6 +23,7 @@ use pocketmine\event\player\PlayerItemConsumeEvent;
 use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\item\GoldenApple;
+use pocketmine\player\GameMode;
 use pocketmine\player\Player;
 use sergittos\flanbacore\event\SessionDeathEvent;
 use sergittos\flanbacore\match\FlanbaMatch;
@@ -155,6 +156,9 @@ class MatchListener implements Listener {
             } else {
                 $match->setSessionScored($session);
                 $match->setStage($match::OPENING_CAGES_STAGE);
+                foreach($players as $player) {
+                    $player->getPlayer()->setGamemode(GameMode::ADVENTURE());
+                }
             }
 
             $countdown = $match->getCountdown();

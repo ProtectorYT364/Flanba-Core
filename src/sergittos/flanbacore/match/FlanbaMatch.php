@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace sergittos\flanbacore\match;
 
 
+use pocketmine\player\GameMode;
 use sergittos\flanbacore\arena\Arena;
 use sergittos\flanbacore\kit\Kit;
 use sergittos\flanbacore\kit\KitFactory;
@@ -196,6 +197,7 @@ class FlanbaMatch {
                         $session->setImmobile(); // TODO: Change this to a cage
                         $session->setScoreboard(new PlayingScoreboard($session, $this));
                         $session->setTheBridgeKit(ColorUtils::colorToDyeColor($session->getTeam()->getColor()));
+                        $session->getPlayer()->setGamemode(GameMode::ADVENTURE());
                         $session->title(" ", "{GRAY}Cages open in {GREEN}5s{GRAY}...");
                     }
                     $this->stage = self::STARTING_STAGE;
@@ -218,6 +220,9 @@ class FlanbaMatch {
                     $this->start();
                     $this->stage = self::PLAYING_STAGE;
                     $this->countdown = ConfigGetter::getOpeningCagesSeconds();
+                    foreach($players as $session) {
+                        $session->getPlayer()->setGamemode(GameMode::SURVIVAL()); // TODO: Make a function for this
+                    }
                 } else {
                     $this->broadcastSubTitle("{GRAY}Cages open in {GREEN}{$this->countdown}s{GRAY}...");
                 }
@@ -234,6 +239,9 @@ class FlanbaMatch {
                     $this->start();
                     $this->stage = self::PLAYING_STAGE;
                     $this->countdown = ConfigGetter::getOpeningCagesSeconds();
+                    foreach($players as $session) {
+                        $session->getPlayer()->setGamemode(GameMode::SURVIVAL());
+                    }
                 } else {
                     $this->broadcastTitle(
                         $this->session_scored->getTeam()->getColor() . $this->session_scored->getUsername() . " scored!",
@@ -281,13 +289,12 @@ class FlanbaMatch {
 
     private function start(): void {
         foreach($this->getPlayers() as $session) {
-            $session->title(" ", "{GREEN}Fight!");
-            $session->setImmobile(false); // TODO: Change this to a cage
-            // TODO: Set kit
-
             $player = $session->getPlayer();
             $player->removeTitles();
             $player->resetTitles();
+
+            $session->title(" ", "{GREEN}Fight!");
+            $session->setImmobile(false); // TODO: Change this to a cage
         }
     }
 

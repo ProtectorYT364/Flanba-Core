@@ -165,7 +165,7 @@ class Session {
         $hunger_manager->setFood($hunger_manager->getMaxFood());
         $this->player->setHealth($this->player->getMaxHealth());
         $this->player->getEffects()->clear(); // TODO: Make a function for this?
-        $this->player->setGamemode(GameMode::SURVIVAL());
+        $this->player->setGamemode(GameMode::ADVENTURE());
         $this->setLobbyItems();
         $this->updateNameTag();
         $this->setScoreboard(new LobbyScoreboard($this));
@@ -175,7 +175,7 @@ class Session {
 
     public function addLeaveMatchItem(): void {
         $this->clearInventory();
-        $this->player->getInventory()->setItem(8, new LeaveMatchItem());
+        $this->player->getInventory()->setItem(7, new LeaveMatchItem());
     }
 
     private function setLobbyItems(): void {

@@ -155,7 +155,7 @@ class FlanbaMatch {
             } else {
                 $session->setScoreboard(new WaitingPlayersScoreboard($session, $this));
             }
-            $this->broadcastMessage("{GRAY}{$session->getUsername()} {YELLOW}has joined ({AQUA}{$this->getPlayersCount()}{YELLOW}/{AQUA}2{YELLOW})!");
+            $this->broadcastMessage("{GRAY}§k{$session->getUsername()} §r{YELLOW}has joined ({AQUA}{$this->getPlayersCount()}{YELLOW}/{AQUA}2{YELLOW})!");
         }
 
         // TODO: Clean this
@@ -244,7 +244,7 @@ class FlanbaMatch {
                     }
                 } else {
                     $this->broadcastTitle(
-                        $this->session_scored->getTeam()->getColor() . $this->session_scored->getUsername() . "§f scored!",
+                        $this->session_scored->getTeam()->getColor() . $this->session_scored->getUsername() . "§f {WHITE}scored!",
                         "{GRAY}Cages open in {GREEN}{$this->countdown}s{GRAY}..."
                     );
                 }

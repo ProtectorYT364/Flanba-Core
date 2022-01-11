@@ -244,7 +244,7 @@ class FlanbaMatch {
                     }
                 } else {
                     $this->broadcastTitle(
-                        $this->session_scored->getTeam()->getColor() . $this->session_scored->getUsername() . " scored!",
+                        $this->session_scored->getTeam()->getColor() . $this->session_scored->getUsername() . "§f scored!",
                         "{GRAY}Cages open in {GREEN}{$this->countdown}s{GRAY}..."
                     );
                 }

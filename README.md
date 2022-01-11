@@ -5,13 +5,13 @@
 
 * BRIDGE Basics
 
-  - Goal system (block id for red team goal, and blue team goal, just like what Phqzing did)
+  - (done) Goal system (block id for red team goal, and blue team goal, just like what Phqzing did)
   - 1v1, 2v2. 3v3, 4v4
-  - Safezone
-  - height limit
+  - (done) Safezone
+  - (done) height limit
   - customizable inventory 
-  - bow cooldown (with moving xp bar as counter)
-  - gapple cooldown (moving xp bar)
+  - (done)bow cooldown (with moving xp bar as counter)
+  - (done)gapple cooldown (moving xp bar)
   - give  coins whenver u goal
   - Leveling System (also display ur level on ur xp bar)
   - Prestige system (Iron, Gold, Diamond, Amethyst, Godlike, bridge #1, bridge #2, bridge #3)    (can be unlock if u reach certain amount pf wins)

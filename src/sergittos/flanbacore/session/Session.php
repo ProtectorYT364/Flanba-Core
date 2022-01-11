@@ -19,6 +19,12 @@ use pocketmine\Server;
 use sergittos\flanbacore\FlanbaCore;
 use sergittos\flanbacore\item\presets\GameSelectorItem;
 use sergittos\flanbacore\item\presets\LeaveMatchItem;
+use sergittos\flanbacore\item\presets\ProfileItem;
+use sergittos\flanbacore\item\presets\SettingsItem;
+use sergittos\flanbacore\item\presets\ShopItem;
+use sergittos\flanbacore\item\presets\SpectateItem;
+use sergittos\flanbacore\item\presets\PartyItem;
+use sergittos\flanbacore\item\presets\UnlockedItem;
 use sergittos\flanbacore\kit\Kit;
 use sergittos\flanbacore\kit\KitFactory;
 use sergittos\flanbacore\match\FlanbaMatch;
@@ -182,7 +188,13 @@ class Session {
         $this->clearInventory();
 
         $inventory = $this->player->getInventory();
-        $inventory->setItem(4, new GameSelectorItem());
+        $inventory->setItem(0, new ShopItem());
+		$inventory->setItem(1, new UnlockedItem());
+		$inventory->setItem(2, new SpectateItem());
+		$inventory->setItem(4, new GameSelectorItem());
+		$inventory->setItem(6, new PartyItem());
+		$inventory->setItem(7, new ProfileItem());
+		$inventory->setItem(8, new SettingsItem());
 
     }
 

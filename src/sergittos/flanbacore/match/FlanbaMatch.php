@@ -155,7 +155,7 @@ class FlanbaMatch {
             } else {
                 $session->setScoreboard(new WaitingPlayersScoreboard($session, $this));
             }
-            $this->broadcastMessage("{GRAY}§k{$session->getUsername()} §r{YELLOW}has joined ({AQUA}{$this->getPlayersCount()}{YELLOW}/{AQUA}2{YELLOW})!");
+            $this->broadcastMessage("{GRAY}§k{$session->getUsername()}§r {YELLOW}has joined ({AQUA}{$this->getPlayersCount()}{YELLOW}/{AQUA}2{YELLOW})!");
         }
 
         // TODO: Clean this

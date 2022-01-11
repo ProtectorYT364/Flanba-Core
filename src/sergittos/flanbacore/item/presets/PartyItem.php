@@ -20,11 +20,11 @@ use sergittos\flanbacore\item\FlanbaItem;
 class PartyItem extends FlanbaItem {
 
     public function __construct() {
-        parent::__construct("Party", ItemIds::NETHER_STAR);
+        parent::__construct("{GOLD}Party", ItemIds::NETHER_STAR);
     }
 
     public function onClickAir(Player $player, Vector3 $directionVector): ItemUseResult {
-
+		return ItemUseResult::SUCCESS();
     }
 
 }

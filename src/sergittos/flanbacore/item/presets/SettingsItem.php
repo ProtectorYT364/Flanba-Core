@@ -11,6 +11,21 @@ declare(strict_types=1);
 namespace sergittos\flanbacore\item\presets;
 
 
-class SettingsItem {
+use pocketmine\item\ItemIds;
+use pocketmine\item\ItemUseResult;
+use pocketmine\math\Vector3;
+use pocketmine\player\Player;
+use sergittos\flanbacore\form\GameSelectorForm;
+use sergittos\flanbacore\item\FlanbaItem;
+
+class SettingsItem extends FlanbaItem{
+
+	public function __construct() {
+		parent::__construct("{GOLD}Settings", ItemIds::CLOCK);
+	}
+
+	public function onClickAir(Player $player, Vector3 $directionVector): ItemUseResult {
+		return ItemUseResult::SUCCESS();
+	}
 
 }

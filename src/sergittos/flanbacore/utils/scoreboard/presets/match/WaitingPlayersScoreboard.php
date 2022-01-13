@@ -26,7 +26,7 @@ class WaitingPlayersScoreboard extends Scoreboard {
 
     public function getLines(): array {
         return [
-            " {GRAY}" . date("d/m/y"),
+            " {GRAY}" . date("d/m/y") "mArC",
             " ",
             " {WHITE}Map: {GREEN}" . $this->match->getArena()->getWorld()->getDisplayName(),
             " {WHITE}Players: {GREEN}" . $this->match->getPlayersCount(),

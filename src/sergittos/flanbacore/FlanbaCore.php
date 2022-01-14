@@ -77,7 +77,7 @@ class FlanbaCore extends PluginBase {
         $this->registerListener(new SessionListener());
         $this->registerListener(new SlotsListener());
 		$cmd = $this->getServer()->getCommandMap();
-		$cmd->register("/hub", new \HubCommand());
+		$cmd->register("/hub", new HubCommand());
 
         $this->getScheduler()->scheduleRepeatingTask(new FlanbaHeartbeat(), 20); // 1 second
         $this->doMuqsitThings();

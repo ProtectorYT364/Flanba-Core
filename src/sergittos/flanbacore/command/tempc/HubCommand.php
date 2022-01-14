@@ -1,6 +1,8 @@
 <?php
 
-use sergittos\flanbacore\command\tempc;
+namespace sergittos\flanbacore\command\tempc;
+
+use sergittos\flanbacore\session\SessionFactory;
 
 class HubCommand extends \pocketmine\command\Command{
 

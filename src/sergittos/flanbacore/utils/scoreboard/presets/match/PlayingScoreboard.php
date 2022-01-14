@@ -29,12 +29,12 @@ class PlayingScoreboard extends Scoreboard {
         return [
             " {GRAY}" . date("d/m/y") . " §8mArCsExY",
             " ",
+            " {WHITE}Mode: {GREEN}The Bridge Duel",
             " {WHITE}Time left: {GREEN}" . gmdate("i:s", $this->match->getTimeLeft()),
             "  ",
             " {RED}[R] {BOLD}" . $this->match->getRedTeam()->getScore(),
             " {BLUE}[B] {BOLD}" . $this->match->getBlueTeam()->getScore(),
             "   ",
-            " {WHITE}Mode: {GREEN}The Bridge Duel",
             " {WHITE}Kills: {GREEN}" . $team->getKills(),
             " {WHITE}Goals: {GREEN}" . $team->getScoreNumber(),
             "    ",

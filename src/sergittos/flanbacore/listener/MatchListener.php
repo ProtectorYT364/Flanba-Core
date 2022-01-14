@@ -12,6 +12,7 @@ namespace sergittos\flanbacore\listener;
 
 
 use pocketmine\entity\projectile\Arrow;
+use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
@@ -188,6 +189,16 @@ class MatchListener implements Listener {
             $event->cancel();
         }
     }
+
+	public function onBreak(BlockBreakEvent $event){
+		$session = SessionFactory::getSession($event->getPlayer());
+		if(!$session->hasMatch()) {
+			return;
+		}
+		if(!$event->getBlock()->getId() == 159){
+			$event->cancel();
+		}
+	}
 
     public function onQuit(PlayerQuitEvent $event): void {
         $session = SessionFactory::getSession($event->getPlayer());

@@ -195,7 +195,7 @@ class MatchListener implements Listener {
 		if(!$session->hasMatch()) {
 			return;
 		}
-		if(!$event->getBlock()->getId() == 159){
+		if(($event->getBlock()->getId() !== 159)){
 			$event->cancel();
 		}
 	}

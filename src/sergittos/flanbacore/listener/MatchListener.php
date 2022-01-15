@@ -171,7 +171,7 @@ class MatchListener implements Listener {
                 $player->teleportToTeamSpawnPoint();
                 $player->updateScoreboard();
                 $match->broadcastTitle(
-                    $color . $session->getUsername() . " scored!",
+                    $color . $session->getUsername() . "§f scored!",
                     "{GRAY}Cages open in {GREEN}{$countdown}s{GRAY}..."
                 );
 
@@ -186,7 +186,9 @@ class MatchListener implements Listener {
         if(!$session->hasMatch()) {
             return;
         }
+	    $player = $event->getPlayer();
         if($event->getBlock()->getPosition()->getY() >= $session->getMatch()->getArena()->getHeightLimit()) {
+	    $player->sendMessage("§8» §cHeight Limit");
             $event->cancel();
         }
     }

@@ -191,6 +191,11 @@ class MatchListener implements Listener {
 	    $player->sendMessage("§8» §cHeight Limit");
             $event->cancel();
         }
+	  $player = $event->getPlayer();
+        $block = $event->getBlock();
+       if (in_array($block->getId(), [205, 459, 58, 145, 154])) {
+          $event->cancel();
+        } 
     }
 
 	public function onBreak(BlockBreakEvent $event){

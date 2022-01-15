@@ -18,7 +18,6 @@ class HubCommand extends \pocketmine\command\Command{
 		if($session->hasMatch()){
 			$session->setMatch(null, true);
 		}
-		$world = $sender->getServer()->getWorldManager()->getDefaultWorld();
-		$sender->teleport($world->getSafeSpawn());
+		$session->teleportToLobby();
 	}
 }

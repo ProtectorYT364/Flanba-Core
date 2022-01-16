@@ -16,7 +16,10 @@ class HubCommand extends \pocketmine\command\Command{
 	public function execute(\pocketmine\command\CommandSender $sender, string $commandLabel, array $args){
 		$session = SessionFactory::getSession($sender);
 		if($session->hasMatch()){
-			$session->setMatch(null, true);
+			if($sender->getInventory()->contains(new Item(new ItemIdentifier(ItemIds::BED, 0)))){
+			} else {	
+				$session->setMatch(null, true);
+			}
 		}
 		$session->teleportToLobby();
 	}

@@ -3,6 +3,10 @@
 namespace sergittos\flanbacore\command\tempc;
 
 use sergittos\flanbacore\session\SessionFactory;
+use pocketmine\item\Item;
+use pocketmine\item\ItemIdentifier;
+use pocketmine\item\ItemIds;
+
 
 class HubCommand extends \pocketmine\command\Command{
 

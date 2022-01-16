@@ -17,9 +17,4 @@ use sergittos\flanbacore\utils\ConfigGetter;
 
 class FlanbaListener implements Listener {
 
-    public function onFight(EntityDamageByEntityEvent $event): void {
-        $event->setKnockBack(ConfigGetter::getKnockback());
-        $event->setAttackCooldown(ConfigGetter::getAttackCooldown());
-    }
-
 }

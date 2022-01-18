@@ -145,12 +145,7 @@ class MatchListener implements Listener {
             } else {
                 $session->teleportToTeamSpawnPoint(true);
 				foreach($entity->getWorld()->getPlayers() as $players){
-					if($session->getTeam()->getColor() == "Blue"){
-						$players->sendMessage(TextFormat::BLUE . "{$entity->getName()} tripped into the void.");
-					}
-					if($session->getTeam()->getColor() == "Red"){
-						$players->sendMessage(TextFormat::RED . "{$entity->getName()} tripped into the void.");
-					}
+					$players->sendMessage("{$session->getTeam()->getColor()}{$entity->getName()} tripped into the void.");
 				}
             }
             return;

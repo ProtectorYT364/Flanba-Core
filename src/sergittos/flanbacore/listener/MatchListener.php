@@ -70,15 +70,11 @@ class MatchListener implements Listener {
             return;
         }
 		if($event instanceof EntityDamageByEntityEvent){
+			$session2 = SessionFactory::getSession($$event->getDamager());
 			if($session->hasMatch() and $entity->getHealth() - $event->getFinalDamage() <= 0) {
 				foreach($entity->getWorld()->getPlayers() as $players){
-					$entity->sendMessage($session->getTeam()->getColor());
-					if($session->getTeam()->getColor() == "Blue"){
-						$players->sendMessage(TextFormat::BLUE . "{$entity->getName()} was killed by" . TextFormat::RED . "{$event->getDamager()}.");
-					}
-					if($session->getTeam()->getColor() == "Red"){
-						$players->sendMessage(TextFormat::RED . "{$entity->getName()} was killed by" . TextFormat::BLUE . "{$event->getDamager()}.");
-					}
+					$players->sendMessage("{$session->getTeam()->getColor()}{$entity->getName()}" . TextFormat::GRAY .  "was killed by {$session2->getTeam()->getColor()}{$event->getDamager()}.");
+
 				}
 				$death_event = new SessionDeathEvent($session);
 				$death_event->call();

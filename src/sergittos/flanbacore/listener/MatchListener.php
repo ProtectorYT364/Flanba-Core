@@ -191,12 +191,12 @@ class MatchListener implements Listener {
             $match->setCountdown($countdown);
             foreach($players as $player) {
                 $player->setImmobile();
-                $player->teleportToTeamSpawnPoint();
-                $player->updateScoreboard();
-                $match->broadcastTitle(
+                $player->teleportToTeamSpawnPoint();             
+                $player->title(
                     $color . $session->getUsername() . "§f scored!",
                     "{GRAY}Cages open in {GREEN}{$countdown}s{GRAY}..."
                 );
+		$player->message($color . $session->getUsername() . " §6scored!");
 
                 // TODO: Clean this
             }

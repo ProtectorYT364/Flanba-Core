@@ -84,7 +84,7 @@ class FlanbaListener implements Listener {
 		$ev->setJoinMessage(TextFormat::GREEN . "[+] {$ev->getPlayer()->getDisplayName()}");
 		$player = $ev->getPlayer();
 		$player->sendTitle(TextFormat::YELLOW . TextFormat::BOLD . "Flanba " . TextFormat::GOLD . "Network");
-		$player->sendSubTitle(TextFormat::YELLOW . TextFormat::BOLD . "Welcome to the server $player, we are happy to have you here! Please join our discord for more information!\n" . TextFormat::GREEN . "discord.gg/flanba");
+		$player->sendSubTitle(TextFormat::YELLOW . TextFormat::BOLD . "Welcome to Flanba Network {$player->getDisplayName()}!, Please join our discord server!\n" . TextFormat::GREEN . "discord.gg/flanba");
 	}
 
 	public function onLeave(PlayerQuitEvent $ev){

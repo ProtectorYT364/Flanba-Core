@@ -70,11 +70,15 @@ class MatchListener implements Listener {
             return;
         }
 		if($event instanceof EntityDamageByEntityEvent){
-			$session2 = SessionFactory::getSession($$event->getDamager());
+			$session2 = SessionFactory::getSession($event->getDamager());
 			if($session->hasMatch() and $entity->getHealth() - $event->getFinalDamage() <= 0) {
 				foreach($entity->getWorld()->getPlayers() as $players){
-					$players->sendMessage("{$session->getTeam()->getColor()}{$entity->getName()}" . TextFormat::GRAY .  "was killed by {$session2->getTeam()->getColor()}{$event->getDamager()}.");
-
+					if($session->getTeam()->getColor() == "{RED}"){
+						$players->sendMessage(TextFormat::RED . "{$entity->getName()}" . TextFormat::GRAY .  "was killed by" . TextFormat::BLUE . "{$event->getDamager()->getNameTag()}.");
+					}
+					if($session->getTeam()->getColor() == "{BLUE}"){
+						$players->sendMessage(TextFormat::BLUE . "{$entity->getName()}" . TextFormat::GRAY .  "was killed by" . TextFormat::RED . "{$event->getDamager()->getNameTag()}.");
+					}
 				}
 				$death_event = new SessionDeathEvent($session);
 				$death_event->call();
@@ -145,7 +149,12 @@ class MatchListener implements Listener {
             } else {
                 $session->teleportToTeamSpawnPoint(true);
 				foreach($entity->getWorld()->getPlayers() as $players){
-					$players->sendMessage("{$session->getTeam()->getColor()}{$entity->getName()} tripped into the void.");
+					if($session->getTeam()->getColor() == "{RED}"){
+						$players->sendMessage(TextFormat::RED . "{$entity->getName()} " . TextFormat::GRAY . "tripped into the void.");
+					}
+					if($session->getTeam()->getColor() == "{BLUE}"){
+						$players->sendMessage(TextFormat::BLUE . "{$entity->getName()} " . TextFormat::GRAY . "tripped into the void.");
+					}
 				}
             }
             return;

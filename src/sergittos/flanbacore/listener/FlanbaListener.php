@@ -14,9 +14,14 @@ namespace sergittos\flanbacore\listener;
 use pocketmine\entity\Entity;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
+use pocketmine\event\entity\EntityDamageByEntityEvent;
+use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerJoinEvent;
+use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\math\Vector3;
 use pocketmine\scheduler\Task;
+use pocketmine\utils\TextFormat;
 use sergittos\flanbacore\FlanbaCore;
 
 class FlanbaListener implements Listener {
@@ -75,6 +80,16 @@ class FlanbaListener implements Listener {
 		}
 	}
 
+	public function onJoin(PlayerJoinEvent $ev){
+		$ev->setJoinMessage(TextFormat::GREEN . "[+] {$ev->getPlayer()->getDisplayName()}");
+		$player = $ev->getPlayer();
+		$player->sendTitle(TextFormat::YELLOW . TextFormat::BOLD . "Flanba " . TextFormat::GOLD . "Network");
+		$player->sendSubTitle(TextFormat::YELLOW . TextFormat::BOLD . "Welcome to the server $player, we are happy to have you here! Please join our discord for more information!\n" . TextFormat::GREEN . "discord.gg/flanba");
+	}
+
+	public function onLeave(PlayerQuitEvent $ev){
+		$ev->setQuitMessage(TextFormat::RED . "[-] {$ev->getPlayer()->getDisplayName()}");
+	}
 }
 class MotionTask extends Task {
 

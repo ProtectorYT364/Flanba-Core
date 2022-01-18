@@ -27,7 +27,9 @@ use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\item\GoldenApple;
 use pocketmine\player\GameMode;
 use pocketmine\player\Player;
+use pocketmine\utils\TextFormat;
 use sergittos\flanbacore\event\SessionDeathEvent;
+use sergittos\flanbacore\FlanbaCore;
 use sergittos\flanbacore\match\FlanbaMatch;
 use sergittos\flanbacore\session\SessionFactory;
 use sergittos\flanbacore\utils\cooldown\BowCooldown;
@@ -36,7 +38,8 @@ use sergittos\flanbacore\utils\cooldown\GappleCooldown;
 
 class MatchListener implements Listener {
 
-    public function onDeath(SessionDeathEvent $event): void {
+
+	public function onDeath(SessionDeathEvent $event): void {
         $session = $event->getSession();
         $cause = $session->getPlayer()->getLastDamageCause();
         $session->teleportToTeamSpawnPoint();
@@ -66,11 +69,22 @@ class MatchListener implements Listener {
             $event->cancel();
             return;
         }
-        if($session->hasMatch() and $entity->getHealth() - $event->getFinalDamage() <= 0) {
-            $death_event = new SessionDeathEvent($session);
-            $death_event->call();
-            $event->cancel();
-        }
+		if($event instanceof EntityDamageByEntityEvent){
+			if($session->hasMatch() and $entity->getHealth() - $event->getFinalDamage() <= 0) {
+				foreach($entity->getWorld()->getPlayers() as $players){
+					$entity->sendMessage($session->getTeam()->getColor());
+					if($session->getTeam()->getColor() == "Blue"){
+						$players->sendMessage(TextFormat::BLUE . "{$entity->getName()} was killed by" . TextFormat::RED . "{$event->getDamager()}.");
+					}
+					if($session->getTeam()->getColor() == "Red"){
+						$players->sendMessage(TextFormat::RED . "{$entity->getName()} was killed by" . TextFormat::BLUE . "{$event->getDamager()}.");
+					}
+				}
+				$death_event = new SessionDeathEvent($session);
+				$death_event->call();
+				$event->cancel();
+			}
+		}
     }
 
     public function onRegainHealth(EntityRegainHealthEvent $event): void {
@@ -121,6 +135,7 @@ class MatchListener implements Listener {
     }
 
     public function onMove(PlayerMoveEvent $event): void {
+		$entity = $event->getPlayer();
         $session = SessionFactory::getSession($player = $event->getPlayer());
         if(!$session->hasMatch()) {
             return;
@@ -133,6 +148,14 @@ class MatchListener implements Listener {
                 $session->teleportToTeamSpawnPoint(false);
             } else {
                 $session->teleportToTeamSpawnPoint(true);
+				foreach($entity->getWorld()->getPlayers() as $players){
+					if($session->getTeam()->getColor() == "Blue"){
+						$players->sendMessage(TextFormat::BLUE . "{$entity->getName()} tripped into the void.");
+					}
+					if($session->getTeam()->getColor() == "Red"){
+						$players->sendMessage(TextFormat::RED . "{$entity->getName()} tripped into the void.");
+					}
+				}
             }
             return;
         }
@@ -191,9 +214,9 @@ class MatchListener implements Listener {
 	    $player->sendMessage("§8» §cHeight Limit");
             $event->cancel();
         }
-	  $player = $event->getPlayer();
+	  	$player = $event->getPlayer();
         $block = $event->getBlock();
-       if (in_array($block->getId(), [205, 459, 58, 145, 154])) {
+        if (in_array($block->getId(), [205, 459, 58, 145, 154])) {
           $event->cancel();
         } 
     }
@@ -207,17 +230,17 @@ class MatchListener implements Listener {
 			$event->cancel();
 		}
 	}
-       public function onTouch(PlayerInteractEvent $event) {
-               $session = SessionFactory::getSession($player = $event->getPlayer());
-               if(!$session->hasMatch()) {
-                       return;
-              } 
-              $player = $event->getPlayer();
-              $block = $event->getBlock();
-              if (in_array($block->getId(), [205, 459, 58, 145, 154])) {
-                       $event->cancel();
-              }
-        }
+    public function onTouch(PlayerInteractEvent $event) {
+		$session = SessionFactory::getSession($player = $event->getPlayer());
+		if(!$session->hasMatch()) {
+			return;
+		}
+		$player = $event->getPlayer();
+		$block = $event->getBlock();
+		if (in_array($block->getId(), [205, 459, 58, 145, 154])) {
+			$event->cancel();
+		}
+    }
     
     public function onQuit(PlayerQuitEvent $event): void {
         $session = SessionFactory::getSession($event->getPlayer());

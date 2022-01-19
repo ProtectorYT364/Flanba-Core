@@ -83,7 +83,7 @@ class FlanbaListener implements Listener {
 	public function onJoin(PlayerJoinEvent $ev){
 		$ev->setJoinMessage(TextFormat::GREEN . "§8[§a+§8]§a {$ev->getPlayer()->getDisplayName()}");
 		$player = $ev->getPlayer();
-		$player->sendMessage(" §f__________________\n     §e§lFLANBA§6MC     \n§l§eSTORE: §r§fstore.flanba.net\n§l§eDISCORD: §r§fdiscord.gg/flanba\n§l§eYOUTUBE: §r§fyoutube.com/c/teamflanba\n§r§f __________________");
+		$player->sendMessage(" §f━━━━━━━━━━━━━━━━━━\n     §e§lFLANBA§6MC     \n§l§eSTORE: §r§fstore.flanba.net\n§l§eDISCORD: §r§fdiscord.gg/flanba\n§l§eYOUTUBE: §r§fyoutube.com/c/teamflanba\n§r§f §f━━━━━━━━━━━━━━━━━━");
 		$player->sendTitle(TextFormat::YELLOW . TextFormat::BOLD . "Flanba " . TextFormat::GOLD . "Network");
 		$player->sendSubTitle(TextFormat::YELLOW . TextFormat::BOLD . "Welcome to Flanba Network,\nPlease join our discord server!\n" . TextFormat::GREEN . "discord.gg/flanba");
 	}

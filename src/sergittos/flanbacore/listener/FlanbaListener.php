@@ -34,7 +34,7 @@ class FlanbaListener implements Listener {
         $event->setAttackCooldown(ConfigGetter::getAttackCooldown());
     }
 
-}
+
 
 	public function __construct(FlanbaCore $plugin){
 		$this->plugin = $plugin;

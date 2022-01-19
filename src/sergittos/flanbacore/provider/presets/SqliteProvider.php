@@ -22,9 +22,9 @@ class SqliteProvider extends Provider {
 
     public function __construct() {
         $this->sqlite = new Sqlite3(FlanbaCore::getInstance()->getDataFolder() . "database.db");
-        $this->sqlite->query(
+        $this->sqlite->exec(
             "CREATE TABLE IF NOT EXISTS layouts (
-                user_xuid VARCHAR(idk) PRIMARY KEY,
+                user_xuid VARCHAR(255) PRIMARY KEY,
                 
                 sword_slot TINYINT,
                 bow_slot TINYINT,

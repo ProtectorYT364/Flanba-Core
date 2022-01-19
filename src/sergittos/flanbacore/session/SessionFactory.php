@@ -12,6 +12,7 @@ namespace sergittos\flanbacore\session;
 
 
 use pocketmine\player\Player;
+use sergittos\flanbacore\FlanbaCore;
 
 class SessionFactory {
 
@@ -30,11 +31,15 @@ class SessionFactory {
     }
 
     static public function createSession(Player $player): void {
-        self::$sessions[$player->getName()] = new Session($player);
+        $session = new Session($player);
+        FlanbaCore::getInstance()->getProvider()->loadSession($session);
+        self::$sessions[$player->getName()] = $session;
     }
 
     static public function removeSession(Player $player): void {
-        unset(self::$sessions[$player->getName()]);
+        $session = self::$sessions[$player->getName()];
+        $session->save();
+        unset($session);
     }
 
 }

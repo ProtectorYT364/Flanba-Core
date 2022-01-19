@@ -17,6 +17,7 @@ use pocketmine\event\player\PlayerItemUseEvent;
 use pocketmine\item\Item;
 use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
 use pocketmine\network\mcpe\protocol\types\LevelSoundEvent;
+use pocketmine\world\sound\PopSound;
 
 class ItemListener implements Listener {
 
@@ -31,10 +32,7 @@ class ItemListener implements Listener {
     public function onItemUse(PlayerItemUseEvent $event): void {
         if($this->hasFlanbaTag($event->getItem())) {
             $player = $event->getPlayer();
-            $packet = new LevelSoundEventPacket();
-            $packet->sound = LevelSoundEvent::BUBBLE_POP;
-            $packet->position = $player->getPosition();
-            $player->getNetworkSession()->sendDataPacket($packet);
+            $player->getWorld()->addSound($player->getPosition(), new PopSound(1));
         }
     }
 

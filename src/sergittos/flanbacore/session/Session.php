@@ -11,22 +11,43 @@ declare(strict_types=1);
 namespace sergittos\flanbacore\session;
 
 
+use muqsit\invmenu\InvMenu;
+use muqsit\invmenu\transaction\InvMenuTransaction;
+use muqsit\invmenu\transaction\InvMenuTransactionResult;
+use muqsit\invmenu\type\InvMenuTypeIds;
+use pocketmine\block\BlockFactory;
+use pocketmine\block\BlockLegacyIds;
 use pocketmine\block\utils\DyeColor;
+use pocketmine\block\VanillaBlocks;
+use pocketmine\data\bedrock\DyeColorIdMap;
+use pocketmine\inventory\PlayerInventory;
+use pocketmine\item\Arrow;
+use pocketmine\item\Bow;
+use pocketmine\item\enchantment\EnchantmentInstance;
+use pocketmine\item\enchantment\VanillaEnchantments;
+use pocketmine\item\GoldenApple;
+use pocketmine\item\ItemIds;
+use pocketmine\item\Pickaxe;
+use pocketmine\item\Sword;
+use pocketmine\item\VanillaItems;
 use pocketmine\network\mcpe\protocol\ClientboundPacket;
+use pocketmine\network\mcpe\protocol\PlaySoundPacket;
 use pocketmine\player\GameMode;
 use pocketmine\player\Player;
 use pocketmine\Server;
 use sergittos\flanbacore\FlanbaCore;
 use sergittos\flanbacore\item\presets\GameSelectorItem;
-use sergittos\flanbacore\item\presets\LeaveMatchItem;
+use sergittos\flanbacore\item\presets\match\EditKitItem;
+use sergittos\flanbacore\item\presets\match\layout\HotbarItem;
+use sergittos\flanbacore\item\presets\match\LeaveMatchItem;
+use sergittos\flanbacore\item\presets\PartyItem;
 use sergittos\flanbacore\item\presets\ProfileItem;
 use sergittos\flanbacore\item\presets\SettingsItem;
 use sergittos\flanbacore\item\presets\ShopItem;
 use sergittos\flanbacore\item\presets\SpectateItem;
-use sergittos\flanbacore\item\presets\PartyItem;
 use sergittos\flanbacore\item\presets\UnlockedItem;
 use sergittos\flanbacore\kit\Kit;
-use sergittos\flanbacore\kit\KitFactory;
+use sergittos\flanbacore\kit\Layout;
 use sergittos\flanbacore\match\FlanbaMatch;
 use sergittos\flanbacore\match\team\Team;
 use sergittos\flanbacore\utils\ColorUtils;
@@ -41,8 +62,8 @@ class Session {
 
     private FlanbaMatch|null $match = null;
     private Team|null $team = null;
-    private Kit|null $kit = null;
     private Scoreboard|null $scoreboard = null;
+    private Kit $kit;
 
     /** @var Cooldown[] */
     private array $cooldowns = [];
@@ -63,7 +84,7 @@ class Session {
         return $this->team;
     }
 
-    public function getKit(): ?Kit {
+    public function getKit(): Kit {
         return $this->kit;
     }
 
@@ -90,10 +111,6 @@ class Session {
         return $this->team !== null;
     }
 
-    public function hasKit(): bool {
-        return $this->kit !== null;
-    }
-
     public function hasCooldown(string $id): bool {
         return array_key_exists($id, $this->cooldowns);
     }
@@ -108,17 +125,15 @@ class Session {
         $this->team = $team;
     }
 
-    private function setKit(?Kit $kit, DyeColor $color): void {
-        if($kit !== null) {
-            $this->clearInventory();
-            $this->player->getInventory()->setContents($kit->getItems($color));
-            $this->player->getArmorInventory()->setContents($kit->getArmorContents($color));
-        }
+    public function setKit(Kit $kit): void {
         $this->kit = $kit;
     }
 
-    public function setTheBridgeKit(DyeColor $color): void {
-        $this->setKit(KitFactory::getKitById(Kit::THE_BRIDGE), $color);
+    public function giveTheBridgeKit(): void {
+        $this->clearInventory();
+        $color = ColorUtils::colorToDyeColor($this->team->getColor());
+        $this->player->getInventory()->setContents($this->kit->getItems($color));
+        $this->player->getArmorInventory()->setContents($this->kit->getArmorContents($color));
     }
 
     public function setScoreboard(?Scoreboard $scoreboard): void {
@@ -162,7 +177,7 @@ class Session {
         $this->player->getEffects()->clear();
         $this->updateNameTag();
         if($give_kit) {
-            $this->setTheBridgeKit(ColorUtils::colorToDyeColor($this->getTeam()->getColor()));
+            $this->giveTheBridgeKit();
         }
     }
 
@@ -179,9 +194,92 @@ class Session {
         $this->player->teleport(Server::getInstance()->getWorldManager()->getWorldByName(ConfigGetter::getLobbyWorldName())->getSafeSpawn());
     }
 
-    public function addLeaveMatchItem(): void {
+    public function setMatchItems(): void {
         $this->clearInventory();
-        $this->player->getInventory()->setItem(7, new LeaveMatchItem());
+
+        $inventory = $this->player->getInventory();
+        $inventory->setItem(2, new EditKitItem());
+        $inventory->setItem(8, new LeaveMatchItem());
+    }
+    
+    public function sendEditKitMenu(): void {
+        $menu = InvMenu::create(InvMenuTypeIds::TYPE_DOUBLE_CHEST);
+        $menu->setName("Edit kit");
+
+        $contents = [];
+        for($index = 27; $index <= 35; $index++) {
+            $contents[$index] = new HotbarItem();
+        }
+        $color = DyeColor::GREEN();
+        foreach($this->kit->getItems($color) as $index => $item) {
+            $contents[Layout::switchPlayerInventoryIndexToUIIndex($index)] = $item;
+        }
+        $contents[48] = VanillaBlocks::CHEST()->asItem()->setCustomName(ColorUtils::translate("{GREEN}Save layout"));
+        $contents[50] = VanillaBlocks::BARRIER()->asItem()->setCustomName(ColorUtils::translate("{RED}Reset layout"));
+        $inventory = $menu->getInventory();
+        $inventory->setContents($contents);
+
+        $menu->setListener(function(InvMenuTransaction $transaction) use ($inventory, $contents, $color): InvMenuTransactionResult {
+            $discard = $transaction->discard();
+            $id = $transaction->getItemClicked()->getId();
+            if($id === ItemIds::CHEST) {
+                $layout = $this->kit->getLayout();
+
+                $gapples = [];
+                $blocks = [];
+                foreach($inventory->getContents() as $index => $item) {
+                    $count = $item->getCount();
+                    $index = Layout::switchUIIndexToPlayerInventoryIndex($index);
+                    if($item instanceof Sword) {
+                        $layout->setSwordSlot($index);
+                    } elseif($item instanceof Bow) {
+                        $layout->setBowSlot($index);
+                    } elseif($item instanceof Pickaxe) {
+                        $layout->setPickaxeSlot($index);
+                    } elseif($item instanceof Arrow) {
+                        $layout->setArrowSlot($index);
+                    } elseif($item instanceof GoldenApple) {
+                        $gapples[$index] = $count;
+                    } elseif($item->getId() === ItemIds::TERRACOTTA) {
+                        $blocks[$index] = $count;
+                    }
+                }
+                if(!empty($gapples)) {
+                    $layout->setGapplesSlots($gapples);
+                }
+                if(!empty($blocks)) {
+                    $layout->setBlocksSlots($blocks);
+                }
+                $this->sendOrbSound();
+                return $discard;
+            } elseif($id === ItemIds::BARRIER) {
+                $air = VanillaBlocks::AIR()->asItem();
+                for($index = 0; $index <= 26; $index++) {
+                    $contents[$index] = $air;
+                }
+                for($index = 36; $index <= 44; $index++) {
+                    $contents[$index] = $air;
+                }
+                $terracotta = BlockFactory::getInstance()->get(BlockLegacyIds::TERRACOTTA, DyeColorIdMap::getInstance()->toId($color))->asItem();
+                $blocks = $terracotta->setCount($terracotta->getMaxStackSize());
+                $contents[36] = VanillaItems::IRON_SWORD();
+                $contents[37] = VanillaItems::BOW();
+                $contents[38] = VanillaItems::DIAMOND_PICKAXE()->addEnchantment(new EnchantmentInstance(VanillaEnchantments::EFFICIENCY(), 2));
+                $contents[39] = $blocks;
+                $contents[40] = $blocks;
+                $contents[41] = VanillaItems::GOLDEN_APPLE()->setCount(8);
+                $contents[44] = VanillaItems::ARROW();
+                $inventory->setContents($contents);
+                return $discard;
+            }
+            foreach($transaction->getTransaction()->getInventories() as $inventory) {
+                if($inventory instanceof PlayerInventory) {
+                    return $discard;
+                }
+            }
+            return $transaction->continue();
+        });
+        $menu->send($this->player);
     }
 
     private function setLobbyItems(): void {
@@ -189,13 +287,12 @@ class Session {
 
         $inventory = $this->player->getInventory();
         $inventory->setItem(0, new ShopItem());
-		$inventory->setItem(1, new UnlockedItem());
-		$inventory->setItem(2, new SpectateItem());
-		$inventory->setItem(4, new GameSelectorItem());
-		$inventory->setItem(6, new PartyItem());
-		$inventory->setItem(7, new ProfileItem());
-		$inventory->setItem(8, new SettingsItem());
-
+        $inventory->setItem(1, new UnlockedItem());
+        $inventory->setItem(2, new SpectateItem());
+        $inventory->setItem(4, new GameSelectorItem());
+        $inventory->setItem(6, new PartyItem());
+        $inventory->setItem(7, new ProfileItem());
+        $inventory->setItem(8, new SettingsItem());
     }
 
     private function clearInventory(): void {
@@ -205,6 +302,18 @@ class Session {
 
     public function setImmobile(bool $immobile = true): void {
         $this->player->setImmobile($immobile);
+    }
+
+    public function sendOrbSound(): void {
+        $position = $this->player->getPosition();
+        $packet = new PlaySoundPacket();
+        $packet->soundName = "random.orb";
+        $packet->x = $position->getX();
+        $packet->y = $position->getY();
+        $packet->z = $position->getZ();
+        $packet->volume = 1;
+        $packet->pitch = 1;
+        $this->sendDataPacket($packet);
     }
 
     public function sendDataPacket(ClientboundPacket $packet): void {

@@ -11,6 +11,9 @@ declare(strict_types=1);
 namespace sergittos\flanbacore\listener;
 
 
+use pocketmine\event\entity\EntityDamageByEntityEvent;
+use pocketmine\event\Listener;
+use sergittos\flanbacore\utils\ConfigGetter;
 use pocketmine\entity\Entity;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
@@ -26,7 +29,12 @@ use sergittos\flanbacore\FlanbaCore;
 
 class FlanbaListener implements Listener {
 
-	private FlanbaCore $plugin;
+    public function onFight(EntityDamageByEntityEvent $event): void {
+        $event->setKnockBack(ConfigGetter::getKnockback());
+        $event->setAttackCooldown(ConfigGetter::getAttackCooldown());
+    }
+
+}
 
 	public function __construct(FlanbaCore $plugin){
 		$this->plugin = $plugin;

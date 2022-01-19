@@ -19,9 +19,9 @@ use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityRegainHealthEvent;
 use pocketmine\event\entity\EntityShootBowEvent;
 use pocketmine\event\entity\ProjectileHitBlockEvent;
+use pocketmine\event\entity\ProjectileHitEntityEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerItemConsumeEvent;
-use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\item\GoldenApple;
@@ -127,6 +127,13 @@ class MatchListener implements Listener {
         $session->addCooldown(new BowCooldown());
     }
 
+    public function onHitEntity(ProjectileHitEntityEvent $event): void {
+        $owning_entity = $event->getEntity()->getOwningEntity();
+        if($owning_entity instanceof Player) {
+            SessionFactory::getSession($owning_entity)->sendOrbSound();
+        }
+    }
+
     public function onHitBlock(ProjectileHitBlockEvent $event): void {
         $entity = $event->getEntity();
         if($entity instanceof Arrow) {
@@ -191,16 +198,20 @@ class MatchListener implements Listener {
             $match->setCountdown($countdown);
             foreach($players as $player) {
                 $player->setImmobile();
+                $player->teleportToTeamSpawnPoint();
+                $player->updateScoreboard();
+                $player->title(
+                    $color . $session->getUsername() . "§f scored!",
+                    "{GRAY}Cages open in {GREEN}{$countdown}s{GRAY}..."
+                );
                 $player->teleportToTeamSpawnPoint();             
                 $player->title(
                     $color . $session->getUsername() . " scored!",
                     "{GRAY}Cages open in {GREEN}{$countdown}s{GRAY}..."
                 );
 		$player->message($color . $session->getUsername() . " §6scored!");
-
-                // TODO: Clean this
             }
-            $match->updatePlayersScoreboard();
+            // TODO: Clean this
         }
     }
 
@@ -209,9 +220,8 @@ class MatchListener implements Listener {
         if(!$session->hasMatch()) {
             return;
         }
-	    $player = $event->getPlayer();
         if($event->getBlock()->getPosition()->getY() >= $session->getMatch()->getArena()->getHeightLimit()) {
-	    $player->sendMessage("§8» §cHeight Limit");
+            $session->message("§8» §cHeight Limit");
             $event->cancel();
         }
 	  	$player = $event->getPlayer();
@@ -230,6 +240,7 @@ class MatchListener implements Listener {
 			$event->cancel();
 		}
 	}
+
     public function onTouch(PlayerInteractEvent $event) {
 		$session = SessionFactory::getSession($player = $event->getPlayer());
 		if(!$session->hasMatch()) {

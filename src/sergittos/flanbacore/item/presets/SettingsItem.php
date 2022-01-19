@@ -15,7 +15,6 @@ use pocketmine\item\ItemIds;
 use pocketmine\item\ItemUseResult;
 use pocketmine\math\Vector3;
 use pocketmine\player\Player;
-use sergittos\flanbacore\form\GameSelectorForm;
 use sergittos\flanbacore\item\FlanbaItem;
 
 class SettingsItem extends FlanbaItem{

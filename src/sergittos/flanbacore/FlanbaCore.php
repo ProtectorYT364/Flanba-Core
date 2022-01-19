@@ -24,7 +24,6 @@ use pocketmine\Server;
 use pocketmine\utils\ServerException;
 use pocketmine\utils\SingletonTrait;
 use sergittos\flanbacore\arena\ArenaFactory;
-use sergittos\flanbacore\kit\KitFactory;
 use sergittos\flanbacore\listener\ClaimListener;
 use sergittos\flanbacore\listener\FlanbaListener;
 use sergittos\flanbacore\listener\ItemListener;
@@ -54,6 +53,10 @@ class FlanbaCore extends PluginBase {
     protected function onLoad(): void {
         self::setInstance($this);
 
+        $players_dir = $this->getDataFolder() . "players";
+        if(!is_dir($players_dir)) {
+            mkdir($players_dir);
+        }
         $this->saveResource("arenas.json");
         $this->saveDefaultConfig();
     }
@@ -63,21 +66,20 @@ class FlanbaCore extends PluginBase {
         $this->getServer()->getWorldManager()->loadWorld(ConfigGetter::getLobbyWorldName(), true);
 
         ArenaFactory::init();
-        KitFactory::init();
         $this->initProvider();
         $this->match_manager = new MatchManager();
         $this->queue_manager = new QueueManager();
 
         $this->registerListener(new ClaimListener());
-        $this->registerListener(new FlanbaListener($this));
+        $this->registerListener(new FlanbaListener());
         $this->registerListener(new ItemListener());
         $this->registerListener(new LobbyListener());
         $this->registerListener(new MatchListener());
         $this->registerListener(new PartyListener());
         $this->registerListener(new SessionListener());
         $this->registerListener(new SlotsListener());
-		$cmd = $this->getServer()->getCommandMap();
-		$cmd->register("/hub", new HubCommand());
+
+        $this->registerCommand(new HubCommand());
 
         $this->getScheduler()->scheduleRepeatingTask(new FlanbaHeartbeat(), 20); // 1 second
         $this->doMuqsitThings();
@@ -93,6 +95,7 @@ class FlanbaCore extends PluginBase {
         if(!InvMenuHandler::isRegistered()) {
             InvMenuHandler::register($this);
         }
+        static $send = false;
         SimplePacketHandler::createInterceptor($this)
             ->interceptIncoming(function(ContainerClosePacket $packet, NetworkSession $session) use (&$send): bool {
                 $send = false;
@@ -119,7 +122,7 @@ class FlanbaCore extends PluginBase {
     }
 
     private function initProvider(): void {
-        $provider = strtolower($this->getConfig()->get("provider"));
+        $provider = strtolower(ConfigGetter::getProvider());
 
         $this->provider = match($provider) {
             "sqlite", "sqlite3" => new SqliteProvider(),

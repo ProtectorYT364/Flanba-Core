@@ -13,8 +13,6 @@ namespace sergittos\flanbacore\match;
 
 use pocketmine\player\GameMode;
 use sergittos\flanbacore\arena\Arena;
-use sergittos\flanbacore\kit\Kit;
-use sergittos\flanbacore\kit\KitFactory;
 use sergittos\flanbacore\match\team\Team;
 use sergittos\flanbacore\session\Session;
 use sergittos\flanbacore\utils\ColorUtils;
@@ -28,7 +26,7 @@ class FlanbaMatch {
     public const WAITING_STAGE = 0;
     public const COUNTDOWN_STAGE = 1;
     private const STARTING_STAGE = 2;
-    public const OPENING_CAGES_STAGE= 3;
+    public const OPENING_CAGES_STAGE = 3;
     public const PLAYING_STAGE = 4;
     public const ENDING_STAGE = 5;
 
@@ -144,10 +142,11 @@ class FlanbaMatch {
             $team->addMember($session);
             $session->setMatch($this, false);
             $session->setTeam($team);
-            $session->addLeaveMatchItem();
+            $session->setMatchItems();
             $session->getPlayer()->teleport($team->getWaitingPoint());
 
-            if($this->getPlayersCount() >= 2) {
+            $players_count = $this->getPlayersCount();
+            if($players_count >= 2) {
                 $this->stage = self::COUNTDOWN_STAGE;
                 foreach($this->getPlayers() as $session) {
                     $session->setScoreboard(new CountdownScoreboard($session, $this));
@@ -155,7 +154,7 @@ class FlanbaMatch {
             } else {
                 $session->setScoreboard(new WaitingPlayersScoreboard($session, $this));
             }
-            $this->broadcastMessage("{GRAY}§k{$session->getUsername()}§r {YELLOW}has joined ({AQUA}{$this->getPlayersCount()}{YELLOW}/{AQUA}2{YELLOW})!");
+            $this->broadcastMessage("{GRAY}§k{$session->getUsername()}§r {YELLOW}has joined ({AQUA}$players_count{YELLOW}/{AQUA}2{YELLOW})!");
         }
 
         // TODO: Clean this
@@ -196,7 +195,7 @@ class FlanbaMatch {
                         $session->updateNameTag();
                         $session->setImmobile(); // TODO: Change this to a cage
                         $session->setScoreboard(new PlayingScoreboard($session, $this));
-                        $session->setTheBridgeKit(ColorUtils::colorToDyeColor($session->getTeam()->getColor()));
+                        $session->giveTheBridgeKit();
                         $session->getPlayer()->setGamemode(GameMode::ADVENTURE());
                         $session->title(" ", "{GRAY}Cages open in {GREEN}5s{GRAY}...");
                     }

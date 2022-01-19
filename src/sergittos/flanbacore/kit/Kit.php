@@ -23,11 +23,15 @@ use pocketmine\item\ItemIds;
 
 abstract class Kit {
 
-    public const THE_BRIDGE = 0;
+    protected Layout $layout;
 
-    private DyeColor $color;
+    public function __construct(Layout $layout) {
+        $this->layout = $layout;
+    }
 
-    abstract public function getId(): int;
+    public function getLayout(): Layout {
+        return $this->layout;
+    }
 
     /**
      * @return Armor[]
@@ -38,9 +42,5 @@ abstract class Kit {
      * @return Item[]
      */
     abstract public function getItems(DyeColor $color): array; // TODO: Change the function name?
-
-    public function getColor(): DyeColor {
-        return $this->color;
-    }
 
 }

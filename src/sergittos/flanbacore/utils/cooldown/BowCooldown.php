@@ -31,7 +31,9 @@ class BowCooldown extends Cooldown {
         // TODO: Add sound
         $on_run = parent::onRun();
         if($on_run) {
-            $this->session->getPlayer()->getInventory()->setItem(8, VanillaItems::ARROW()); // TODO: Change this because inventories will be configurable
+            $this->session->getPlayer()->getInventory()->setItem(
+                $this->session->getKit()->getLayout()->getArrowSlot(), VanillaItems::ARROW()
+            );
         }
         return $on_run;
     }

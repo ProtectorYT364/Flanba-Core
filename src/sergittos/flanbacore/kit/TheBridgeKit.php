@@ -14,18 +14,12 @@ namespace sergittos\flanbacore\kit;
 use pocketmine\block\BlockFactory;
 use pocketmine\block\BlockLegacyIds;
 use pocketmine\block\utils\DyeColor;
-use pocketmine\block\VanillaBlocks;
 use pocketmine\data\bedrock\DyeColorIdMap;
-use pocketmine\item\Dye;
 use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\item\enchantment\VanillaEnchantments;
 use pocketmine\item\VanillaItems;
 
 class TheBridgeKit extends Kit {
-
-    public function getId(): int {
-        return self::THE_BRIDGE;
-    }
 
     public function getArmorContents(DyeColor $color): array {
         $unbreaking = new EnchantmentInstance(VanillaEnchantments::UNBREAKING(), 10);
@@ -39,20 +33,22 @@ class TheBridgeKit extends Kit {
     }
 
     public function getItems(DyeColor $color): array {
-        $terracotta = BlockFactory::getInstance()->get(BlockLegacyIds::TERRACOTTA, DyeColorIdMap::getInstance()->toId($color))->asItem();
-        $blocks = $terracotta->setCount($terracotta->getMaxStackSize());
-        $air = VanillaBlocks::AIR()->asItem();
-        return [
-            VanillaItems::IRON_SWORD(),
-            VanillaItems::BOW(),
-            VanillaItems::DIAMOND_PICKAXE()->addEnchantment(new EnchantmentInstance(VanillaEnchantments::EFFICIENCY(), 2)),
-            $blocks,
-            $blocks,
-            VanillaItems::GOLDEN_APPLE()->setCount(8),
-            $air,
-            $air,
-            VanillaItems::ARROW()
-        ];
+        $items = [];
+        foreach($this->layout->getBlocksSlots() as $slot => $amount) {
+            $items[$slot] = BlockFactory::getInstance()->get(
+                BlockLegacyIds::TERRACOTTA,
+                DyeColorIdMap::getInstance()->toId($color)
+            )->asItem()->setCount($amount);
+        }
+        foreach($this->layout->getGapplesSlots() as $slot => $amount) {
+            $items[$slot] = VanillaItems::GOLDEN_APPLE()->setCount($amount);
+        }
+        $items[$this->layout->getSwordSlot()] = VanillaItems::IRON_SWORD();
+        $items[$this->layout->getBowSlot()] = VanillaItems::BOW();
+        $items[$this->layout->getPickaxeSlot()] = VanillaItems::DIAMOND_PICKAXE()->addEnchantment(new EnchantmentInstance(VanillaEnchantments::EFFICIENCY(), 2));
+        $items[$this->layout->getArrowSlot()] = VanillaItems::ARROW();
+
+        return $items;
     }
 
 }

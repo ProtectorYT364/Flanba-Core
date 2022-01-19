@@ -1,29 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace sergittos\flanbacore\command\tempc;
 
+use pocketmine\command\CommandSender;
 use sergittos\flanbacore\session\SessionFactory;
-use pocketmine\item\Item;
-use pocketmine\item\ItemIdentifier;
-use pocketmine\item\ItemIds;
+use pocketmine\command\Command;
 
+class HubCommand extends Command {
 
-class HubCommand extends \pocketmine\command\Command{
-
-	public function __construct(){
+	public function __construct() {
 		parent::__construct("hub", "Teleports you to the lobby!", null, ["lobby", "l", "spawn"]);
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	public function execute(\pocketmine\command\CommandSender $sender, string $commandLabel, array $args){
+	public function execute(CommandSender $sender, string $commandLabel, array $args) {
 		$session = SessionFactory::getSession($sender);
 		if($session->hasMatch()){
-			if(!$sender->getInventory()->contains(new Item(new ItemIdentifier(ItemIds::BED, 0)))){
-				$session->setMatch(null, true);
-			}
+			$session->setMatch(null, true);
 		}
-		$session->teleportToLobby();
 	}
+
 }

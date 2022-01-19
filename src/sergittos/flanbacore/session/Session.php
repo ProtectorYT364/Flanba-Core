@@ -149,7 +149,7 @@ class Session {
         if($this->hasMatch() and $this->hasTeam()) {
             $this->player->setNameTag(ColorUtils::translate(
                 $this->team->getColor() . $username . "\n" .
-                "{WHITE}{BOLD}" . (int) $this->player->getHealth() . " {RED}❤"
+                "{WHITE}{BOLD}" . (int) $this->player->getHealth() . " {RED}HP"
             ));
         } else {
             $this->player->setNameTag(ColorUtils::translate("{GRAY}$username"));

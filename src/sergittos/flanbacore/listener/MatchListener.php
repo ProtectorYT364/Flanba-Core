@@ -193,7 +193,7 @@ class MatchListener implements Listener {
                 $player->setImmobile();
                 $player->teleportToTeamSpawnPoint();             
                 $player->title(
-                    $color . $session->getUsername() . "§f scored!",
+                    $color . $session->getUsername() . " scored!",
                     "{GRAY}Cages open in {GREEN}{$countdown}s{GRAY}..."
                 );
 		$player->message($color . $session->getUsername() . " §6scored!");

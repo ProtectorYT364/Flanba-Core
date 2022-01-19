@@ -32,7 +32,7 @@ class SqliteProvider extends Provider {
                 arrow_slot TINYINT,
     
                 blocks_slot TINYINT,
-                gapples_slot TINYINT,
+                gapples_slot TINYINT
             )"
         );
     }

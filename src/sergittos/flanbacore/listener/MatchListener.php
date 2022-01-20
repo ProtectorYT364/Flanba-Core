@@ -74,7 +74,7 @@ class MatchListener implements Listener {
 			if($session->hasMatch() and $entity->getHealth() - $event->getFinalDamage() <= 0) {
 				foreach($entity->getWorld()->getPlayers() as $players){
 					if($session->getTeam()->getColor() == "{RED}"){
-						$players->sendMessage(TextFormat::RED . "{$entity->getName()}" . TextFormat::GRAY .  "was killed by " . TextFormat::BLUE . "{$event->getDamager()->getName()}.");
+						$players->sendMessage(TextFormat::RED . "{$entity->getName()}" . TextFormat::GRAY .  " was killed by " . TextFormat::BLUE . "{$event->getDamager()->getName()}.");
 					}
 					if($session->getTeam()->getColor() == "{BLUE}"){
 						$players->sendMessage(TextFormat::BLUE . "{$entity->getName()}" . TextFormat::GRAY .  " was killed by " . TextFormat::RED . "{$event->getDamager()->getName()}.");

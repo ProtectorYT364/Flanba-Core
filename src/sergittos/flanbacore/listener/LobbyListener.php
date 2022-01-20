@@ -61,10 +61,6 @@ class LobbyListener implements Listener {
         $hunger_manager->setFood($hunger_manager->getMaxFood());
     }
 
-    public function onChat(PlayerChatEvent $event): void {
-        SessionFactory::getSession($event->getPlayer())->giveTheBridgeKit();
-    }
-
     private function checkLobby(Entity $entity): bool {
         if($entity->getWorld()->getFolderName() === ConfigGetter::getLobbyWorldName()) {
             return true;

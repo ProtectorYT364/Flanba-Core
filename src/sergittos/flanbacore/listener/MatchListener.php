@@ -74,10 +74,10 @@ class MatchListener implements Listener {
 			if($session->hasMatch() and $entity->getHealth() - $event->getFinalDamage() <= 0) {
 				foreach($entity->getWorld()->getPlayers() as $players){
 					if($session->getTeam()->getColor() == "{RED}"){
-						$players->sendMessage(TextFormat::RED . "{$entity->getName()}" . TextFormat::GRAY .  "was killed by" . TextFormat::BLUE . "{$event->getDamager()->getNameTag()}.");
+						$players->sendMessage(TextFormat::RED . "{$entity->getName()}" . TextFormat::GRAY .  "was killed by " . TextFormat::BLUE . "{$event->getDamager()->getName()}.");
 					}
 					if($session->getTeam()->getColor() == "{BLUE}"){
-						$players->sendMessage(TextFormat::BLUE . "{$entity->getName()}" . TextFormat::GRAY .  "was killed by" . TextFormat::RED . "{$event->getDamager()->getNameTag()}.");
+						$players->sendMessage(TextFormat::BLUE . "{$entity->getName()}" . TextFormat::GRAY .  " was killed by " . TextFormat::RED . "{$event->getDamager()->getName()}.");
 					}
 				}
 				$death_event = new SessionDeathEvent($session);
@@ -236,7 +236,7 @@ class MatchListener implements Listener {
 		if(!$session->hasMatch()) {
 			return;
 		}
-		if(($event->getBlock()->getId() !== 159)){
+		if(($event->getBlock()->getId() !== 159 && $event->getBlock()->getMeta() !== 11 or 14 or 0)){
 			$event->cancel();
 		}
 	}

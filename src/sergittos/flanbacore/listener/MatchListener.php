@@ -21,6 +21,8 @@ use pocketmine\event\entity\EntityShootBowEvent;
 use pocketmine\event\entity\ProjectileHitBlockEvent;
 use pocketmine\event\entity\ProjectileHitEntityEvent;
 use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerDropItemEvent;
+use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerItemConsumeEvent;
 use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\event\player\PlayerQuitEvent;
@@ -37,6 +39,10 @@ use sergittos\flanbacore\utils\cooldown\Cooldown;
 use sergittos\flanbacore\utils\cooldown\GappleCooldown;
 
 class MatchListener implements Listener {
+
+	public function onDrop(PlayerDropItemEvent $event){
+		$event->cancel();
+	}
 
 
 	public function onDeath(SessionDeathEvent $event): void {
@@ -100,14 +106,9 @@ class MatchListener implements Listener {
             return;
         }
         if($event->getItem() instanceof GoldenApple) {
-            if($session->hasCooldown(Cooldown::GAPPLE)) {
-                $event->cancel();
-                return;
-            }
             $player->setHealth($player->getMaxHealth());
             $player->getEffects()->clear();
             $session->updateNameTag();
-            $session->addCooldown(new GappleCooldown());
         }
     }
 
@@ -131,6 +132,7 @@ class MatchListener implements Listener {
         $owning_entity = $event->getEntity()->getOwningEntity();
         if($owning_entity instanceof Player) {
             SessionFactory::getSession($owning_entity)->sendOrbSound();
+			$owning_entity->sendMessage("§b{$event->getEntityHit()->getName()} §ais on §c{$event->getEntityHit()->getHealth()}!");
         }
     }
 
@@ -236,7 +238,7 @@ class MatchListener implements Listener {
 		if(!$session->hasMatch()) {
 			return;
 		}
-		if(($event->getBlock()->getId() !== 159 && $event->getBlock()->getMeta() !== 11 or 14 or 0)){
+		if(!($event->getBlock()->getId() == 159 and $event->getBlock()->getMeta() == 11 or $event->getBlock()->getMeta() == 14 or $event->getBlock()->getMeta() == 0)){
 			$event->cancel();
 		}
 	}

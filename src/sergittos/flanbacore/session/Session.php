@@ -148,14 +148,18 @@ class Session {
     public function addCooldown(Cooldown $cooldown): void {
         $this->cooldowns[$cooldown->getId()]  = $cooldown;
         $cooldown->setSession($this);
-        $this->message("§8» §c" . $cooldown->getId() . " is now on cooldown.");
+		if($this->getPlayer()->isOnline()){
+			$this->message("§8» §c" . $cooldown->getId() . " is now on cooldown.");
+		}
     }
 
     public function removeCooldown(Cooldown $cooldown): void {
         $id = $cooldown->getId();
         if($this->hasCooldown($id)) {
             unset($this->cooldowns[$id]);
-            $this->message("§8» §a" . $cooldown->getId() . " is out of cooldown");
+			if($this->getPlayer()->isOnline()){
+				$this->message("§8» §a" . $cooldown->getId() . " is out of cooldown");
+			}
         }
     }
 

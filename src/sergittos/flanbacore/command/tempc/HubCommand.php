@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace sergittos\flanbacore\command\tempc;
 
 use pocketmine\command\CommandSender;
+use pocketmine\item\Item;
+use pocketmine\item\ItemIdentifier;
+use pocketmine\item\ItemIds;
 use sergittos\flanbacore\session\SessionFactory;
 use pocketmine\command\Command;
 
@@ -17,8 +20,13 @@ class HubCommand extends Command {
 	public function execute(CommandSender $sender, string $commandLabel, array $args) {
 		$session = SessionFactory::getSession($sender);
 		if($session->hasMatch()){
-			$session->setMatch(null, true);
+			if($sender->getInventory()->contains(new Item(new ItemIdentifier(ItemIds::BED, 0)))){
+				$session->setMatch(null, false);
+			} else {
+				$session->setMatch(null, true);
+			}
 		}
+		$session->teleportToLobby();
 	}
 
 }

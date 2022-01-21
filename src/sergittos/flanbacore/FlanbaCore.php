@@ -71,7 +71,7 @@ class FlanbaCore extends PluginBase {
         $this->queue_manager = new QueueManager();
 
         $this->registerListener(new ClaimListener());
-        $this->registerListener(new FlanbaListener());
+        $this->registerListener(new FlanbaListener($this));
         $this->registerListener(new ItemListener());
         $this->registerListener(new LobbyListener());
         $this->registerListener(new MatchListener());

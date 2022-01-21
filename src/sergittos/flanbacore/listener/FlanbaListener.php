@@ -17,9 +17,7 @@ use sergittos\flanbacore\utils\ConfigGetter;
 use pocketmine\entity\Entity;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
-use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
-use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\math\Vector3;
@@ -28,11 +26,6 @@ use pocketmine\utils\TextFormat;
 use sergittos\flanbacore\FlanbaCore;
 
 class FlanbaListener implements Listener {
-
-    public function onFight(EntityDamageByEntityEvent $event): void {
-        $event->setKnockBack(ConfigGetter::getKnockback());
-        $event->setAttackCooldown(ConfigGetter::getAttackCooldown());
-    }
 
 	public function __construct(FlanbaCore $plugin){
 		$this->plugin = $plugin;

@@ -18,20 +18,24 @@ use sergittos\flanbacore\session\SessionFactory;
 
 class SpectateMatchForm extends \jojoe77777\FormAPI\SimpleForm {
 
-    public function __construct(Player $player) {
+	private Player $player1;
+
+	public function __construct(Player $player1) {
+		$this->player1 = $player1;
 		parent::__construct(function(Player $player, $data = null) : void{
 			if($data == null) return;
-			$player->sendMessage("Test");
-			$player->teleport(FlanbaCore::getInstance()->getServer()->getPlayerExact($data->getName())->getPosition());
-			$player->setGamemode(GameMode::SPECTATOR());
-			$inventory = $player->getInventory();
+			$this->player1->teleport(FlanbaCore::getInstance()->getServer()->getPlayerExact($data)->getPosition());
+			$this->player1->setGamemode(GameMode::SPECTATOR());
+			$inventory = $this->player1->getInventory();
+
+			$inventory->clearAll();
 			$inventory->setItem(7, new LeaveMatchItem());
 		});
-		$this->setTitle("Spectate Match");
+		$this->setTitle("Spectate a Match");
 		foreach(FlanbaCore::getInstance()->getServer()->getOnlinePlayers() as $players){
 			$session = SessionFactory::getSession($players);
 			if($session->hasMatch()){
-				$this->addButton($session->getPlayer()->getName());
+				$this->addButton($session->getPlayer()->getName(), -1, "", $session->getPlayer()->getName());
 			}
 		}
     }

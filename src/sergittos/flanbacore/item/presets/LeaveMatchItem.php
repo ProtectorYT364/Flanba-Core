@@ -15,6 +15,7 @@ use pocketmine\block\utils\DyeColor;
 use pocketmine\item\ItemIds;
 use pocketmine\item\ItemUseResult;
 use pocketmine\math\Vector3;
+use pocketmine\player\GameMode;
 use pocketmine\player\Player;
 use sergittos\flanbacore\item\FlanbaItem;
 use sergittos\flanbacore\session\SessionFactory;
@@ -27,12 +28,15 @@ class LeaveMatchItem extends FlanbaItem {
 
     public function onClickAir(Player $player, Vector3 $directionVector): ItemUseResult {
         $session = SessionFactory::getSession($player);
+		if($session->getPlayer()->getGamemode() === GameMode::SPECTATOR()){
+			$session->teleportToLobby();
+			return ItemUseResult::SUCCESS();
+		}
         if(!$session->hasMatch()) {
             $session->message("{RED}You must be on a match to do this!");
             return ItemUseResult::FAIL();
         }
         $session->setMatch(null, false);
-        $session->teleportToLobby();
         return ItemUseResult::SUCCESS();
     }
 

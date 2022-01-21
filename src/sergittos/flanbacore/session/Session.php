@@ -199,7 +199,7 @@ class Session {
 
         $inventory = $this->player->getInventory();
         $inventory->setItem(2, new EditKitItem());
-        $inventory->setItem(8, new LeaveMatchItem());
+        $inventory->setItem(7, new LeaveMatchItem());
     }
     
     public function sendEditKitMenu(): void {

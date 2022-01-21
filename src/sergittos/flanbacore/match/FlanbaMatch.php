@@ -13,6 +13,7 @@ namespace sergittos\flanbacore\match;
 
 use pocketmine\player\GameMode;
 use sergittos\flanbacore\arena\Arena;
+use sergittos\flanbacore\FlanbaCore;
 use sergittos\flanbacore\match\team\Team;
 use sergittos\flanbacore\session\Session;
 use sergittos\flanbacore\utils\ColorUtils;
@@ -171,6 +172,7 @@ class FlanbaMatch {
 
     public function addSpectator(Session $spectator): void {
         // TODO
+		$this->spectators[] = $spectator;
     }
 
     public function removeSpectator(Session $spectator): void {

@@ -19,7 +19,7 @@ use sergittos\flanbacore\match\team\TeamSettings;
 class ArenaFactory {
 
     /** @var Arena[] */
-    static private array $arenas = [];
+    static public array $arenas = [];
 
     static public function init(): void {
         foreach(json_decode(file_get_contents(FlanbaCore::getInstance()->getDataFolder() . "arenas.json"), true) as $arena_data) {
@@ -46,7 +46,7 @@ class ArenaFactory {
         return self::$arenas;
     }
 
-    static private function addArena(Arena $arena): void {
+    public static function addArena(Arena $arena): void {
         self::$arenas[$arena->getId()] = $arena;
     }
 

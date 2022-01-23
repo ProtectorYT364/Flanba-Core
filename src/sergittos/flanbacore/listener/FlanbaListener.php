@@ -31,6 +31,10 @@ class FlanbaListener implements Listener {
 		$this->plugin = $plugin;
 	}
 
+	public function onFight(EntityDamageByEntityEvent $event): void {
+		$event->setKnockBack(ConfigGetter::getKnockback());
+	}
+
 	public function onBlockBreak(BlockBreakEvent $event) {
 		$player = $event->getPlayer();
 		$block = $event->getBlock();

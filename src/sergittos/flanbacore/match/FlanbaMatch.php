@@ -173,7 +173,7 @@ class FlanbaMatch {
 
     public function addSpectator(Session $spectator): void {
         // TODO
-		$this->spectators[] = $spectator;
+		$thing = $this->spectators[$spectator];
     }
 
     public function removeSpectator(Session $spectator): void {
@@ -222,7 +222,7 @@ class FlanbaMatch {
 							$sessions->setScoreboard(new WaitingPlayersScoreboard($sessions, $this));
 						}
 					}
-                    $this->broadcastMessage("{YELLOW}The game starts in {RED}" . $this->countdown +1 . " {YELLOW}seconds!");
+                    $this->broadcastMessage("{YELLOW}The game starts in {RED}" . $this->countdown - 1  . " {YELLOW}seconds!");
                 }
                 $this->updatePlayersScoreboard();
                 break;

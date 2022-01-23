@@ -209,7 +209,7 @@ class FlanbaMatch {
                     if($this->countdown <= 3) {
                         $color = "{RED}";
                     }
-                    $this->broadcastTitle("{$color}{$this->countdown}");
+                    $this->broadcastTitle("{$color}" . $this->countdown-1);
 					$players_count = $this->getPlayersCount();
 					if($players_count >= 2) {
 						$this->countdown--;

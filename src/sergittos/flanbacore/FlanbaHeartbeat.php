@@ -22,12 +22,12 @@ class FlanbaHeartbeat extends Task {
             $match->tick();
         }
         foreach(SessionFactory::getSessions() as $session) {
-            foreach($session->getCooldowns() as $cooldown) {
-                $cooldown->onRun();
-            }
-            if($session->getScoreboard() instanceof LobbyScoreboard and $session->checkPing()) {
-                $session->updateScoreboard();
-            }
+			foreach($session->getCooldowns() as $cooldown) {
+				$cooldown->onRun();
+			}
+			if($session->getScoreboard() instanceof LobbyScoreboard and $session->checkPing()) {
+				$session->updateScoreboard();
+			}
         }
     }
 

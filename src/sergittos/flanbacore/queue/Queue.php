@@ -35,7 +35,8 @@ abstract class Queue {
     private string $name;
 
     private FlanbaMatch|null $match = null;
-	private int $j = 10;
+	private int $j = 0;
+	private string $worldname;
 
 	public function __construct(int $id, string $name) {
         $this->id = $id;
@@ -69,30 +70,96 @@ abstract class Queue {
     }
 
     private function createNewArena(): void {
+
         $j = $this->j;
-        $server = Server::getInstance();
-        $data_path = $server->getDataPath();
-        $dir = $data_path . "/worlds/Ruins-" . $j;
-        if(!file_exists($dir)) {
-            mkdir($dir);
-            $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($data_path . "/worlds/Ruins", FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::SELF_FIRST);
-            /** @var SplFileInfo $fileInfo */
-            foreach($files as $fileInfo) {
-                if($filePath = $fileInfo->getRealPath()) {
-                    if($fileInfo->isFile()) {
-                        copy($filePath, str_replace("Ruins", "Ruins-" . $j, $filePath));
-                    } else {
-                        mkdir(str_replace("Ruins", "Ruins-" . $j, $filePath));
-                    }
-                }
-            }
-        }
-
-        $world_name = "Ruins-" . $j;
+		$random = mt_rand(0, 3);
+		switch($random){
+			case 0:
+				$server = Server::getInstance();
+				$data_path = $server->getDataPath();
+				$dir = $data_path . "/worlds/Ruins-" . $j;
+				if(!file_exists($dir)) {
+					mkdir($dir);
+					$files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($data_path . "/worlds/Ruins", FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::SELF_FIRST);
+					/** @var SplFileInfo $fileInfo */
+					foreach($files as $fileInfo) {
+						if($filePath = $fileInfo->getRealPath()) {
+							if($fileInfo->isFile()) {
+								copy($filePath, str_replace("Ruins", "Ruins-" . $j, $filePath));
+							} else {
+								mkdir(str_replace("Ruins", "Ruins-" . $j, $filePath));
+							}
+						}
+					}
+				}
+				$this->worldname = "Ruins-" . $j;
+				break;
+			case 1:
+				$server = Server::getInstance();
+				$data_path = $server->getDataPath();
+				$dir = $data_path . "/worlds/SpaceX-" . $j;
+				if(!file_exists($dir)) {
+					mkdir($dir);
+					$files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($data_path . "/worlds/SpaceX", FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::SELF_FIRST);
+					/** @var SplFileInfo $fileInfo */
+					foreach($files as $fileInfo) {
+						if($filePath = $fileInfo->getRealPath()) {
+							if($fileInfo->isFile()) {
+								copy($filePath, str_replace("SpaceX", "SpaceX-" . $j, $filePath));
+							} else {
+								mkdir(str_replace("SpaceX", "SpaceX-" . $j, $filePath));
+							}
+						}
+					}
+				}
+				$this->worldname = "SpaceX-" . $j;
+				break;
+			case 2:
+				$server = Server::getInstance();
+				$data_path = $server->getDataPath();
+				$dir = $data_path . "/worlds/Shrine-" . $j;
+				if(!file_exists($dir)) {
+					mkdir($dir);
+					$files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($data_path . "/worlds/Shrine", FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::SELF_FIRST);
+					/** @var SplFileInfo $fileInfo */
+					foreach($files as $fileInfo) {
+						if($filePath = $fileInfo->getRealPath()) {
+							if($fileInfo->isFile()) {
+								copy($filePath, str_replace("Shrine", "Shrine-" . $j, $filePath));
+							} else {
+								mkdir(str_replace("Shrine", "Shrine-" . $j, $filePath));
+							}
+						}
+					}
+				}
+				$this->worldname = "Shrine-" . $j;
+				break;
+			case 3:
+				$server = Server::getInstance();
+				$data_path = $server->getDataPath();
+				$dir = $data_path . "/worlds/1945-" . $j;
+				if(!file_exists($dir)) {
+					mkdir($dir);
+					$files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($data_path . "/worlds/1945", FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::SELF_FIRST);
+					/** @var SplFileInfo $fileInfo */
+					foreach($files as $fileInfo) {
+						if($filePath = $fileInfo->getRealPath()) {
+							if($fileInfo->isFile()) {
+								copy($filePath, str_replace("1945", "1945-" . $j, $filePath));
+							} else {
+								mkdir(str_replace("1945", "1945-" . $j, $filePath));
+							}
+						}
+					}
+				}
+				$this->worldname = "1945-" . $j;
+				break;
+		}
+		
         $world_manager = Server::getInstance()->getWorldManager();
-        $world_manager->loadWorld($world_name, true);
+        $world_manager->loadWorld($this->worldname, true);
 
-        $world = $world_manager->getWorldByName($world_name);
+        $world = $world_manager->getWorldByName($this->worldname);
         $world->setAutoSave(false);
         $world->setTime(World::TIME_DAY);
         $world->stopTime();

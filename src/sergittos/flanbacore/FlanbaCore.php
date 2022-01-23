@@ -44,6 +44,7 @@ use sergittos\flanbacore\session\SessionFactory;
 use sergittos\flanbacore\utils\ConfigGetter;
 use sergittos\flanbacore\command\tempc\HubCommand;
 
+
 class FlanbaCore extends PluginBase {
     use SingletonTrait;
 
@@ -74,21 +75,20 @@ class FlanbaCore extends PluginBase {
         $this->initProvider();
         $this->match_manager = new MatchManager();
         $this->queue_manager = new QueueManager();
-
         $this->registerListener(new ClaimListener());
         $this->registerListener(new FlanbaListener($this));
+		$this->registerListener(new ScoreboardListener());
         $this->registerListener(new ItemListener());
         $this->registerListener(new LobbyListener());
         $this->registerListener(new MatchListener());
         $this->registerListener(new PartyListener());
-        $this->registerListener(new ScoreboardListener());
         $this->registerListener(new SessionListener());
         $this->registerListener(new SlotsListener());
 
         $this->registerCommand(new HubCommand());
 
-        $scheduler = $this->getScheduler();
-        $scheduler->scheduleRepeatingTask(new FlanbaHeartbeat(), 20); // 1 second
+		$scheduler = $this->getScheduler();
+		$scheduler->scheduleRepeatingTask(new FlanbaHeartbeat(), 20); // 1 second
         $this->doMuqsitThings();
     }
 

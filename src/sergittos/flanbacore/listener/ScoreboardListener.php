@@ -13,12 +13,12 @@ use sergittos\flanbacore\utils\scoreboard\presets\LobbyScoreboard;
 
 class ScoreboardListener implements Listener {
 
-    public function onJoin(PlayerJoinEvent $event): void {
-        foreach(SessionFactory::getSessions() as $session) {
-            if($session->getScoreboard() instanceof LobbyScoreboard) {
-                $session->updateScoreboard();
-            }
-        }
-    }
+	public function onJoin(PlayerJoinEvent $event): void {
+		foreach(SessionFactory::getSessions() as $session) {
+			if($session->getScoreboard() instanceof LobbyScoreboard) {
+				$session->updateScoreboard();
+			}
+		}
+	}
 
 }

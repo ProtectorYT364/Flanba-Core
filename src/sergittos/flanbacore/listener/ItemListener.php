@@ -32,7 +32,7 @@ class ItemListener implements Listener {
     public function onItemUse(PlayerItemUseEvent $event): void {
         if($this->hasFlanbaTag($event->getItem())) {
             $player = $event->getPlayer();
-            $player->broadcastSound(new PopSound(1), [$player]);
+			$player->broadcastSound(new PopSound(1), [$player]);
         }
     }
 

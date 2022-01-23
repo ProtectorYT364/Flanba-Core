@@ -42,10 +42,10 @@ use sergittos\flanbacore\item\presets\match\layout\HotbarItem;
 use sergittos\flanbacore\item\presets\match\LeaveMatchItem;
 use sergittos\flanbacore\item\presets\PartyItem;
 use sergittos\flanbacore\item\presets\ProfileItem;
+use sergittos\flanbacore\item\presets\ReplayItem;
 use sergittos\flanbacore\item\presets\SettingsItem;
 use sergittos\flanbacore\item\presets\ShopItem;
 use sergittos\flanbacore\item\presets\SpectateItem;
-use sergittos\flanbacore\item\presets\UnlockedItem;
 use sergittos\flanbacore\kit\Kit;
 use sergittos\flanbacore\kit\Layout;
 use sergittos\flanbacore\match\FlanbaMatch;
@@ -65,14 +65,15 @@ class Session {
     private Scoreboard|null $scoreboard = null;
     private Kit $kit;
 
-    private int $current_ping;
+	private int $current_ping;
 
-    /** @var Cooldown[] */
+
+	/** @var Cooldown[] */
     private array $cooldowns = [];
 
     public function __construct(Player $player) {
         $this->player = $player;
-        $this->current_ping = $this->getPing();
+		$this->current_ping = $this->getPing();
     }
 
     public function getPlayer(): Player {
@@ -294,7 +295,7 @@ class Session {
 
         $inventory = $this->player->getInventory();
         $inventory->setItem(0, new ShopItem());
-        $inventory->setItem(1, new UnlockedItem());
+        $inventory->setItem(1, new ReplayItem());
         $inventory->setItem(2, new SpectateItem());
         $inventory->setItem(4, new GameSelectorItem());
         $inventory->setItem(6, new PartyItem());
@@ -328,20 +329,20 @@ class Session {
     }
 
     public function getPing(): int {
-        if(!$this->player->isOnline()) {
-            return 0;
-        }
+		if(!$this->player->isOnline()) {
+			return 0;
+		}
         return $this->player->getNetworkSession()->getPing() ?? 0;
     }
 
-    public function checkPing(): bool {
-        $ping = $this->getPing();
-        if($this->current_ping !== $ping) {
-            $this->current_ping = $ping;
-            return true;
-        }
-        return false;
-    }
+	public function checkPing(): bool {
+		$ping = $this->getPing();
+		if($this->current_ping !== $ping) {
+			$this->current_ping = $ping;
+			return true;
+		}
+		return false;
+	}
 
     public function getUsername(): string {
         return $this->player->getName();

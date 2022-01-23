@@ -1,0 +1,55 @@
+[
+	{
+		"time_left": 15,
+    	"height_limit": 37,
+    	"void_limit": 0,
+    	"red_settings": {
+    	  "safe_zone": {
+    	    "first_position": {
+    	      "x": 400, "z": 316
+    	    },
+    	    "second_position": {
+    	      "x": 200, "z": 400
+    	    }
+    	  },
+    	  "goal_area": {
+    	    "first_position": {
+    	      "x": 260, "y": 28, "z": 327
+    	    },
+    	    "second_position": {
+    	      "x": 256, "y": 29, "z": 331
+    	    }
+    	  },
+    	  "waiting_point": {
+    	    "x": 258.5, "y": 39, "z": 324.5
+    	  },
+    	  "spawn_point": {
+    	    "x": 258.5, "y": 39, "z": 324.5
+    	  }
+    	},
+    	"blue_settings": {
+    	  "safe_zone": {
+    	    "first_position": {
+    	      "x": 150, "z": 237
+    	    },
+    	    "second_position": {
+    	      "x": 300, "z": 100
+    	    }
+    	  },
+    	  "goal_area": {
+    	    "first_position": {
+    	      "x": 260, "y": 28, "z": 223
+    	    },
+    	    "second_position": {
+    	      "x": 256, "y": 29, "z": 227
+    	    }
+    	  },
+    	  "waiting_point": {
+    	    "x": 258.5, "y": 39, "z": 230.5
+    	  },
+    	  "spawn_point": {
+    	    "x": 258.5, "y": 39, "z": 230.5
+    	  }
+    	}
+  	}	
+]

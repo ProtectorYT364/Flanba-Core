@@ -65,11 +65,14 @@ class Session {
     private Scoreboard|null $scoreboard = null;
     private Kit $kit;
 
+    private int $current_ping;
+
     /** @var Cooldown[] */
     private array $cooldowns = [];
 
     public function __construct(Player $player) {
         $this->player = $player;
+        $this->current_ping = $this->getPing();
     }
 
     public function getPlayer(): Player {
@@ -326,6 +329,15 @@ class Session {
 
     public function getPing(): int {
         return $this->player->getNetworkSession()->getPing() ?? 0;
+    }
+
+    public function checkPing(): bool {
+        $ping = $this->getPing();
+        if($this->current_ping !== $ping) {
+            $this->current_ping = $ping;
+            return true;
+        }
+        return false;
     }
 
     public function getUsername(): string {

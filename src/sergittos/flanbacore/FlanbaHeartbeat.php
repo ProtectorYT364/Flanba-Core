@@ -13,6 +13,7 @@ namespace sergittos\flanbacore;
 
 use pocketmine\scheduler\Task;
 use sergittos\flanbacore\session\SessionFactory;
+use sergittos\flanbacore\utils\scoreboard\presets\LobbyScoreboard;
 
 class FlanbaHeartbeat extends Task {
 
@@ -23,6 +24,9 @@ class FlanbaHeartbeat extends Task {
         foreach(SessionFactory::getSessions() as $session) {
             foreach($session->getCooldowns() as $cooldown) {
                 $cooldown->onRun();
+            }
+            if($session->getScoreboard() instanceof LobbyScoreboard and $session->checkPing()) {
+                $session->updateScoreboard();
             }
         }
     }

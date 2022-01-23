@@ -30,6 +30,7 @@ use sergittos\flanbacore\listener\ItemListener;
 use sergittos\flanbacore\listener\LobbyListener;
 use sergittos\flanbacore\listener\MatchListener;
 use sergittos\flanbacore\listener\PartyListener;
+use sergittos\flanbacore\listener\ScoreboardListener;
 use sergittos\flanbacore\listener\SessionListener;
 use sergittos\flanbacore\listener\SlotsListener;
 use sergittos\flanbacore\map\MapFactory;
@@ -80,12 +81,14 @@ class FlanbaCore extends PluginBase {
         $this->registerListener(new LobbyListener());
         $this->registerListener(new MatchListener());
         $this->registerListener(new PartyListener());
+        $this->registerListener(new ScoreboardListener());
         $this->registerListener(new SessionListener());
         $this->registerListener(new SlotsListener());
 
         $this->registerCommand(new HubCommand());
 
-        $this->getScheduler()->scheduleRepeatingTask(new FlanbaHeartbeat(), 20); // 1 second
+        $scheduler = $this->getScheduler();
+        $scheduler->scheduleRepeatingTask(new FlanbaHeartbeat(), 20); // 1 second
         $this->doMuqsitThings();
     }
 

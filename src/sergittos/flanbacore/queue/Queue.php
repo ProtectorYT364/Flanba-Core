@@ -55,19 +55,21 @@ abstract class Queue {
             $match = $this->getRandomMatch();
             if($match === null) {
 				$j = $this->j;
-				mkdir(Server::getInstance()->getDataPath() . "/worlds/Ruins-" . $j);
-
-				$files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(Server::getInstance()->getDataPath() . "/worlds/Ruins", FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::SELF_FIRST);
-				/** @var SplFileInfo $fileInfo */
-				foreach($files as $fileInfo) {
-					if($filePath = $fileInfo->getRealPath()) {
-						if($fileInfo->isFile()) {
-							copy($filePath, str_replace("Ruins", "Ruins-" . $j, $filePath));
-						} else {
-							mkdir(str_replace("Ruins", "Ruins-" . $j, $filePath));
+				if(!file_exists(Server::getInstance()->getDataPath() . "/worlds/Ruins-" . $j)){
+					mkdir(Server::getInstance()->getDataPath() . "/worlds/Ruins-" . $j);
+					$files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(Server::getInstance()->getDataPath() . "/worlds/Ruins", FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::SELF_FIRST);
+					/** @var SplFileInfo $fileInfo */
+					foreach($files as $fileInfo) {
+						if($filePath = $fileInfo->getRealPath()) {
+							if($fileInfo->isFile()) {
+								copy($filePath, str_replace("Ruins", "Ruins-" . $j, $filePath));
+							} else {
+								mkdir(str_replace("Ruins", "Ruins-" . $j, $filePath));
+							}
 						}
 					}
 				}
+
 				$world_name = "Ruins-" . $j;
 				$world_manager = Server::getInstance()->getWorldManager();
 				$world_manager->loadWorld($world_name, true);
@@ -81,11 +83,12 @@ abstract class Queue {
 						"tb" . $j, $arena_data["time_left"], $arena_data["height_limit"], $arena_data["void_limit"], $world,
 						TeamSettings::fromData($arena_data["red_settings"], $world), TeamSettings::fromData($arena_data["blue_settings"], $world)
 					));
+					$match = FlanbaCore::getInstance()->getMatchManager();
+					foreach(ArenaFactory::getArenas() as $arena) {
+						$match->addMatch(new FlanbaMatch($arena));
+					}
 				}
-				$match = new MatchManager();
-				foreach(ArenaFactory::getArenas() as $arena) {
-					$match->addMatch(new FlanbaMatch($arena));
-				}
+				$this->addDupedMatch($session);
 				$this->j++;
                 return;
             }

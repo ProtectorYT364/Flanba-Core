@@ -25,6 +25,7 @@ class TheBridgeKit extends Kit {
         $unbreaking = new EnchantmentInstance(VanillaEnchantments::UNBREAKING(), 10);
         $color = $color->getRgbValue();
         return [
+            VanillaItems::AIR,
             VanillaItems::LEATHER_TUNIC()->setCustomColor($color)->addEnchantment($unbreaking),
             VanillaItems::LEATHER_PANTS()->setCustomColor($color)->addEnchantment($unbreaking),
             VanillaItems::LEATHER_BOOTS()->setCustomColor($color)->addEnchantment($unbreaking)

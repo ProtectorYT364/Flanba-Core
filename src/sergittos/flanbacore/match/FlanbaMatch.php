@@ -222,7 +222,7 @@ class FlanbaMatch {
 							$sessions->setScoreboard(new WaitingPlayersScoreboard($sessions, $this));
 						}
 					}
-                    $this->broadcastMessage("{YELLOW}The game starts in {RED}" . $this->countdown - 1  . " {YELLOW}seconds!");
+                    $this->broadcastMessage("{YELLOW}The game starts in {RED}" . $this->countdown  . " {YELLOW}seconds!");
                 }
                 $this->updatePlayersScoreboard();
                 break;

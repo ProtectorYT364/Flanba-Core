@@ -146,12 +146,15 @@ class MatchListener implements Listener {
     public function onMove(PlayerMoveEvent $event): void {
 		$entity = $event->getPlayer();
         $session = SessionFactory::getSession($player = $event->getPlayer());
+		$position = $player->getPosition();
         if(!$session->hasMatch()) {
+			if($position->getY() <= 10){
+				$player->teleport(FlanbaCore::getInstance()->getServer()->getWorldManager()->getDefaultWorld()->getSpawnLocation());
+			}
             return;
         }
         $match = $session->getMatch();
         $stage = $match->getStage();
-        $position = $player->getPosition();
         if($position->getY() <= $match->getArena()->getVoidLimit()) {
             if($stage === FlanbaMatch::WAITING_STAGE or $stage === FlanbaMatch::COUNTDOWN_STAGE) {
                 $session->teleportToTeamSpawnPoint(false);
@@ -203,12 +206,12 @@ class MatchListener implements Listener {
                 $player->teleportToTeamSpawnPoint();
                 $player->updateScoreboard();
                 $player->title(
-                    $color . $session->getUsername() . "§f scored!",
+                    $color . $session->getUsername() . "§7 scored!",
                     "{GRAY}Cages open in {GREEN}{$countdown}s{GRAY}..."
                 );
                 $player->teleportToTeamSpawnPoint();             
                 $player->title(
-                    $color . $session->getUsername() . " scored!",
+                    $color . $session->getUsername() . "§7 scored!",
                     "{GRAY}Cages open in {GREEN}{$countdown}s{GRAY}..."
                 );
 		$player->message($color . $session->getUsername() . " §6scored!");

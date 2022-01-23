@@ -37,6 +37,7 @@ abstract class Queue {
     private FlanbaMatch|null $match = null;
 	private int $j = 0;
 	private string $worldname;
+	private string $thingiguess;
 
 	public function __construct(int $id, string $name) {
         $this->id = $id;
@@ -93,6 +94,7 @@ abstract class Queue {
 					}
 				}
 				$this->worldname = "Ruins-" . $j;
+				$this->thingiguess = "ruins";
 				break;
 			case 1:
 				$server = Server::getInstance();
@@ -113,6 +115,7 @@ abstract class Queue {
 					}
 				}
 				$this->worldname = "SpaceX-" . $j;
+				$this->thingiguess = "spaceX";
 				break;
 			case 2:
 				$server = Server::getInstance();
@@ -133,6 +136,7 @@ abstract class Queue {
 					}
 				}
 				$this->worldname = "Shrine-" . $j;
+				$this->thingiguess = "shrine";
 				break;
 			case 3:
 				$server = Server::getInstance();
@@ -153,6 +157,7 @@ abstract class Queue {
 					}
 				}
 				$this->worldname = "1945-" . $j;
+				$this->thingiguess = "1945";
 				break;
 		}
 		
@@ -163,7 +168,7 @@ abstract class Queue {
         $world->setAutoSave(false);
         $world->setTime(World::TIME_DAY);
         $world->stopTime();
-        foreach(json_decode(file_get_contents(FlanbaCore::getInstance()->getDataFolder() . "dupedarena.json"), true) as $arena_data){
+        foreach(json_decode(file_get_contents(FlanbaCore::getInstance()->getDataFolder() . "$this->thingiguess.json"), true) as $arena_data){
             $arena = new Arena(
                 "tb" . $j, $arena_data["time_left"], $arena_data["height_limit"], $arena_data["void_limit"], $world,
                 TeamSettings::fromData($arena_data["red_settings"], $world), TeamSettings::fromData($arena_data["blue_settings"], $world)

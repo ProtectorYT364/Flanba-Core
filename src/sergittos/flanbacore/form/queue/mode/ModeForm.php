@@ -8,22 +8,28 @@
 declare(strict_types=1);
 
 
-namespace sergittos\flanbacore\form;
+namespace sergittos\flanbacore\form\queue\mode;
 
 
 use EasyUI\element\Button;
 use EasyUI\variant\SimpleForm;
 use pocketmine\player\Player;
 use sergittos\flanbacore\FlanbaCore;
+use sergittos\flanbacore\form\queue\SelectMapForm;
 use sergittos\flanbacore\session\SessionFactory;
 
-class GameSelectorForm extends SimpleForm {
+class ModeForm extends SimpleForm {
 
-    public function __construct() {
-        parent::__construct("Game selector");
+    public function __construct(string $title) {
+        parent::__construct($title);
     }
 
     protected function onCreation(): void {
+        $this->addRandomMapButton(); // TODO: Do solos, duos and squads
+        $this->addRedirectFormButton("Select map", new SelectMapForm());
+    }
+
+    private function addRandomMapButton(): void {
         foreach(FlanbaCore::getInstance()->getQueueManager()->getQueues() as $queue) {
             $button = new Button($queue->getName());
             $button->setSubmitListener(function(Player $player) use ($queue) {

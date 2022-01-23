@@ -14,6 +14,7 @@ namespace sergittos\flanbacore\arena;
 use pocketmine\Server;
 use pocketmine\world\World;
 use sergittos\flanbacore\FlanbaCore;
+use sergittos\flanbacore\map\MapFactory;
 use sergittos\flanbacore\match\team\TeamSettings;
 
 class ArenaFactory {
@@ -33,8 +34,9 @@ class ArenaFactory {
             $world->stopTime();
 
             self::addArena(new Arena(
-                $arena_data["id"], $arena_data["time_left"], $arena_data["height_limit"], $arena_data["void_limit"], $world,
-                TeamSettings::fromData($arena_data["red_settings"], $world), TeamSettings::fromData($arena_data["blue_settings"], $world)
+                $arena_data["id"], $arena_data["time_left"], $arena_data["height_limit"], $arena_data["void_limit"]
+                /* MapFactory::getMapByName($arena_data["map"]) */, $world, TeamSettings::fromData($arena_data["red_settings"], $world),
+                TeamSettings::fromData($arena_data["blue_settings"], $world)
             ));
         }
     }

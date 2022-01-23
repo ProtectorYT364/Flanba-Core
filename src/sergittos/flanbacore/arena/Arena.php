@@ -13,6 +13,7 @@ namespace sergittos\flanbacore\arena;
 
 use pocketmine\Server;
 use pocketmine\world\World;
+use sergittos\flanbacore\map\Map;
 use sergittos\flanbacore\match\team\TeamSettings;
 
 class Arena {
@@ -21,16 +22,19 @@ class Arena {
     private int $time_left;
     private int $height_limit;
     private int $void_limit;
+
+    private Map $map;
     private World $world;
 
     private TeamSettings $red_team_settings;
     private TeamSettings $blue_team_settings;
 
-    public function __construct(string $id, int $time_left, int $height_limit, int $void_limit, World $world, TeamSettings $red_team_settings, TeamSettings $blue_team_settings) {
+    public function __construct(string $id, int $time_left, int $height_limit, int $void_limit, /* Map $map, */ World $world, TeamSettings $red_team_settings, TeamSettings $blue_team_settings) {
         $this->id = $id;
         $this->time_left = $time_left;
         $this->height_limit = $height_limit;
         $this->void_limit = $void_limit;
+        // $this->map = $map;
         $this->world = $world;
         $this->red_team_settings = $red_team_settings;
         $this->blue_team_settings = $blue_team_settings;
@@ -50,6 +54,10 @@ class Arena {
 
     public function getVoidLimit(): int {
         return $this->void_limit;
+    }
+
+    public function getMap(): Map {
+        return $this->map;
     }
 
     public function getWorld(): World {

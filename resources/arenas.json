@@ -3,6 +3,7 @@
   {
     "id": "tb1",
     "world_name": "Ruins",
+    "map": "Ruins",
     "time_left": 15,
     "height_limit": 37,
     "void_limit": 0,
@@ -58,6 +59,7 @@
   {
     "id": "tb2",
     "world_name": "Shrine",
+    "map": "Shrine",
     "time_left": 15,
     "height_limit": 37,
     "void_limit": 0,
@@ -113,6 +115,7 @@
   {
     "id": "tb3",
     "world_name": "SpaceX",
+    "map": "SpaceX",
     "time_left": 15,
     "height_limit": 37,
     "void_limit": 0,

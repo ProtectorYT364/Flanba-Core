@@ -52,47 +52,15 @@ abstract class Queue {
 
     public function addSession(Session $session): void {
         if($this->match === null) {
+            /*
             $match = $this->getRandomMatch();
             if($match === null) {
-				$j = $this->j;
-				if(!file_exists(Server::getInstance()->getDataPath() . "/worlds/Ruins-" . $j)){
-					mkdir(Server::getInstance()->getDataPath() . "/worlds/Ruins-" . $j);
-					$files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(Server::getInstance()->getDataPath() . "/worlds/Ruins", FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::SELF_FIRST);
-					/** @var SplFileInfo $fileInfo */
-					foreach($files as $fileInfo) {
-						if($filePath = $fileInfo->getRealPath()) {
-							if($fileInfo->isFile()) {
-								copy($filePath, str_replace("Ruins", "Ruins-" . $j, $filePath));
-							} else {
-								mkdir(str_replace("Ruins", "Ruins-" . $j, $filePath));
-							}
-						}
-					}
-				}
-
-				$world_name = "Ruins-" . $j;
-				$world_manager = Server::getInstance()->getWorldManager();
-				$world_manager->loadWorld($world_name, true);
-
-				$world = $world_manager->getWorldByName($world_name);
-				$world->setAutoSave(false);
-				$world->setTime(World::TIME_DAY);
-				$world->stopTime();
-				foreach(json_decode(file_get_contents(FlanbaCore::getInstance()->getDataFolder() . "dupedarena.json"), true) as $arena_data){
-					ArenaFactory::addArena(new Arena(
-						"tb" . $j, $arena_data["time_left"], $arena_data["height_limit"], $arena_data["void_limit"], $world,
-						TeamSettings::fromData($arena_data["red_settings"], $world), TeamSettings::fromData($arena_data["blue_settings"], $world)
-					));
-					$match = FlanbaCore::getInstance()->getMatchManager();
-					foreach(ArenaFactory::getArenas() as $arena) {
-						$match->addMatch(new FlanbaMatch($arena));
-					}
-				}
-				$this->addDupedMatch($session);
-				$this->j++;
+				$this->createNewArena();
+                $this->addSession($session);
                 return;
             }
-            $this->match = $match;
+            */
+            $this->match = $this->getRandomMatch();
         }
         $this->match->addSession($session);
         if($this->match->getPlayersCount() >= self::MAX_PLAYERS_QUEUED) {
@@ -100,21 +68,46 @@ abstract class Queue {
         }
     }
 
-	public function addDupedMatch(Session $session): void {
-		if($this->match === null){
-			$match = $this->getRandomMatch();
-			if($match === null) {
-				return;
-			}
-			$this->match = $match;
-		}
-		$this->match->addSession($session);
-		if($this->match->getPlayersCount() >= self::MAX_PLAYERS_QUEUED) {
-			$this->match = null;
-		}
-	}
+    private function createNewArena(): void {
+        $j = $this->j;
+        $server = Server::getInstance();
+        $data_path = $server->getDataPath();
+        $dir = $data_path . "/worlds/Ruins-" . $j;
+        if(!file_exists($dir)) {
+            mkdir($dir);
+            $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($data_path . "/worlds/Ruins", FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::SELF_FIRST);
+            /** @var SplFileInfo $fileInfo */
+            foreach($files as $fileInfo) {
+                if($filePath = $fileInfo->getRealPath()) {
+                    if($fileInfo->isFile()) {
+                        copy($filePath, str_replace("Ruins", "Ruins-" . $j, $filePath));
+                    } else {
+                        mkdir(str_replace("Ruins", "Ruins-" . $j, $filePath));
+                    }
+                }
+            }
+        }
 
-    private function getRandomMatch(): ?FlanbaMatch {
+        $world_name = "Ruins-" . $j;
+        $world_manager = Server::getInstance()->getWorldManager();
+        $world_manager->loadWorld($world_name, true);
+
+        $world = $world_manager->getWorldByName($world_name);
+        $world->setAutoSave(false);
+        $world->setTime(World::TIME_DAY);
+        $world->stopTime();
+        foreach(json_decode(file_get_contents(FlanbaCore::getInstance()->getDataFolder() . "dupedarena.json"), true) as $arena_data){
+            $arena = new Arena(
+                "tb" . $j, $arena_data["time_left"], $arena_data["height_limit"], $arena_data["void_limit"], $world,
+                TeamSettings::fromData($arena_data["red_settings"], $world), TeamSettings::fromData($arena_data["blue_settings"], $world)
+            );
+            ArenaFactory::addArena($arena);
+            FlanbaCore::getInstance()->getMatchManager()->addMatch(new FlanbaMatch($arena));
+        }
+        $this->j++;
+    }
+
+    private function getRandomMatch(): FlanbaMatch {
         $matches = FlanbaCore::getInstance()->getMatchManager()->getMatches();
         shuffle($matches);
 
@@ -123,7 +116,8 @@ abstract class Queue {
                 return $match;
             }
         }
-        return null;
+        $this->createNewArena();
+        return $this->getRandomMatch();
     }
 
 }

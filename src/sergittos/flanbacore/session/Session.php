@@ -328,6 +328,9 @@ class Session {
     }
 
     public function getPing(): int {
+        if(!$this->player->isOnline()) {
+            return 0;
+        }
         return $this->player->getNetworkSession()->getPing() ?? 0;
     }
 

@@ -16,6 +16,7 @@ use sergittos\flanbacore\arena\Arena;
 use sergittos\flanbacore\FlanbaCore;
 use sergittos\flanbacore\match\team\Team;
 use sergittos\flanbacore\session\Session;
+use sergittos\flanbacore\session\SessionFactory;
 use sergittos\flanbacore\utils\ColorUtils;
 use sergittos\flanbacore\utils\ConfigGetter;
 use sergittos\flanbacore\utils\scoreboard\presets\match\CountdownScoreboard;
@@ -204,13 +205,24 @@ class FlanbaMatch {
                     $this->stage = self::STARTING_STAGE;
                     $this->countdown = ConfigGetter::getStartingSeconds();
                 } else {
-                    $this->countdown--;
                     $color = "{YELLOW}";
                     if($this->countdown <= 3) {
                         $color = "{RED}";
                     }
                     $this->broadcastTitle("{$color}{$this->countdown}");
-                    $this->broadcastMessage("{YELLOW}The game starts in {RED}$this->countdown {YELLOW}seconds!");
+					$players_count = $this->getPlayersCount();
+					if($players_count >= 2) {
+						$this->countdown--;
+						foreach($this->getPlayers() as $session) {
+							$session->setScoreboard(new CountdownScoreboard($session, $this));
+						}
+					} else {
+						$this->stage = self::WAITING_STAGE;
+						foreach($players as $sessions){
+							$sessions->setScoreboard(new WaitingPlayersScoreboard($sessions, $this));
+						}
+					}
+                    $this->broadcastMessage("{YELLOW}The game starts in {RED}" . $this->countdown +1 . " {YELLOW}seconds!");
                 }
                 $this->updatePlayersScoreboard();
                 break;

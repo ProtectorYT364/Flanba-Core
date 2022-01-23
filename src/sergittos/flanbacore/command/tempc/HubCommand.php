@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace sergittos\flanbacore\command\tempc;
 
+use pocketmine\block\utils\DyeColor;
 use pocketmine\command\CommandSender;
 use pocketmine\item\Item;
 use pocketmine\item\ItemIdentifier;
@@ -20,7 +21,7 @@ class HubCommand extends Command {
 	public function execute(CommandSender $sender, string $commandLabel, array $args) {
 		$session = SessionFactory::getSession($sender);
 		if($session->hasMatch()){
-			if($sender->getInventory()->contains(new Item(new ItemIdentifier(ItemIds::BED, 0)))){
+			if($sender->getInventory()->contains(new Item(new ItemIdentifier(ItemIds::BED, DyeColor::RED()->id())))){
 				$session->setMatch(null, false);
 			} else {
 				$session->setMatch(null, true);

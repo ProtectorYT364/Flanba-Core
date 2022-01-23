@@ -20,6 +20,7 @@ use sergittos\flanbacore\arena\Arena;
 use sergittos\flanbacore\arena\ArenaFactory;
 use sergittos\flanbacore\FlanbaCore;
 use sergittos\flanbacore\match\FlanbaMatch;
+use sergittos\flanbacore\match\MatchManager;
 use sergittos\flanbacore\match\team\TeamSettings;
 use sergittos\flanbacore\session\Session;
 use SplFileInfo;
@@ -80,6 +81,10 @@ abstract class Queue {
 						"tb" . $j, $arena_data["time_left"], $arena_data["height_limit"], $arena_data["void_limit"], $world,
 						TeamSettings::fromData($arena_data["red_settings"], $world), TeamSettings::fromData($arena_data["blue_settings"], $world)
 					));
+				}
+				$match = new MatchManager();
+				foreach(ArenaFactory::getArenas() as $arena) {
+					$match->addMatch(new FlanbaMatch($arena));
 				}
 				$this->j++;
                 return;

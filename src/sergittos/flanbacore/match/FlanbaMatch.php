@@ -27,24 +27,24 @@ class FlanbaMatch {
 
     public const WAITING_STAGE = 0;
     public const COUNTDOWN_STAGE = 1;
-    private const STARTING_STAGE = 2;
+	public const STARTING_STAGE = 2;
     public const OPENING_CAGES_STAGE = 3;
     public const PLAYING_STAGE = 4;
     public const ENDING_STAGE = 5;
 
-    private string $id;
-    private int $stage = self::WAITING_STAGE;
-    private int $countdown;
-    private int $time_left;
-    private Arena $arena;
+    public string $id;
+    public int $stage = self::WAITING_STAGE;
+    public int $countdown;
+    public int $time_left;
+	public Arena $arena;
 
-    private Team $red_team;
-    private Team $blue_team;
+    public Team $red_team;
+    public Team $blue_team;
 
-    private Session $session_scored;
+    public Session $session_scored;
 
     /** @var Session[] */
-    private array $spectators = [];
+    public array $spectators = [];
 
     public function __construct(Arena $arena) {
         $this->id = $arena->getId();

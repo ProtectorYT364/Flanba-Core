@@ -17,7 +17,7 @@ use sergittos\flanbacore\arena\ArenaFactory;
 class MatchManager {
 
     /** @var FlanbaMatch[] */
-    private array $matches = [];
+    public array $matches = [];
 
     public function __construct() {
         foreach(ArenaFactory::getArenas() as $arena) {
@@ -32,7 +32,7 @@ class MatchManager {
         return $this->matches;
     }
 
-    private function addMatch(FlanbaMatch $match): void {
+    public function addMatch(FlanbaMatch $match): void {
         $this->matches[$match->getId()] = $match;
     }
 

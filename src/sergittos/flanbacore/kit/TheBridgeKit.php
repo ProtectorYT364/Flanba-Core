@@ -18,6 +18,7 @@ use pocketmine\data\bedrock\DyeColorIdMap;
 use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\item\enchantment\VanillaEnchantments;
 use pocketmine\item\VanillaItems;
+use pocketmine\block\VanillaBlocks;
 
 class TheBridgeKit extends Kit {
 
@@ -25,7 +26,7 @@ class TheBridgeKit extends Kit {
         $unbreaking = new EnchantmentInstance(VanillaEnchantments::UNBREAKING(), 10);
         $color = $color->getRgbValue();
         return [
-            VanillaItems::AIR,
+            VanillaBlocks::AIR()->asItem(),
             VanillaItems::LEATHER_TUNIC()->setCustomColor($color)->addEnchantment($unbreaking),
             VanillaItems::LEATHER_PANTS()->setCustomColor($color)->addEnchantment($unbreaking),
             VanillaItems::LEATHER_BOOTS()->setCustomColor($color)->addEnchantment($unbreaking)

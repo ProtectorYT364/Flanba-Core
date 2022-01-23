@@ -11,14 +11,18 @@ declare(strict_types=1);
 namespace sergittos\flanbacore\queue;
 
 
+use FilesystemIterator;
 use pocketmine\Server;
 use pocketmine\world\World;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 use sergittos\flanbacore\arena\Arena;
 use sergittos\flanbacore\arena\ArenaFactory;
 use sergittos\flanbacore\FlanbaCore;
 use sergittos\flanbacore\match\FlanbaMatch;
 use sergittos\flanbacore\match\team\TeamSettings;
 use sergittos\flanbacore\session\Session;
+use SplFileInfo;
 
 abstract class Queue {
 
@@ -30,8 +34,9 @@ abstract class Queue {
     private string $name;
 
     private FlanbaMatch|null $match = null;
+	private int $j = 10;
 
-    public function __construct(int $id, string $name) {
+	public function __construct(int $id, string $name) {
         $this->id = $id;
         $this->name = $name;
     }
@@ -48,8 +53,20 @@ abstract class Queue {
         if($this->match === null) {
             $match = $this->getRandomMatch();
             if($match === null) {
-                $session->message("{RED}Seems look like there isn't any matches available! Try joining in five minutes.");
-				/*$j = 1;
+				$j = $this->j;
+				mkdir(Server::getInstance()->getDataPath() . "/worlds/Ruins-" . $j);
+
+				$files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(Server::getInstance()->getDataPath() . "/worlds/Ruins", FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::SELF_FIRST);
+				/** @var SplFileInfo $fileInfo */
+				foreach($files as $fileInfo) {
+					if($filePath = $fileInfo->getRealPath()) {
+						if($fileInfo->isFile()) {
+							copy($filePath, str_replace("Ruins", "Ruins-" . $j, $filePath));
+						} else {
+							mkdir(str_replace("Ruins", "Ruins-" . $j, $filePath));
+						}
+					}
+				}
 				$world_name = "Ruins-" . $j;
 				$world_manager = Server::getInstance()->getWorldManager();
 				$world_manager->loadWorld($world_name, true);
@@ -63,7 +80,8 @@ abstract class Queue {
 						"tb" . $j, $arena_data["time_left"], $arena_data["height_limit"], $arena_data["void_limit"], $world,
 						TeamSettings::fromData($arena_data["red_settings"], $world), TeamSettings::fromData($arena_data["blue_settings"], $world)
 					));
-				}*/ //dupe map coming soon????
+				}
+				$this->j++;
                 return;
             }
             $this->match = $match;
@@ -73,6 +91,20 @@ abstract class Queue {
             $this->match = null;
         }
     }
+
+	public function addDupedMatch(Session $session): void {
+		if($this->match === null){
+			$match = $this->getRandomMatch();
+			if($match === null) {
+				return;
+			}
+			$this->match = $match;
+		}
+		$this->match->addSession($session);
+		if($this->match->getPlayersCount() >= self::MAX_PLAYERS_QUEUED) {
+			$this->match = null;
+		}
+	}
 
     private function getRandomMatch(): ?FlanbaMatch {
         $matches = FlanbaCore::getInstance()->getMatchManager()->getMatches();

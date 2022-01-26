@@ -11,6 +11,17 @@ declare(strict_types=1);
 namespace sergittos\flanbacore\form\party;
 
 
-class YourPartyForm {
+use jojoe77777\FormAPI\SimpleForm;
+use pocketmine\player\Player;
 
+class YourPartyForm extends SimpleForm {
+
+    public function __construct()
+    {
+        parent::__construct(function(Player $player, $data = null){
+            //soon
+        });
+        $this->setTitle("My party");
+        $this->addButton("Invite");
+    }
 }

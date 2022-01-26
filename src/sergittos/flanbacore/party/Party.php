@@ -15,7 +15,7 @@ use pocketmine\player\Player;
 
 class Party {
 
-	private Player $owner;
+	public Player $owner;
 
 	public function __construct(Player $owner){
 		$this->owner = $owner;
@@ -25,7 +25,8 @@ class Party {
 		return $this->owner;
 	}
 
+
 	public function getPartyFactory() : PartyFactory{
-		return new PartyFactory();
+		return new PartyFactory($this->getOwner());
 	}
 }

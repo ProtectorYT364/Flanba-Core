@@ -29,7 +29,7 @@ class CountdownScoreboard extends Scoreboard {
             " {GRAY}" . date("d/m/y") . " §8Sicro",
             " ",
             " {WHITE}Map: {GREEN}" . $this->match->getArena()->getWorld()->getDisplayName(),
-            " {WHITE}Players: {GREEN}" . $this->match->getPlayersCount() . "/2",
+            " {WHITE}Players: {GREEN}" . $this->match->getPlayersCount(),
             "  ",
             " {WHITE}Starting in {GREEN}{$this->match->getCountdown()}s",
             "   ",

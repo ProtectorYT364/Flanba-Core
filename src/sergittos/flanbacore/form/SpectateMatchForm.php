@@ -24,7 +24,7 @@ class SpectateMatchForm extends \jojoe77777\FormAPI\SimpleForm {
 		$this->player1 = $player1;
 		parent::__construct(function(Player $player, $data = null) : void{
 			if($data == null) return;
-			foreach(FlanbaCore::getInstance()->getServer()->getWorldManager()->getWorldByName(FlanbaCore::getInstance()->getServer()->getPlayerExact($data)->getPosition()->getWorld()->getDisplayName())->getPlayers() as $players){
+			foreach(FlanbaCore::getInstance()->getServer()->getWorldManager()->getWorldByName(FlanbaCore::getInstance()->getServer()->getPlayerExact($data)->getPosition()->getWorld()->getFolderName())->getPlayers() as $players){
 				$players->sendMessage(TextFormat::LIGHT_PURPLE . $this->player1->getName() . TextFormat::YELLOW . " started spectating");
 			}
 			$this->player1->teleport(FlanbaCore::getInstance()->getServer()->getPlayerExact($data)->getPosition());

@@ -33,6 +33,7 @@ use sergittos\flanbacore\listener\PartyListener;
 use sergittos\flanbacore\listener\ScoreboardListener;
 use sergittos\flanbacore\listener\SessionListener;
 use sergittos\flanbacore\listener\SlotsListener;
+use sergittos\flanbacore\listener\TeamListener;
 use sergittos\flanbacore\map\MapFactory;
 use sergittos\flanbacore\match\MatchManager;
 use sergittos\flanbacore\provider\presets\JsonProvider;
@@ -56,13 +57,15 @@ class FlanbaCore extends PluginBase {
     protected function onLoad(): void {
         self::setInstance($this);
 
-        $players_dir = $this->getDataFolder() . "players";
+        $data_folder = $this->getDataFolder();
+        $players_dir = $data_folder . "players";
         if(!is_dir($players_dir)) {
             mkdir($players_dir);
         }
-        $this->saveResource("arenas.json");
-        $this->saveResource("maps.json");
-        $this->saveResource("dupedarena.json");
+        $maps_dir = $data_folder . "maps";
+        if(!is_dir($maps_dir)) {
+            mkdir($maps_dir);
+        }
         $this->saveDefaultConfig();
     }
 
@@ -70,8 +73,8 @@ class FlanbaCore extends PluginBase {
         ConfigGetter::init();
         $this->getServer()->getWorldManager()->loadWorld(ConfigGetter::getLobbyWorldName(), true);
 
-        ArenaFactory::init();
         MapFactory::init();
+        ArenaFactory::init();
         $this->initProvider();
         $this->match_manager = new MatchManager();
         $this->queue_manager = new QueueManager();
@@ -84,6 +87,7 @@ class FlanbaCore extends PluginBase {
         $this->registerListener(new PartyListener());
         $this->registerListener(new SessionListener());
         $this->registerListener(new SlotsListener());
+        $this->registerListener(new TeamListener());
 
         $this->registerCommand(new HubCommand());
 

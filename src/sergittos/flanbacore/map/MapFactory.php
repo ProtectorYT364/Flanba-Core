@@ -12,6 +12,8 @@ namespace sergittos\flanbacore\map;
 
 
 use sergittos\flanbacore\FlanbaCore;
+use DirectoryIterator;
+use SplFileInfo;
 
 class MapFactory {
 
@@ -19,8 +21,8 @@ class MapFactory {
     static private array $maps = [];
 
     static public function init(): void {
-        foreach(json_decode(file_get_contents(FlanbaCore::getInstance()->getDataFolder() . "maps.json"), true) as $map_data) {
-            self::addMap(new Map($map_data["name"]));
+        foreach(glob(FlanbaCore::getInstance()->getDataFolder() . "maps/*.json") as $map_name) {
+            self::addMap(new Map(basename(substr($map_name, 0, strrpos($map_name, ".")))));
         }
     }
 
@@ -29,10 +31,6 @@ class MapFactory {
      */
     static public function getMaps(): array {
         return self::$maps;
-    }
-
-    static public function getMapByName(string $name): ?Map {
-        return self::$maps[$name] ?? null;
     }
 
     static private function addMap(Map $map): void {

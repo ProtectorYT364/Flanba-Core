@@ -20,25 +20,29 @@ use sergittos\flanbacore\match\team\TeamSettings;
 class ArenaFactory {
 
     /** @var Arena[] */
-    static public array $arenas = [];
+    static private array $arenas = [];
 
     static public function init(): void {
-        foreach(json_decode(file_get_contents(FlanbaCore::getInstance()->getDataFolder() . "arenas.json"), true) as $arena_data) {
-            $world_name = $arena_data["world_name"];
-            $world_manager = Server::getInstance()->getWorldManager();
-            $world_manager->loadWorld($world_name, true);
+        /*
+        foreach(MapFactory::getMaps() as $map) {
+            foreach(json_decode(file_get_contents(FlanbaCore::getInstance()->getDataFolder() . "maps/{$map->getName()}.json"), true) as $arena_data) {
+                $world_name = $arena_data["world_name"];
+                $world_manager = Server::getInstance()->getWorldManager();
+                $world_manager->loadWorld($world_name, true);
 
-            $world = $world_manager->getWorldByName($world_name);
-            $world->setAutoSave(false);
-            $world->setTime(World::TIME_DAY);
-            $world->stopTime();
+                $world = $world_manager->getWorldByName($world_name);
+                $world->setAutoSave(false);
+                $world->setTime(World::TIME_DAY);
+                $world->stopTime();
 
-            self::addArena(new Arena(
-                $arena_data["id"], $arena_data["time_left"], $arena_data["height_limit"], $arena_data["void_limit"]
-                /* MapFactory::getMapByName($arena_data["map"]) */, $world, TeamSettings::fromData($arena_data["red_settings"], $world),
-                TeamSettings::fromData($arena_data["blue_settings"], $world)
-            ));
+                self::addArena(new Arena(
+                    $arena_data["id"], $arena_data["time_left"], $arena_data["height_limit"], $arena_data["void_limit"],
+                    $map, $world, TeamSettings::fromData($arena_data["red_settings"], $world),
+                    TeamSettings::fromData($arena_data["blue_settings"], $world)
+                ));
+            }
         }
+        */
     }
 
     /**
@@ -48,7 +52,7 @@ class ArenaFactory {
         return self::$arenas;
     }
 
-    public static function addArena(Arena $arena): void {
+    static public function addArena(Arena $arena): void {
         self::$arenas[$arena->getId()] = $arena;
     }
 

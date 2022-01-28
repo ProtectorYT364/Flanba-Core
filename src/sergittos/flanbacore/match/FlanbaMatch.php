@@ -13,11 +13,8 @@ namespace sergittos\flanbacore\match;
 
 use pocketmine\player\GameMode;
 use sergittos\flanbacore\arena\Arena;
-use sergittos\flanbacore\FlanbaCore;
 use sergittos\flanbacore\match\team\Team;
 use sergittos\flanbacore\session\Session;
-use sergittos\flanbacore\session\SessionFactory;
-use sergittos\flanbacore\utils\ColorUtils;
 use sergittos\flanbacore\utils\ConfigGetter;
 use sergittos\flanbacore\utils\scoreboard\presets\match\CountdownScoreboard;
 use sergittos\flanbacore\utils\scoreboard\presets\match\PlayingScoreboard;
@@ -32,16 +29,16 @@ class FlanbaMatch {
     public const PLAYING_STAGE = 4;
     public const ENDING_STAGE = 5;
 
-    public string $id;
-    public int $stage = self::WAITING_STAGE;
-    public int $countdown;
-    public int $time_left;
-	public Arena $arena;
+    private string $id;
+    private int $stage = self::WAITING_STAGE;
+    private int $countdown;
+    private int $time_left;
+    private Arena $arena;
 
-    public Team $red_team;
-    public Team $blue_team;
+    private Team $red_team;
+    private Team $blue_team;
 
-    public Session $session_scored;
+    private Session $session_scored;
 
     /** @var Session[] */
     public array $spectators = [];
@@ -132,23 +129,25 @@ class FlanbaMatch {
         $this->countdown = $countdown;
     }
 
-    public function addSession(Session $session): void {
+    public function addSession(Session $session, int $player_team_capacity): void {
         if(!$this->isPlaying($session)) {
             $teams = $this->getTeams();
             shuffle($teams);
 
             $team = $teams[0];
-            if(!empty($team->getMembers())) {
+            if(count($team->getMembers()) >= $player_team_capacity) {
                 $team = $teams[1];
             }
             $team->addMember($session);
-            $session->setMatch($this, false);
+
+            $session->setMatch($this);
             $session->setTeam($team);
             $session->setMatchItems();
             $session->getPlayer()->teleport($team->getWaitingPoint());
 
             $players_count = $this->getPlayersCount();
-            if($players_count >= 2) {
+            $max_players = $player_team_capacity * 2;
+            if($players_count >= $max_players) {
                 $this->stage = self::COUNTDOWN_STAGE;
                 foreach($this->getPlayers() as $session) {
                     $session->setScoreboard(new CountdownScoreboard($session, $this));
@@ -156,7 +155,7 @@ class FlanbaMatch {
             } else {
                 $session->setScoreboard(new WaitingPlayersScoreboard($session, $this));
             }
-            $this->broadcastMessage("{GRAY}§k{$session->getUsername()}§r {YELLOW}has joined ({AQUA}$players_count{YELLOW}/{AQUA}2{YELLOW})!");
+            $this->broadcastMessage("{GRAY}§k{$session->getUsername()}§r {YELLOW}has joined ({AQUA}{$players_count}{YELLOW}/{AQUA}{$max_players}{YELLOW})!");
         }
 
         // TODO: Clean this
@@ -168,12 +167,12 @@ class FlanbaMatch {
                 $this->finish($this->red_team->hasMember($session) ? $this->blue_team : $this->red_team, $session->getTeam());
             }
             $session->setTeam(null);
+            // TODO: Broadcast message
         }
     }
 
     public function addSpectator(Session $spectator): void {
         // TODO
-		$thing = $this->spectators[$spectator];
     }
 
     public function removeSpectator(Session $spectator): void {
@@ -209,19 +208,8 @@ class FlanbaMatch {
                     if($this->countdown <= 3) {
                         $color = "{RED}";
                     }
-                    $this->broadcastTitle("{$color}" . $this->countdown-1);
-					$players_count = $this->getPlayersCount();
-					if($players_count >= 2) {
-						$this->countdown--;
-						foreach($this->getPlayers() as $session) {
-							$session->setScoreboard(new CountdownScoreboard($session, $this));
-						}
-					} else {
-						$this->stage = self::WAITING_STAGE;
-						foreach($players as $sessions){
-							$sessions->setScoreboard(new WaitingPlayersScoreboard($sessions, $this));
-						}
-					}
+                    $this->countdown--;
+                    $this->broadcastTitle($color . $this->countdown);
                     $this->broadcastMessage("{YELLOW}The game starts in {RED}" . $this->countdown  . " {YELLOW}seconds!");
                 }
                 $this->updatePlayersScoreboard();
@@ -270,7 +258,7 @@ class FlanbaMatch {
                     $this->reset();
                 } elseif($this->countdown === 6) {
                     foreach($this->getPlayersAndSpectators() as $session) {
-                        $session->setMatch(null, false);
+                        $session->setMatch(null);
                         $session->teleportToLobby();
                     }
                 }
@@ -294,7 +282,7 @@ class FlanbaMatch {
         $this->broadcastTitle(" ", $subtitle);
     }
 
-    private function broadcastMessage(string $message): void {
+    public function broadcastMessage(string $message): void {
         foreach($this->getPlayers() as $session) {
             $session->message($message);
         }

@@ -54,6 +54,7 @@ use sergittos\flanbacore\utils\ColorUtils;
 use sergittos\flanbacore\utils\ConfigGetter;
 use sergittos\flanbacore\utils\cooldown\Cooldown;
 use sergittos\flanbacore\utils\scoreboard\presets\LobbyScoreboard;
+use sergittos\flanbacore\utils\scoreboard\presets\match\WaitingPlayersScoreboard;
 use sergittos\flanbacore\utils\scoreboard\Scoreboard;
 
 class Session {
@@ -119,8 +120,23 @@ class Session {
         return array_key_exists($id, $this->cooldowns);
     }
 
-    public function setMatch(?FlanbaMatch $match, bool $finish): void {
-        $this->match?->removeSession($this, $finish); // TODO: Fix this
+    public function setMatch(?FlanbaMatch $match): void {
+        $finish = true;
+        if($this->hasMatch()) {
+            $stage = $this->match->getStage();
+            if($stage === FlanbaMatch::COUNTDOWN_STAGE) {
+                $this->match->setStage(FlanbaMatch::WAITING_STAGE);
+                foreach($this->match->getPlayers() as $player) {
+                    $player->setScoreboard(new WaitingPlayersScoreboard($player, $this->match));
+                }
+                $finish = false;
+            } elseif($stage === FlanbaMatch::WAITING_STAGE) {
+                $finish = false;
+            } elseif($stage === FlanbaMatch::ENDING_STAGE) {
+                $finish = false;
+            }
+        }
+        $this->match?->removeSession($this, $finish);
         $this->match = $match;
     }
 

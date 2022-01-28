@@ -11,14 +11,7 @@ declare(strict_types=1);
 namespace sergittos\flanbacore\form\queue;
 
 
-use EasyUI\element\Button;
 use EasyUI\variant\SimpleForm;
-use pocketmine\player\Player;
-use sergittos\flanbacore\FlanbaCore;
-use sergittos\flanbacore\form\queue\mode\PlayDuoForm;
-use sergittos\flanbacore\form\queue\mode\PlaySoloForm;
-use sergittos\flanbacore\form\queue\mode\PlaySquadForm;
-use sergittos\flanbacore\session\SessionFactory;
 
 class GameSelectorForm extends SimpleForm {
 
@@ -27,18 +20,9 @@ class GameSelectorForm extends SimpleForm {
     }
 
     protected function onCreation(): void {
-        /*
-        $this->addRedirectFormButton("Solo (1 vs 1)", new PlaySoloForm());
-        $this->addRedirectFormButton("Duo (2 vs 2)", new PlayDuoForm());
-        $this->addRedirectFormButton("Squad (4 vs 4)", new PlaySquadForm());
-        */
-        foreach(FlanbaCore::getInstance()->getQueueManager()->getQueues() as $queue) {
-            $button = new Button($queue->getName());
-            $button->setSubmitListener(function(Player $player) use ($queue) {
-                $queue->addSession(SessionFactory::getSession($player));
-            });
-            $this->addButton($button);
-        }
+        $this->addRedirectFormButton("Solo (1 vs 1)", new PlayForm(1));
+        $this->addRedirectFormButton("Duo (2 vs 2)", new PlayForm(2));
+        $this->addRedirectFormButton("Squad (4 vs 4)", new PlayForm(4));
     }
 
 }

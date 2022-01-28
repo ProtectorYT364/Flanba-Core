@@ -17,7 +17,9 @@ use pocketmine\item\ItemUseResult;
 use pocketmine\math\Vector3;
 use pocketmine\player\Player;
 use sergittos\flanbacore\item\FlanbaItem;
+use sergittos\flanbacore\match\FlanbaMatch;
 use sergittos\flanbacore\session\SessionFactory;
+use sergittos\flanbacore\utils\scoreboard\presets\match\WaitingPlayersScoreboard;
 
 class LeaveMatchItem extends FlanbaItem {
 
@@ -31,7 +33,7 @@ class LeaveMatchItem extends FlanbaItem {
             $session->message("{RED}You must be on a match to do this!");
             return ItemUseResult::FAIL();
         }
-        $session->setMatch(null, false);
+        $session->setMatch(null);
         $session->teleportToLobby();
         return ItemUseResult::SUCCESS();
     }

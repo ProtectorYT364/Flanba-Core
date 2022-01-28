@@ -12,7 +12,7 @@ attack-cooldown: 10 # 0.5 seconds
 
 # Provider
 # Available providers: sqlite, json, yaml
-provider: "sqlite"
+provider: "json"
 
 # The seconds that will the match wait to start the starting stage
 countdown-seconds: 5

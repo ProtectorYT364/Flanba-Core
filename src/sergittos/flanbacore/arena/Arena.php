@@ -29,12 +29,12 @@ class Arena {
     private TeamSettings $red_team_settings;
     private TeamSettings $blue_team_settings;
 
-    public function __construct(string $id, int $time_left, int $height_limit, int $void_limit, /* Map $map, */ World $world, TeamSettings $red_team_settings, TeamSettings $blue_team_settings) {
+    public function __construct(string $id, int $time_left, int $height_limit, int $void_limit, Map $map, World $world, TeamSettings $red_team_settings, TeamSettings $blue_team_settings) {
         $this->id = $id;
         $this->time_left = $time_left;
         $this->height_limit = $height_limit;
         $this->void_limit = $void_limit;
-        // $this->map = $map;
+        $this->map = $map;
         $this->world = $world;
         $this->red_team_settings = $red_team_settings;
         $this->blue_team_settings = $blue_team_settings;

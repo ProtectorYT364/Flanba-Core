@@ -9,6 +9,9 @@ use pocketmine\command\CommandSender;
 use pocketmine\item\Item;
 use pocketmine\item\ItemIdentifier;
 use pocketmine\item\ItemIds;
+use pocketmine\item\VanillaItems;
+use pocketmine\player\Player;
+use sergittos\flanbacore\match\FlanbaMatch;
 use sergittos\flanbacore\session\SessionFactory;
 use pocketmine\command\Command;
 
@@ -19,13 +22,13 @@ class HubCommand extends Command {
 	}
 
 	public function execute(CommandSender $sender, string $commandLabel, array $args) {
+        if(!$sender instanceof Player) {
+            $sender->sendMessage("Please, run this command in-game");
+            return;
+        }
 		$session = SessionFactory::getSession($sender);
-		if($session->hasMatch()){
-			if($sender->getInventory()->contains(new Item(new ItemIdentifier(ItemIds::BED, DyeColor::RED()->id())))){
-				$session->setMatch(null, false);
-			} else {
-				$session->setMatch(null, true);
-			}
+		if($session->hasMatch()) {
+            $session->setMatch(null);
 		}
 		$session->teleportToLobby();
 	}

@@ -1,9 +1,4 @@
 <?php
-/*
-* Copyright (C) Sergittos - All Rights Reserved
-* Unauthorized copying of this file, via any medium is strictly prohibited
-* Proprietary and confidential
-*/
 
 declare(strict_types=1);
 
@@ -11,13 +6,16 @@ declare(strict_types=1);
 namespace sergittos\flanbacore\queue;
 
 
+use sergittos\flanbacore\map\Map;
+use sergittos\flanbacore\map\MapFactory;
+
 class QueueManager {
 
     /** @var Queue[] */
     private array $queues = [];
 
     public function __construct() {
-        $this->addQueue(new TheBridgeQueue());
+        $this->createQueues();
     }
 
     /**
@@ -27,8 +25,34 @@ class QueueManager {
         return $this->queues;
     }
 
+    public function getQueueByCapacity(int $capacity): ?Queue {
+        foreach($this->queues as $queue) {
+            if($queue->getPlayerTeamCapacity() === $capacity) {
+                return $queue;
+            }
+        }
+        return null;
+    }
+
+    public function getQueueByCapacityAndMap(int $capacity, Map $map): ?Queue {
+        foreach($this->queues as $queue) {
+            if($queue->getPlayerTeamCapacity() === $capacity and $queue->getMap()->getName() === $map->getName()) {
+                return $queue;
+            }
+        }
+        return null;
+    }
+
     private function addQueue(Queue $queue): void {
-        $this->queues[$queue->getId()] = $queue;
+        $this->queues[] = $queue;
+    }
+
+    private function createQueues(): void {
+        foreach(MapFactory::getMaps() as $map) {
+            $this->addQueue(new Queue($map, 1));
+            $this->addQueue(new Queue($map, 2));
+            $this->addQueue(new Queue($map, 4));
+        }
     }
 
 }

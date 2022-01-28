@@ -25,7 +25,9 @@ class PartyItem extends FlanbaItem {
     }
 
     public function onClickAir(Player $player, Vector3 $directionVector): ItemUseResult {
+        /*
         $player->sendForm(new PartyForm());
+        */
 		return ItemUseResult::SUCCESS();
     }
 

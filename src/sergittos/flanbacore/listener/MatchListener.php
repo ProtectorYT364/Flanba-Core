@@ -44,7 +44,6 @@ class MatchListener implements Listener {
 		$event->cancel();
 	}
 
-
 	public function onDeath(SessionDeathEvent $event): void {
         $session = $event->getSession();
         $cause = $session->getPlayer()->getLastDamageCause();
@@ -71,12 +70,15 @@ class MatchListener implements Listener {
         }
         $session = SessionFactory::getSession($entity);
         $session->updateNameTag();
+        if($session->hasMatch() and $session->getMatch()->getStage() === FlanbaMatch::WAITING_STAGE) {
+            $event->cancel();
+            return;
+        }
         if($event->getCause() === EntityDamageEvent::CAUSE_FALL) {
             $event->cancel();
             return;
         }
 		if($event instanceof EntityDamageByEntityEvent){
-			$session2 = SessionFactory::getSession($event->getDamager());
 			if($session->hasMatch() and $entity->getHealth() - $event->getFinalDamage() <= 0) {
 				foreach($entity->getWorld()->getPlayers() as $players){
 					if($session->getTeam()->getColor() == "{RED}"){
@@ -144,7 +146,6 @@ class MatchListener implements Listener {
     }
 
     public function onMove(PlayerMoveEvent $event): void {
-		$entity = $event->getPlayer();
         $session = SessionFactory::getSession($player = $event->getPlayer());
 		$position = $player->getPosition();
         if(!$session->hasMatch()) {
@@ -155,19 +156,13 @@ class MatchListener implements Listener {
         }
         $match = $session->getMatch();
         $stage = $match->getStage();
+        $session_team = $session->getTeam();
         if($position->getY() <= $match->getArena()->getVoidLimit()) {
             if($stage === FlanbaMatch::WAITING_STAGE or $stage === FlanbaMatch::COUNTDOWN_STAGE) {
                 $session->teleportToTeamSpawnPoint(false);
             } else {
                 $session->teleportToTeamSpawnPoint(true);
-				foreach($entity->getWorld()->getPlayers() as $players){
-					if($session->getTeam()->getColor() == "{RED}"){
-						$players->sendMessage(TextFormat::RED . "{$entity->getName()} " . TextFormat::GRAY . "tripped into the void.");
-					}
-					if($session->getTeam()->getColor() == "{BLUE}"){
-						$players->sendMessage(TextFormat::BLUE . "{$entity->getName()} " . TextFormat::GRAY . "tripped into the void.");
-					}
-				}
+                $match->broadcastMessage($session_team->getColor() . $session->getUsername() . " {GRAY}tripped into the void.");
             }
             return;
         }
@@ -175,18 +170,18 @@ class MatchListener implements Listener {
         if($stage !== $match::PLAYING_STAGE) {
             return;
         }
+
         $players = $match->getPlayers();
-        $session_team = $session->getTeam();
         foreach($match->getTeams() as $team) {
             if(!$team->getGoalArea()->isInside($position, true)) {
                 continue;
             }
-            if($session_team->getColor() === $team->getColor()) {
+            $color = $session_team->getColor();
+            if($color === $team->getColor()) {
                 $session->teleportToTeamSpawnPoint();
                 return;
             }
             $session_team->addScore();
-            $color = $session_team->getColor();
             if($session_team->getScoreNumber() >= 5) {
                 $match->finish($session_team, $team);
                 return;
@@ -209,12 +204,7 @@ class MatchListener implements Listener {
                     $color . $session->getUsername() . "§7 scored!",
                     "{GRAY}Cages open in {GREEN}{$countdown}s{GRAY}..."
                 );
-                $player->teleportToTeamSpawnPoint();             
-                $player->title(
-                    $color . $session->getUsername() . "§7 scored!",
-                    "{GRAY}Cages open in {GREEN}{$countdown}s{GRAY}..."
-                );
-		$player->message($color . $session->getUsername() . " §6scored!");
+                $player->message($color . $session->getUsername() . " §6scored!");
             }
             // TODO: Clean this
         }
@@ -229,7 +219,6 @@ class MatchListener implements Listener {
             $session->message("§8» §cHeight Limit");
             $event->cancel();
         }
-	  	$player = $event->getPlayer();
         $block = $event->getBlock();
         if (in_array($block->getId(), [205, 459, 58, 145, 154])) {
           $event->cancel();
@@ -247,11 +236,10 @@ class MatchListener implements Listener {
 	}
 
     public function onTouch(PlayerInteractEvent $event) {
-		$session = SessionFactory::getSession($player = $event->getPlayer());
+		$session = SessionFactory::getSession($event->getPlayer());
 		if(!$session->hasMatch()) {
 			return;
 		}
-		$player = $event->getPlayer();
 		$block = $event->getBlock();
 		if (in_array($block->getId(), [205, 459, 58, 145, 154])) {
 			$event->cancel();
@@ -261,11 +249,7 @@ class MatchListener implements Listener {
     public function onQuit(PlayerQuitEvent $event): void {
         $session = SessionFactory::getSession($event->getPlayer());
         if($session->hasMatch()) {
-            $finish = false;
-            if($session->getMatch()->getStage() !== FlanbaMatch::WAITING_STAGE) {
-                $finish = true;
-            }
-            $session->setMatch(null, $finish);
+            $session->setMatch(null);
         }
     }
 

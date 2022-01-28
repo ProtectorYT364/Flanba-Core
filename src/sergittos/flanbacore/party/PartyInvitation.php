@@ -19,6 +19,8 @@ class PartyInvitation {
     public function __construct(Player $owner, Player $player){
         $player->sendMessage(TextFormat::AQUA . "{$owner->getName()} " . TextFormat::GREEN . "invited you too a party!");
         $owner->sendMessage(TextFormat::AQUA . "{$player->getName()} " . TextFormat::GREEN . "was invited to the party!");
+        $party = new Party($owner);
+        $party->getPartyFactory()->addInvite($owner, $player);
     }
 
 }

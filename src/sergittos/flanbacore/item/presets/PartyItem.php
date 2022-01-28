@@ -15,6 +15,7 @@ use pocketmine\item\ItemIds;
 use pocketmine\item\ItemUseResult;
 use pocketmine\math\Vector3;
 use pocketmine\player\Player;
+use sergittos\flanbacore\form\party\PartyForm;
 use sergittos\flanbacore\item\FlanbaItem;
 
 class PartyItem extends FlanbaItem {
@@ -24,6 +25,7 @@ class PartyItem extends FlanbaItem {
     }
 
     public function onClickAir(Player $player, Vector3 $directionVector): ItemUseResult {
+        $player->sendForm(new PartyForm());
 		return ItemUseResult::SUCCESS();
     }
 

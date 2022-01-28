@@ -27,6 +27,6 @@ class Party {
 
 
 	public function getPartyFactory() : PartyFactory{
-		return new PartyFactory($this->getOwner());
+		return new PartyFactory();
 	}
 }

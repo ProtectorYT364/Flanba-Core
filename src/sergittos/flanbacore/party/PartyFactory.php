@@ -19,21 +19,20 @@ class PartyFactory {
 
     public array $parties = [];
 
-    public function __construct(Player $owner){
+    public array $invites = [];
 
-    }
-
-    public function createParty(Player $owner){
+    public function createParty(Player $owner)
+    {
         $members = "";
-        if(!isset($this->parties[$owner->getName()])) {
-            $this->parties[$owner->getName()] = [$members];
+        if (!array_key_exists($owner->getName(), $this->parties)) {
+            $this->parties[$owner->getName()] = [$owner->getName(), $members];
             $owner->sendMessage(TextFormat::GREEN . "Successfully created a party!");
         } else {
             $owner->sendMessage(TextFormat::RED . "You already have a party!");
         }
     }
 
-    public function InvitePlayer(Player $owner, string $iplayer){
+    public function InvitePlayer(Player $owner, $iplayer){
         $player = FlanbaCore::getInstance()->getServer()->getPlayerExact($iplayer);
         if($player == null){
             $owner->sendMessage(TextFormat::RED . "Unknown player, maybe you misspelled his name?");
@@ -51,7 +50,7 @@ class PartyFactory {
     }
 
     public function JoinParty(Player $owner, Player $player){
-        $this->parties[$owner->getName()][] = $player;
+        $this->parties[$owner->getName()] = $player;
         $player->sendMessage(TextFormat::GREEN . "You have successfully joined " . TextFormat::AQUA . "{$owner->getName()}'s" . TextFormat::GREEN . " party!");
     }
 
@@ -68,7 +67,7 @@ class PartyFactory {
     }
 
     public function hasParty(Player $player) : bool{
-        if(isset($this->parties[$player->getName()])){
+        if(array_key_exists($player->getName(), $this->parties)){
             $idk = true;
         } else {
             $idk = false;
@@ -76,5 +75,7 @@ class PartyFactory {
         return $idk;
     }
 
-
+    public function addInvite(Player $player, Player $iplayer){
+        $this->invites[$iplayer->getName()] = $player->getName();
+    }
 }

@@ -19,9 +19,14 @@ class YourPartyForm extends SimpleForm {
     public function __construct()
     {
         parent::__construct(function(Player $player, $data = null){
-            //soon
+            switch($data) {
+                case 0:
+                    $player->sendForm(new InviteForm());
+                break;
+            }
         });
         $this->setTitle("My party");
         $this->addButton("Invite");
+        $this->addButton("Disband");
     }
 }

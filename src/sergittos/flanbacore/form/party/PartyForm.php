@@ -24,7 +24,7 @@ class PartyForm extends SimpleForm {
                 case 0:
                     $party = new Party($player);
                     $party->getPartyFactory()->createParty($player);
-                    new YourPartyForm();
+                    $player->sendForm(new YourPartyForm());
                 break;
                 case 1:
                     //soon

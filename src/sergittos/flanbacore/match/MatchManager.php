@@ -21,9 +21,11 @@ class MatchManager {
     public array $matches = [];
 
     public function __construct() {
+        /*
         foreach(ArenaFactory::getArenas() as $arena) {
             $this->addMatch(new FlanbaMatch($arena));
         }
+        */
     }
 
     /**
@@ -36,12 +38,15 @@ class MatchManager {
     public function getRandomMatch(Queue $queue): FlanbaMatch {
         shuffle($this->matches);
         $map = $queue->getMap();
+        $capacity = $queue->getPlayerTeamCapacity();
         foreach($this->matches as $match) {
-            if($match->getStage() === FlanbaMatch::WAITING_STAGE and $match->getArena()->getMap()->getName() === $map->getName()) {
+            if($match->getStage() === FlanbaMatch::WAITING_STAGE and
+                $match->getArena()->getMap()->getName() === $map->getName() and
+                $match->getPlayerTeamCapacity() === $queue->getPlayerTeamCapacity()) {
                 return $match;
             }
         }
-        $this->addMatch(new FlanbaMatch(ArenaUtils::generateArena($map)));
+        $this->addMatch(new FlanbaMatch(ArenaUtils::generateArena($map), $capacity));
         return $this->getRandomMatch($queue);
     }
 

@@ -33,6 +33,7 @@ class FlanbaMatch {
     private int $stage = self::WAITING_STAGE;
     private int $countdown;
     private int $time_left;
+    private int $player_team_capacity;
     private Arena $arena;
 
     private Team $red_team;
@@ -43,12 +44,13 @@ class FlanbaMatch {
     /** @var Session[] */
     public array $spectators = [];
 
-    public function __construct(Arena $arena) {
+    public function __construct(Arena $arena, int $player_team_capacity) {
         $this->id = $arena->getId();
         $this->arena = $arena;
 
         $this->countdown = ConfigGetter::getCountdownSeconds();
         $this->time_left = $arena->getTimeLeft() * 60;
+        $this->player_team_capacity = $player_team_capacity;
         $this->red_team = new Team($arena->getRedTeamSettings(), "{RED}");
         $this->blue_team = new Team($arena->getBlueTeamSettings(), "{BLUE}");
     }
@@ -67,6 +69,10 @@ class FlanbaMatch {
 
     public function getTimeLeft(): float|int {
         return $this->time_left;
+    }
+
+    public function getPlayerTeamCapacity(): int {
+        return $this->player_team_capacity;
     }
 
     public function getArena(): Arena {
@@ -129,13 +135,13 @@ class FlanbaMatch {
         $this->countdown = $countdown;
     }
 
-    public function addSession(Session $session, int $player_team_capacity): void {
+    public function addSession(Session $session): void {
         if(!$this->isPlaying($session)) {
             $teams = $this->getTeams();
             shuffle($teams);
 
             $team = $teams[0];
-            if(count($team->getMembers()) >= $player_team_capacity) {
+            if(count($team->getMembers()) >= $this->player_team_capacity) {
                 $team = $teams[1];
             }
             $team->addMember($session);
@@ -146,7 +152,7 @@ class FlanbaMatch {
             $session->getPlayer()->teleport($team->getWaitingPoint());
 
             $players_count = $this->getPlayersCount();
-            $max_players = $player_team_capacity * 2;
+            $max_players = $this->player_team_capacity * 2;
             if($players_count >= $max_players) {
                 $this->stage = self::COUNTDOWN_STAGE;
                 foreach($this->getPlayers() as $session) {

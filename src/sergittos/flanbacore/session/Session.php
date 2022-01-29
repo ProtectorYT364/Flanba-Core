@@ -130,13 +130,11 @@ class Session {
                     $player->setScoreboard(new WaitingPlayersScoreboard($player, $this->match));
                 }
                 $finish = false;
-            } elseif($stage === FlanbaMatch::WAITING_STAGE) {
-                $finish = false;
-            } elseif($stage === FlanbaMatch::ENDING_STAGE) {
+            } elseif($stage === FlanbaMatch::WAITING_STAGE or $stage === FlanbaMatch::ENDING_STAGE) {
                 $finish = false;
             }
+            $this->match->removeSession($this, $finish);
         }
-        $this->match?->removeSession($this, $finish);
         $this->match = $match;
     }
 

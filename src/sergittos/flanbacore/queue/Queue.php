@@ -37,9 +37,9 @@ class Queue {
     }
 
     public function addSession(Session $session): void {
-        $this->match->addSession($session, $this->player_team_capacity);
+        $this->match->addSession($session);
 
-        if(count($this->match->getPlayers()) >= ($this->player_team_capacity * 2)) {
+        if($this->match->getPlayersCount() >= ($this->player_team_capacity * 2)) {
             $this->reset();
         }
     }

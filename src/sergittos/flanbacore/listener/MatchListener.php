@@ -225,7 +225,8 @@ class MatchListener implements Listener {
         } 
     }
 
-	public function onBreak(BlockBreakEvent $event){
+	/*
+	 public function onBreak(BlockBreakEvent $event){
 		$session = SessionFactory::getSession($event->getPlayer());
 		if(!$session->hasMatch()) {
 			return;
@@ -234,6 +235,7 @@ class MatchListener implements Listener {
 			$event->cancel();
 		}
 	}
+	*/
 
     public function onTouch(PlayerInteractEvent $event) {
 		$session = SessionFactory::getSession($event->getPlayer());
@@ -241,9 +243,17 @@ class MatchListener implements Listener {
 			return;
 		}
 		$block = $event->getBlock();
-		if (in_array($block->getId(), [205, 459, 58, 145, 154])) {
+        if($event->getAction() !== PlayerInteractEvent::LEFT_CLICK_BLOCK) return;
+
+        if($block->getId() !== 159 && !in_array($block->getMeta(), [11, 0, 14])) $event->cancel();
+
+		/*
+	    if (in_array($block->getId(), [205, 459, 58, 145, 154])) {
 			$event->cancel();
 		}
+		*/
+
+
     }
     
     public function onQuit(PlayerQuitEvent $event): void {

@@ -40,6 +40,7 @@ use sergittos\flanbacore\item\presets\GameSelectorItem;
 use sergittos\flanbacore\item\presets\match\EditKitItem;
 use sergittos\flanbacore\item\presets\match\layout\HotbarItem;
 use sergittos\flanbacore\item\presets\match\LeaveMatchItem;
+use sergittos\flanbacore\item\presets\match\LeaveSpectatorItem;
 use sergittos\flanbacore\item\presets\PartyItem;
 use sergittos\flanbacore\item\presets\ProfileItem;
 use sergittos\flanbacore\item\presets\ReplayItem;
@@ -222,6 +223,13 @@ class Session {
         $inventory = $this->player->getInventory();
         $inventory->setItem(2, new EditKitItem());
         $inventory->setItem(7, new LeaveMatchItem());
+    }
+
+    public function setSpectatorItems(): void {
+        $this->clearInventory();
+
+        $inventory = $this->player->getInventory();
+        $inventory->setItem(7, new LeaveSpectatorItem());
     }
     
     public function sendEditKitMenu(): void {

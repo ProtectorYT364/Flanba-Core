@@ -14,6 +14,7 @@ use pocketmine\player\GameMode;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 use sergittos\flanbacore\FlanbaCore;
+use sergittos\flanbacore\match\FlanbaMatch;
 use sergittos\flanbacore\session\SessionFactory;
 
 class SpectateMatchForm extends \jojoe77777\FormAPI\SimpleForm {
@@ -24,22 +25,34 @@ class SpectateMatchForm extends \jojoe77777\FormAPI\SimpleForm {
 		$this->player1 = $player1;
 		parent::__construct(function(Player $player, $data = null) : void{
 			if($data == null) return;
-			foreach(FlanbaCore::getInstance()->getServer()->getWorldManager()->getWorldByName(FlanbaCore::getInstance()->getServer()->getPlayerExact($data)->getPosition()->getWorld()->getFolderName())->getPlayers() as $players){
+			foreach(FlanbaCore::getInstance()->getMatchManager()->matches[$data]->getArena()->getWorld()->getPlayers() as $players){
 				$players->sendMessage(TextFormat::LIGHT_PURPLE . $this->player1->getName() . TextFormat::YELLOW . " started spectating");
 			}
-			$this->player1->teleport(FlanbaCore::getInstance()->getServer()->getPlayerExact($data)->getPosition());
+			$this->player1->teleport(FlanbaCore::getInstance()->getMatchManager()->matches[$data]->getPlayers()[0]->getPlayer()->getPosition());
 			$this->player1->setGamemode(GameMode::SPECTATOR());
-			$this->player1->sendMessage(TextFormat::GREEN . "You just started spectating " . TextFormat::AQUA . $data . "," . TextFormat::GREEN . " To leave, do /hub.");
-			$inventory = $this->player1->getInventory();
+			$this->player1->sendMessage(TextFormat::GREEN . "You just started spectating " . TextFormat::AQUA . $data . "," . TextFormat::GREEN . " To leave, do /hub or use the bed in your inventory..");
+            $session = SessionFactory::getSession($this->player1);
 
-			$inventory->clearAll();
+            $inventory = $this->player1->getInventory();
+
+            $inventory->clearAll();
+            $session->setSpectatorItems();
+;
 		});
 		$this->setTitle("Spectate a Match");
-		foreach(FlanbaCore::getInstance()->getServer()->getOnlinePlayers() as $players){
-			$session = SessionFactory::getSession($players);
-			if($session->hasMatch()){
-				$this->addButton($session->getPlayer()->getName(), -1, "", $session->getPlayer()->getName());
-			}
-		}
+		foreach(FlanbaCore::getInstance()->getMatchManager()->getMatches() as $match){
+              if($match->getPlayerTeamCapacity() == 1) {
+                  $players = $match->getPlayers();
+                  $this->addButton($players[0]->getPlayer()->getName() . "vs" . $players[1]->getPlayer()->getName(), -1, "", $match->getId());
+              } elseif ($match->getPlayerTeamCapacity() == 2) {
+
+                  $this->addButton($players[0]->getPlayer()->getName() . ", " . $players[1]->getPlayer()->getName() . "vs" . $players[2]->getPlayer()->getName() . ", " . $players[3]->getPlayer()->getName(), -1, "", $match->getId());
+
+              } elseif($match->getPlayerTeamCapacity() == 4) {
+
+                  $this->addButton($players[0]->getPlayer()->getName() . " (+3, 4v4)", -1, "", $match->getId());
+
+              }
+        }
     }
 }

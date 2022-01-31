@@ -18,7 +18,6 @@ class LobbyScoreboard extends Scoreboard {
 
     public function getLines(): array {
         return [
-            "flanba.sb.logo",
             "{DARK_GRAY}---------------",
             " §eOnline: {WHITE}" . count(Server::getInstance()->getOnlinePlayers()),
             " ",

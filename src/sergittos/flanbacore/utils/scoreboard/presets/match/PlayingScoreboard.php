@@ -27,7 +27,6 @@ class PlayingScoreboard extends Scoreboard {
     public function getLines(): array {
         $team = $this->session->getTeam();
         return [
-            "flanba.sb.logo",
             " {GRAY}" . date("d/m/y") . " §8SicroMedia",
             " ",
             " {WHITE}Time left: {GREEN}" . gmdate("i:s", $this->match->getTimeLeft()),

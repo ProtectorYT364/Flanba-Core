@@ -26,7 +26,6 @@ class CountdownScoreboard extends Scoreboard {
 
     public function getLines(): array {
         return [
-            "flanba.sb.logo",
             " {GRAY}" . date("d/m/y") . " §8Sicro",
             " ",
             " {WHITE}Map: {GREEN}" . $this->match->getArena()->getWorld()->getDisplayName(),

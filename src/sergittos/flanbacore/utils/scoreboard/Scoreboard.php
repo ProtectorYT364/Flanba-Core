@@ -61,7 +61,7 @@ abstract class Scoreboard {
         $packet = new SetDisplayObjectivePacket();
         $packet->displaySlot = "sidebar";
         $packet->objectiveName = $this->session->getUsername();
-        $packet->displayName = ColorUtils::translate(ConfigGetter::getScoreboardTitle());
+        $packet->displayName = "flanba.sb.logo";
         $packet->criteriaName = "dummy";
         $packet->sortOrder = 0;
         $this->session->sendDataPacket($packet);

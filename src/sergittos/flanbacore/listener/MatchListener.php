@@ -226,7 +226,7 @@ class MatchListener implements Listener {
     }
 
 	
-	 public function onBreak(BlockBreakEvent $event){
+	 /*public function onBreak(BlockBreakEvent $event){
 		$session = SessionFactory::getSession($event->getPlayer());
 		if(!$session->hasMatch()) {
 			return;
@@ -234,7 +234,7 @@ class MatchListener implements Listener {
 		if(!($event->getBlock()->getId() == 159 and $event->getBlock()->getMeta() == 11 or $event->getBlock()->getMeta() == 14 or $event->getBlock()->getMeta() == 0)){
 			$event->cancel();
 		}
-	}
+	}*/
 	
 
     public function onTouch(PlayerInteractEvent $event) {

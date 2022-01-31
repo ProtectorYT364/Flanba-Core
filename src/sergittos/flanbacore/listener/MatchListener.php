@@ -201,7 +201,7 @@ class MatchListener implements Listener {
                 $player->teleportToTeamSpawnPoint();
                 $player->updateScoreboard();
                 $player->title(
-                    $color . $session->getUsername() . "§7 scored!",
+                    $color . $session->getUsername() . " scored!",
                     "{GRAY}Cages open in {GREEN}{$countdown}s{GRAY}..."
                 );
                 $player->message($color . $session->getUsername() . " §6scored!");

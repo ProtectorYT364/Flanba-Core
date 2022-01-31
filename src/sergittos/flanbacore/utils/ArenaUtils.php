@@ -26,9 +26,13 @@ class ArenaUtils {
         $name = ucfirst($map->getName());
         if($name === "Spacex") {
             $name = "SpaceX";
+        } elseif ($name === "Flanbainc") {
+
+            $name = "flanbainc";
+
         }
         $server = Server::getInstance();
-        $data_path = $server->getDataPath();
+         $data_path = $server->getDataPath();
         $dir = $data_path . "/worlds/$name-" . self::$j;
         if(!file_exists($dir)) {
             mkdir($dir);
@@ -49,14 +53,17 @@ class ArenaUtils {
         $world_manager = Server::getInstance()->getWorldManager();
         $world_manager->loadWorld($world_name, true);
 
+
         $world = $world_manager->getWorldByName($world_name);
-        $world->setAutoSave(false);
-        $world->setTime(World::TIME_DAY);
-        $world->stopTime();
+        if(is_null($world)) echo "\n\n\n\n Ayo this world is naughty {$world_name}\n\n\n\n\n";
+            $world->setAutoSave(false);
+            $world->setTime(World::TIME_DAY);
+            $world->stopTime();
+
 
         $plugin = FlanbaCore::getInstance();
         $arena = null;
-        foreach(json_decode(file_get_contents($plugin->getDataFolder()  . "maps/" . $name . ".json"), true) as $arena_data) {
+        foreach(json_decode(file_get_contents($plugin->getDataFolder()  . "maps/" . strtolower($name) . ".json"), true) as $arena_data) {
             $arena = new Arena(
                 "tb" . self::$j, $arena_data["time_left"], $arena_data["height_limit"], $arena_data["void_limit"], $map, $world,
                 TeamSettings::fromData($arena_data["red_settings"], $world), TeamSettings::fromData($arena_data["blue_settings"], $world)

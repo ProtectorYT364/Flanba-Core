@@ -56,7 +56,7 @@ class ArenaUtils {
 
         $plugin = FlanbaCore::getInstance();
         $arena = null;
-        foreach(json_decode(file_get_contents($plugin->getDataFolder()  . "maps/" . strtolower($name) . ".json"), true) as $arena_data) {
+        foreach(json_decode(file_get_contents($plugin->getDataFolder()  . "maps/" . $name . ".json"), true) as $arena_data) {
             $arena = new Arena(
                 "tb" . self::$j, $arena_data["time_left"], $arena_data["height_limit"], $arena_data["void_limit"], $map, $world,
                 TeamSettings::fromData($arena_data["red_settings"], $world), TeamSettings::fromData($arena_data["blue_settings"], $world)

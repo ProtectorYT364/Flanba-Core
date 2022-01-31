@@ -162,7 +162,7 @@ class MatchListener implements Listener {
                 $session->teleportToTeamSpawnPoint(false);
             } else {
                 $session->teleportToTeamSpawnPoint(true);
-                $match->broadcastMessage($session_team->getColor() . " " . $session->getUsername() . " {GRAY}fell into the void.");
+                $match->broadcastMessage($session_team->getColor() . " " . $session->getUsername() . " {GRAY}fell into the void.");
             }
             return;
         }

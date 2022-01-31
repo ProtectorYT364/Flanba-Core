@@ -35,6 +35,21 @@ class MatchManager {
         return $this->matches;
     }
 
+    /**
+     * @param string $id
+     * @return FlanbaMatch
+     */
+    public function getMatchFromId(string $id): FlanbaMatch {
+
+        foreach($this->matches as $match) {
+
+            if($match->getId() === $id)
+                $returnMatch = $match;
+        }
+
+        return $returnMatch;
+    }
+
     public function getRandomMatch(Queue $queue): FlanbaMatch {
         shuffle($this->matches);
         $map = $queue->getMap();

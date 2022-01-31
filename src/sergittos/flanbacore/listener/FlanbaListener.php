@@ -84,7 +84,7 @@ class FlanbaListener implements Listener {
 	}
 
 	public function onJoin(PlayerJoinEvent $ev){
-		$ev->setJoinMessage(TextFormat::GREEN . "§8[§a+§8]§a {$ev->getPlayer()->getDisplayName()}");
+		$ev->setJoinMessage(" §gWelcome, §a{$ev->getPlayer()->getDisplayName()}!");
 		$player = $ev->getPlayer();
 		$player->sendMessage(" §f__________________\n     §e§lFLANBA§6MC     \n§l§eSTORE: §r§fflanba.com/store\n§l§eDISCORD: §r§fdiscord.gg/flanba\n§l§eYOUTUBE: §r§fyoutube.com/c/flanba\n§r§f §f__________________");
 		$player->sendTitle(TextFormat::YELLOW . TextFormat::BOLD . "Flanba " . TextFormat::GOLD . "Network");
@@ -92,7 +92,7 @@ class FlanbaListener implements Listener {
 	}
 
 	public function onLeave(PlayerQuitEvent $ev){
-		$ev->setQuitMessage(TextFormat::RED . "§8[§c-§8]§c {$ev->getPlayer()->getDisplayName()}");
+		$ev->setQuitMessage(" §gGoodbye, §c{$ev->getPlayer()->getDisplayName()}.");
 	}
 }
 class MotionTask extends Task {

@@ -64,14 +64,25 @@ class Team {
     }
 
     public function getScore(): string {
+        if($this->color === "{RED}"){
         return match($this->score) {
-            default => "{GRAY}ooooo",
-            1 => $this->color . "o{GRAY}oooo",
-            2 => $this->color . "oo{GRAY}ooo",
-            3 => $this->color . "ooo{GRAY}oo",
-            4 => $this->color . "oooo{GRAY}o",
-            5 => $this->color . "ooooo",
+            default => "",
+            1 => "",
+            2 => "",
+            3 => "",
+            4 => "",
+            5 => "",
         };
+        }else{
+            return match($this->score) {
+            default => "",
+            1 => "",
+            2 => "",
+            3 => "",
+            4 => "",
+            5 => "",
+        };
+        }
     }
 
     public function getKills(): int {

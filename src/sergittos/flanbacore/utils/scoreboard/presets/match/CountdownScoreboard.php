@@ -28,10 +28,10 @@ class CountdownScoreboard extends Scoreboard {
         return [
             " {GRAY}" . date("d/m/y") . " §8Sicro",
             " ",
-            " {WHITE}Map: {GREEN}" . $this->match->getArena()->getWorld()->getDisplayName(),
-            " {WHITE}Players: {GREEN}" . $this->match->getPlayersCount(),
+            " {GREEN} " . $this->match->getArena()->getWorld()->getDisplayName(),
+            " {GREEN} " . $this->match->getPlayersCount(),
             "  ",
-            " {WHITE}Starting in {GREEN}{$this->match->getCountdown()}s",
+            " {GREEN} {$this->match->getCountdown()}s",
             "   ",
             " {YELLOW}play.flanba.com"
         ];

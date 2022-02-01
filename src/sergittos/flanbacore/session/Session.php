@@ -66,6 +66,7 @@ class Session {
     private Team|null $team = null;
     private Scoreboard|null $scoreboard = null;
     private Kit $kit;
+    private bool $spectating = false;
 
 	private int $current_ping;
 
@@ -119,6 +120,12 @@ class Session {
 
     public function hasCooldown(string $id): bool {
         return array_key_exists($id, $this->cooldowns);
+    }
+
+    public function isSpectating(): bool{
+
+        return $this->spectating;
+
     }
 
     public function setMatch(?FlanbaMatch $match): void {
@@ -210,6 +217,7 @@ class Session {
         $this->player->setHealth($this->player->getMaxHealth());
         $this->player->getEffects()->clear(); // TODO: Make a function for this?
         $this->player->setGamemode(GameMode::ADVENTURE());
+        $this->spectating = false;
         $this->setLobbyItems();
         $this->updateNameTag();
         $this->setScoreboard(new LobbyScoreboard($this));
@@ -228,6 +236,7 @@ class Session {
     public function setSpectatorItems(): void {
         $this->clearInventory();
 
+        $this->spectating = true;
         $inventory = $this->player->getInventory();
         $inventory->setItem(7, new LeaveSpectatorItem());
     }

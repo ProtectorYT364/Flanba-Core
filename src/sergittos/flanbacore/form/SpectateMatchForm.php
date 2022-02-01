@@ -62,6 +62,12 @@ class SpectateMatchForm extends \jojoe77777\FormAPI\SimpleForm {
                     if(array_key_exists(0, $players) && array_key_exists(1, $players) && array_key_exists(2, $players) && array_key_exists(3, $players))
                     $this->addButton($players[0]->getPlayer()->getName() . ", " . $players[1]->getPlayer()->getName() . " vs " . $players[2]->getPlayer()->getName() . ", " . $players[3]->getPlayer()->getName(), -1, "", $match->getId());
 
+                } elseif ($match->getPlayerTeamCapacity() == 3) {
+
+                    $players = $match->getPlayers();
+                    if(array_key_exists(0, $players))
+                        $this->addButton($players[0]->getPlayer()->getName() . " (+5, 3v3)", -1, "", $match->getId());
+
                 } elseif ($match->getPlayerTeamCapacity() == 4) {
 
                     $players = $match->getPlayers();

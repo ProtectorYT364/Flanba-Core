@@ -218,6 +218,7 @@ class Session {
         $this->player->getEffects()->clear(); // TODO: Make a function for this?
         $this->player->setGamemode(GameMode::ADVENTURE());
         $this->spectating = false;
+        $this->player->setFlying(false);
         $this->setLobbyItems();
         $this->updateNameTag();
         $this->setScoreboard(new LobbyScoreboard($this));

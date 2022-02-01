@@ -34,9 +34,9 @@ class PlayingScoreboard extends Scoreboard {
             " {RED}[R] {BOLD}" . $this->match->getRedTeam()->getScore(),
             " {BLUE}[B] {BOLD}" . $this->match->getBlueTeam()->getScore(),
             "   ",
-            " {WHITE}Mode: {GREEN}The Bridge Duel",
-            " {WHITE}Kills: {GREEN}" . $team->getKills(),
-            " {WHITE}Goals: {GREEN}" . $team->getScoreNumber(),
+            " {WHITE}: {GREEN}The Bridge Duel",
+            " {WHITE}: {GREEN}" . $team->getKills(),
+            " {WHITE}: {GREEN}" . $team->getScoreNumber(),
             "    ",
             " {YELLOW}play.flanba.com"
         ];

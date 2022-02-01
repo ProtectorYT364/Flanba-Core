@@ -2,7 +2,7 @@
 
 # Quick note
 
-If you are putting the core into the server from github, make sure you dont delete the Team class file and the scoreboard files because I made some changes directly on the server but didn't put on github
+If you are putting the core into the server from github, make sure you dont delete the Team class file and the scoreboard files from the server because I made some changes directly on the server but didn't put on github
 
 I'll remove this msg once i upload changes to github
 

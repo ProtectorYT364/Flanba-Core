@@ -10,6 +10,9 @@ declare(strict_types=1);
 
 namespace sergittos\flanbacore\form;
 
+use pocketmine\entity\effect\EffectInstance;
+use pocketmine\entity\effect\VanillaEffects;
+use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\player\GameMode;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
@@ -29,7 +32,10 @@ class SpectateMatchForm extends \jojoe77777\FormAPI\SimpleForm {
 				$players->sendMessage(TextFormat::LIGHT_PURPLE . $this->player1->getName() . TextFormat::YELLOW . " started spectating");
 			}
 			$this->player1->teleport(FlanbaCore::getInstance()->getMatchManager()->getMatchFromId($data)->getPlayers()[0]->getPlayer()->getPosition());
-			$this->player1->setGamemode(GameMode::SPECTATOR());
+			$this->player1->setGamemode(GameMode::ADVENTURE());
+            $this->player1->setFlying(true);
+            $this->player1->getEffects()->add(new EffectInstance(VanillaEffects::INVISIBILITY(), 100000));
+
 			$this->player1->sendMessage(TextFormat::GREEN . "You just started spectating " . TextFormat::AQUA . $data . "," . TextFormat::GREEN . " To leave, do /hub or use the bed in your inventory..");
             $session = SessionFactory::getSession($this->player1);
 

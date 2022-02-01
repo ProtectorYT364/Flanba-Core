@@ -78,6 +78,12 @@ class MatchListener implements Listener {
             $event->cancel();
             return;
         }
+
+        if($entity->isFlying()) {
+            $event->cancel();
+            return;
+        }
+        
 		if($event instanceof EntityDamageByEntityEvent){
 			if($session->hasMatch() and $entity->getHealth() - $event->getFinalDamage() <= 0) {
 				foreach($entity->getWorld()->getPlayers() as $players){

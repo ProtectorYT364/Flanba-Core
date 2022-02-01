@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace sergittos\flanbacore\item\presets\match;
 
 
+use pocketmine\block\Block;
 use pocketmine\block\utils\DyeColor;
 use pocketmine\item\ItemIds;
 use pocketmine\item\ItemUseResult;

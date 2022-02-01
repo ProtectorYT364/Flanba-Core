@@ -75,7 +75,7 @@ class MatchListener implements Listener {
             return;
         }
         if($event->getCause() === EntityDamageEvent::CAUSE_FALL) {
-            $event->cancel();
+                $event->cancel();
             return;
         }
 
@@ -169,7 +169,20 @@ class MatchListener implements Listener {
                 $session->teleportToTeamSpawnPoint(false);
             } else {
                 $session->teleportToTeamSpawnPoint(true);
-                $match->broadcastMessage($session_team->getColor() . " " . $session->getUsername() . " {GRAY}fell into the void.");
+
+                if($player->getLastDamageCause() instanceof EntityDamageByEntityEvent) {
+                    $damager = $player->getLastDamageCause()->getEntity();
+                    $damage_session = SessionFactory::getSession(FlanbaCore::getInstance()->getServer()->getPlayerExact($damager->getNameTag()));
+                    $damage_team = $damage_session->getTeam();
+                    $match->broadcastMessage($session_team->getColor() . " " . $session->getUsername() . " {GRAY}fell into the void fighting " . $damage_team->getColor() . $damage->getUsername());
+
+                    $death_event = new SessionDeathEvent($session);
+                    $death_event->call();
+            } else {
+
+                    $match->broadcastMessage($session_team->getColor() . " " . $session->getUsername() . " {GRAY}fell into the void.");
+
+              }
             }
             return;
         }

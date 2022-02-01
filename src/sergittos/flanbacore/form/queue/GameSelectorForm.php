@@ -22,6 +22,7 @@ class GameSelectorForm extends SimpleForm {
     protected function onCreation(): void {
         $this->addRedirectFormButton("Solo (1 vs 1)", new PlayForm(1));
         $this->addRedirectFormButton("Duo (2 vs 2)", new PlayForm(2));
+        $this->addRedirectFormButton("Trios (3 vs 3)", new PlayForm(3));
         $this->addRedirectFormButton("Squad (4 vs 4)", new PlayForm(4));
     }
 

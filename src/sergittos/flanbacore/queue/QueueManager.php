@@ -51,6 +51,7 @@ class QueueManager {
         foreach(MapFactory::getMaps() as $map) {
             $this->addQueue(new Queue($map, 1));
             $this->addQueue(new Queue($map, 2));
+            $this->addQueue(new Queue($map, 3));
             $this->addQueue(new Queue($map, 4));
         }
     }

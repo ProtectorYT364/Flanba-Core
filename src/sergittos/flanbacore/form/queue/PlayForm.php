@@ -18,7 +18,13 @@ class PlayForm extends SimpleForm {
 
     public function __construct(int $player_team_capacity) {
         $this->player_team_capacity = $player_team_capacity;
-        parent::__construct("Play " . ($player_team_capacity === 1 ? "solo" : ($player_team_capacity === 2 ? "duos" : "squads")));
+        parent::__construct("Play " . (
+            $player_team_capacity === 1 ? "solo" :
+                ($player_team_capacity === 2 ? "duos" :
+                    ($player_team_capacity === 3 ? "trios" : "squads")
+                )
+            )
+        );
     }
 
     protected function onCreation(): void {

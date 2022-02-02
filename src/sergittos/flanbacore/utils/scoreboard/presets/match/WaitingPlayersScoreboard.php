@@ -28,10 +28,10 @@ class WaitingPlayersScoreboard extends Scoreboard {
         return [
             " {GRAY}" . date("d/m/y") . " §8Sicro",
             " ",
-            " {WHITE}: {GREEN}" . $this->match->getArena()->getWorld()->getDisplayName(),
-            " {WHITE}: {GREEN}" . $this->match->getPlayersCount(),
+            " {GREEN} " . $this->match->getArena()->getWorld()->getDisplayName(),
+            " {GREEN} " . $this->match->getPlayersCount(),
             "  ",
-            " {WHITE}Waiting...",
+            "  Waiting...",
             "   ",
             " {YELLOW}play.flanba.com"
         ];

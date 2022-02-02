@@ -66,7 +66,6 @@ class Session {
     private Team|null $team = null;
     private Scoreboard|null $scoreboard = null;
     private Kit $kit;
-    private bool $spectating = false;
 
 	private int $current_ping;
 
@@ -122,11 +121,6 @@ class Session {
         return array_key_exists($id, $this->cooldowns);
     }
 
-    public function isSpectating(): bool{
-
-        return $this->spectating;
-
-    }
 
     public function setMatch(?FlanbaMatch $match): void {
         $finish = true;
@@ -237,7 +231,6 @@ class Session {
     public function setSpectatorItems(): void {
         $this->clearInventory();
 
-        $this->spectating = true;
         $inventory = $this->player->getInventory();
         $inventory->setItem(7, new LeaveSpectatorItem());
     }

@@ -20,18 +20,22 @@ use pocketmine\event\entity\EntityRegainHealthEvent;
 use pocketmine\event\entity\EntityShootBowEvent;
 use pocketmine\event\entity\ProjectileHitBlockEvent;
 use pocketmine\event\entity\ProjectileHitEntityEvent;
+use pocketmine\event\inventory\InventoryTransactionEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerDropItemEvent;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerItemConsumeEvent;
+use pocketmine\event\player\PlayerItemHeldEvent;
 use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\event\player\PlayerQuitEvent;
+use pocketmine\inventory\transaction\action\SlotChangeAction;
 use pocketmine\item\GoldenApple;
 use pocketmine\player\GameMode;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 use sergittos\flanbacore\event\SessionDeathEvent;
 use sergittos\flanbacore\FlanbaCore;
+use sergittos\flanbacore\item\presets\match\LeaveSpectatorItem;
 use sergittos\flanbacore\match\FlanbaMatch;
 use sergittos\flanbacore\session\SessionFactory;
 use sergittos\flanbacore\utils\cooldown\BowCooldown;
@@ -76,11 +80,6 @@ class MatchListener implements Listener {
         }
         if($event->getCause() === EntityDamageEvent::CAUSE_FALL) {
                 $event->cancel();
-            return;
-        }
-
-        if($session->isSpectating()) {
-            $event->cancel();
             return;
         }
 
@@ -170,7 +169,7 @@ class MatchListener implements Listener {
             } else {
                 $session->teleportToTeamSpawnPoint(true);
 
-                if($player->getLastDamageCause() instanceof EntityDamageByEntityEvent) {
+                if($player->getLastDamageCause() instanceof EntityDamageByEntityEvent && $player->getLastDamageCause()->getEntity() !== null) {
                     $damager = $player->getLastDamageCause()->getEntity();
                     $damage_session = SessionFactory::getSession(FlanbaCore::getInstance()->getServer()->getPlayerExact($damager->getNameTag()));
                     $damage_team = $damage_session->getTeam();
@@ -243,6 +242,16 @@ class MatchListener implements Listener {
         if (in_array($block->getId(), [205, 459, 58, 145, 154])) {
           $event->cancel();
         } 
+    }
+
+    public function onHeld(PlayerItemHeldEvent $event) {
+
+        if($event->getPlayer() !== null and $event->getPlayer()->isSpectator() and $event->getItem() instanceof LeaveSpectatorItem) {
+
+            $event->getItem()->onClickAir($event->getPlayer(), $event->getPlayer()->getDirectionVector());
+
+        }
+
     }
 
 	

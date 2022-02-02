@@ -62,6 +62,8 @@ class MatchListener implements Listener {
                 return;
             }
             if($damager_session->getMatch()->getId() === $session->getMatch()->getId()) {
+                $damage_event = new EntityDamageEvent($damager_session->getPlayer(), EntityDamageEvent::CAUSE_VOID, 0);
+                $damager_session->getPlayer()->setLastDamageCause($damage_event);
                 $damager_session->getTeam()->addKill();
             }
         }

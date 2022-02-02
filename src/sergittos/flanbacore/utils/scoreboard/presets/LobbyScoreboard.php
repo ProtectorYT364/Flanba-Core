@@ -18,15 +18,11 @@ class LobbyScoreboard extends Scoreboard {
 
     public function getLines(): array {
         return [
-            "{DARK_GRAY}---------------",
-            " §eOnline: {WHITE}" . count(Server::getInstance()->getOnlinePlayers()),
-            " ",
-            " §eYour ping: {WHITE}" . $this->session->getPing(),
-            "  ",
-            " §eK: {WHITE}3 §eD: {WHITE}1", // {kills} {deaths}
-            " §eKDR: {WHITE}3.8 {LIGHT_PURPLE}Elo: {WHITE}1000", // {kdr} {elo}
-            " §eKillstreak: {WHITE}4 {GRAY}9", // {current_kill_streak} {best_kill_streak}
-            "{DARK_GRAY}---------------{DARK_GRAY}"
+            //Rank | Level | Coins | Wins
+            "§eRank: {WHITE}N/A",
+            "§eLevel: {WHITE}N/A",
+            "§eCoins: {WHITE}N/A",
+            "§eWins: {WHITE}N/A"
         ];
     }
 

@@ -167,18 +167,19 @@ class MatchListener implements Listener {
             if($stage === FlanbaMatch::WAITING_STAGE or $stage === FlanbaMatch::COUNTDOWN_STAGE) {
                 $session->teleportToTeamSpawnPoint(false);
             } else {
-                $session->teleportToTeamSpawnPoint(true);
 
-                if($player->getLastDamageCause() instanceof EntityDamageByEntityEvent && $player->getLastDamageCause()->getEntity() !== null) {
-                    $damager = $player->getLastDamageCause()->getEntity();
+                if($player->getLastDamageCause() instanceof EntityDamageByEntityEvent && $player->getLastDamageCause()->getDamager() !== null) {
+                    $damager = $player->getLastDamageCause()->getDamager();
                     $damage_session = SessionFactory::getSession($damager);
                     $damage_team = $damage_session->getTeam();
                     $match->broadcastMessage($session_team->getColor() . " " . $session->getUsername() . " {GRAY}fell into the void fighting " . $damage_team->getColor() . $damage_session->getUsername());
 
+                    $session->teleportToTeamSpawnPoint(true);
                     $death_event = new SessionDeathEvent($session);
                     $death_event->call();
             } else {
 
+                    $session->teleportToTeamSpawnPoint(true);
                     $match->broadcastMessage($session_team->getColor() . " " . $session->getUsername() . " {GRAY}fell into the void.");
 
               }

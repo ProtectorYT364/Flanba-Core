@@ -13,8 +13,10 @@ namespace sergittos\flanbacore\match;
 
 use pocketmine\player\GameMode;
 use sergittos\flanbacore\arena\Arena;
+use sergittos\flanbacore\FlanbaCore;
 use sergittos\flanbacore\match\team\Team;
 use sergittos\flanbacore\session\Session;
+use sergittos\flanbacore\session\SessionFactory;
 use sergittos\flanbacore\utils\ConfigGetter;
 use sergittos\flanbacore\utils\scoreboard\presets\match\CountdownScoreboard;
 use sergittos\flanbacore\utils\scoreboard\presets\match\PlayingScoreboard;
@@ -289,8 +291,8 @@ class FlanbaMatch {
     }
 
     public function broadcastMessage(string $message): void {
-        foreach($this->getPlayers() as $session) {
-            $session->message($message);
+        foreach($this->getArena()->getWorld()->getPlayers() as $session) {
+            SessionFactory::getSession($session)->message($message);
         }
     }
 

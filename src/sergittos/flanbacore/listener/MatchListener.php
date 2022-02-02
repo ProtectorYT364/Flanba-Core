@@ -171,7 +171,7 @@ class MatchListener implements Listener {
 
                 if($player->getLastDamageCause() instanceof EntityDamageByEntityEvent && $player->getLastDamageCause()->getEntity() !== null) {
                     $damager = $player->getLastDamageCause()->getEntity();
-                    $damage_session = SessionFactory::getSession(FlanbaCore::getInstance()->getServer()->getPlayerExact($damager->getNameTag()));
+                    $damage_session = SessionFactory::getSession($damager);
                     $damage_team = $damage_session->getTeam();
                     $match->broadcastMessage($session_team->getColor() . " " . $session->getUsername() . " {GRAY}fell into the void fighting " . $damage_team->getColor() . $damage->getUsername());
 

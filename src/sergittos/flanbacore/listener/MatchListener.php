@@ -173,7 +173,7 @@ class MatchListener implements Listener {
                     $damager = $player->getLastDamageCause()->getEntity();
                     $damage_session = SessionFactory::getSession($damager);
                     $damage_team = $damage_session->getTeam();
-                    $match->broadcastMessage($session_team->getColor() . " " . $session->getUsername() . " {GRAY}fell into the void fighting " . $damage_team->getColor() . $damage->getUsername());
+                    $match->broadcastMessage($session_team->getColor() . " " . $session->getUsername() . " {GRAY}fell into the void fighting " . $damage_team->getColor() . $damager->getUsername());
 
                     $death_event = new SessionDeathEvent($session);
                     $death_event->call();

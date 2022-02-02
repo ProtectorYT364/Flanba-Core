@@ -19,10 +19,10 @@ class LobbyScoreboard extends Scoreboard {
     public function getLines(): array {
         return [
             //Rank | Level | Coins | Wins
-            "§eRank: {WHITE}N/A",
-            "§eLevel: {WHITE}N/A",
-            "§eCoins: {WHITE}N/A",
-            "§eWins: {WHITE}N/A"
+            " §eRank: {WHITE}N/A",
+            " §eLevel: {WHITE}N/A",
+            " §eCoins: {WHITE}N/A",
+            " §eWins: {WHITE}N/A"
         ];
     }
 

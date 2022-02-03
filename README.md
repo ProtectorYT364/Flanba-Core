@@ -5,10 +5,10 @@
 * BRIDGE Basics
 
   - (done) Goal system (block id for red team goal, and blue team goal, just like what Phqzing did)
-  - 1v1, 2v2. 3v3, 4v4
+  - (done)1v1, 2v2. 3v3, 4v4
   - (done) Safezone
   - (done) height limit
-  - customizable inventory 
+  - (done)customizable inventory 
   - (done)bow cooldown (with moving xp bar as counter)
   - (done)gapple cooldown (moving xp bar)
   - give  coins whenver u goal

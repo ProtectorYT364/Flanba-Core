@@ -267,23 +267,8 @@ class MatchListener implements Listener {
         
 
         if($block->getId() !== 159 && !in_array($block->getMeta(), [11, 0, 14])) $event->cancel();
-		}
-
-	
-
-    public function onTouch(PlayerInteractEvent $event) {
-		$session = SessionFactory::getSession($event->getPlayer());
-		if(!$session->hasMatch()) {
-			return;
-		}
-		$block = $event->getBlock();
-        
-
-        if($block->getId() !== 159 && !in_array($block->getMeta(), [11, 0, 14])) $event->cancel();
-
-
-    }
-    
+	 }
+  
     public function onQuit(PlayerQuitEvent $event): void {
         $session = SessionFactory::getSession($event->getPlayer());
         if($session->hasMatch()) {

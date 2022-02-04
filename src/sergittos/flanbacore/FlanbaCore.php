@@ -24,6 +24,7 @@ use pocketmine\Server;
 use pocketmine\utils\ServerException;
 use pocketmine\utils\SingletonTrait;
 use sergittos\flanbacore\arena\ArenaFactory;
+use sergittos\flanbacore\command\party\PartyCommand;
 use sergittos\flanbacore\listener\ClaimListener;
 use sergittos\flanbacore\listener\FlanbaListener;
 use sergittos\flanbacore\listener\ItemListener;
@@ -90,6 +91,7 @@ class FlanbaCore extends PluginBase {
         $this->registerListener(new TeamListener());
 
         $this->registerCommand(new HubCommand());
+        $this->registerCommand(new PartyCommand());
 
 		$scheduler = $this->getScheduler();
 		$scheduler->scheduleRepeatingTask(new FlanbaHeartbeat(), 20); // 1 second

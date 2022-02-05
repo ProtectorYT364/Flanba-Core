@@ -45,6 +45,7 @@ use sergittos\flanbacore\queue\QueueManager;
 use sergittos\flanbacore\session\SessionFactory;
 use sergittos\flanbacore\utils\ConfigGetter;
 use sergittos\flanbacore\command\tempc\HubCommand;
+use thebarii\partyengine\PartyEngine;
 
 
 class FlanbaCore extends PluginBase {
@@ -54,6 +55,7 @@ class FlanbaCore extends PluginBase {
 
     private MatchManager $match_manager;
     private QueueManager $queue_manager;
+    private PartyEngine $partyEngine;
 
     protected function onLoad(): void {
         self::setInstance($this);
@@ -79,6 +81,10 @@ class FlanbaCore extends PluginBase {
         $this->initProvider();
         $this->match_manager = new MatchManager();
         $this->queue_manager = new QueueManager();
+        $partyEngine = $this->getServer()->getPluginManager()->getPlugin("Party Engine");
+
+        if($partyEngine instanceof PartyEngine)
+            $this->partyEngine = $partyEngine;
         $this->registerListener(new ClaimListener());
         $this->registerListener(new FlanbaListener($this));
 		$this->registerListener(new ScoreboardListener());

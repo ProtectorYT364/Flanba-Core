@@ -70,4 +70,8 @@ class ConfigGetter {
         return self::get("gapple-cooldown");
     }
 
+    static public function getGamemodeMax(): int {
+        return self::get("gamemode-max");
+    }
+
 }

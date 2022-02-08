@@ -14,6 +14,7 @@ namespace sergittos\flanbacore\match;
 use pocketmine\player\GameMode;
 use sergittos\flanbacore\arena\Arena;
 use sergittos\flanbacore\FlanbaCore;
+use sergittos\flanbacore\form\queue\PlayForm;
 use sergittos\flanbacore\match\team\Team;
 use sergittos\flanbacore\session\Session;
 use sergittos\flanbacore\session\SessionFactory;
@@ -267,7 +268,8 @@ class FlanbaMatch {
                 } elseif($this->countdown === 6) {
                     foreach($this->getPlayersAndSpectators() as $session) {
                         $session->setMatch(null);
-                        $session->teleportToLobby();
+                        $session->message("If you want to play a different mode for this gamemode, please go back to hub using the bed or /hub.");
+                        $session->getPlayer()->sendForm(new PlayForm(ConfigGetter::getGamemodeMax()));
                     }
                 }
                 break;

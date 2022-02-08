@@ -13,6 +13,8 @@ namespace sergittos\flanbacore\listener;
 
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\Listener;
+use sergittos\flanbacore\form\queue\GameSelectorForm;
+use sergittos\flanbacore\form\queue\PlayForm;
 use sergittos\flanbacore\utils\ConfigGetter;
 use pocketmine\entity\Entity;
 use pocketmine\event\block\BlockBreakEvent;
@@ -89,6 +91,7 @@ class FlanbaListener implements Listener {
 		$player->sendMessage(" §f__________________\n     §e§lFLANBA§6MC     \n§l§eSTORE: §r§fflanba.com/store\n§l§eDISCORD: §r§fdiscord.gg/flanba\n§l§eYOUTUBE: §r§fyoutube.com/c/flanba\n§r§f §f__________________");
 		$player->sendTitle(TextFormat::YELLOW . TextFormat::BOLD . "Flanba " . TextFormat::GOLD . "Network");
 		$player->sendSubTitle(TextFormat::YELLOW . TextFormat::BOLD . "Welcome to Flanba Network,\nPlease join our discord server!\n" . TextFormat::GREEN . "discord.gg/flanba");
+        $player->sendForm(new PlayForm(ConfigGetter::getGamemodeMax()));
 	}
 
 	public function onLeave(PlayerQuitEvent $ev){

@@ -31,3 +31,7 @@ bow-cooldown: 3
 
 # The cooldown that has the gapple
 gapple-cooldown: 5
+
+# The max players in the gamemode.
+# 1 = 1v1, 2 = 2v2, 3 = 3v3, 4 = 4v4
+gamemode-max: 1

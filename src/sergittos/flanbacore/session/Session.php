@@ -15,6 +15,7 @@ use muqsit\invmenu\InvMenu;
 use muqsit\invmenu\transaction\InvMenuTransaction;
 use muqsit\invmenu\transaction\InvMenuTransactionResult;
 use muqsit\invmenu\type\InvMenuTypeIds;
+use paroxity\portal\Portal;
 use pocketmine\block\BlockFactory;
 use pocketmine\block\BlockLegacyIds;
 use pocketmine\block\utils\DyeColor;
@@ -206,18 +207,9 @@ class Session {
     }
 
     public function teleportToLobby(): void {
-        $hunger_manager = $this->player->getHungerManager();
-        $hunger_manager->setFood($hunger_manager->getMaxFood());
-        $this->player->setHealth($this->player->getMaxHealth());
-        $this->player->getEffects()->clear(); // TODO: Make a function for this?
-        $this->player->setGamemode(GameMode::ADVENTURE());
-        $this->spectating = false;
-        $this->player->setFlying(false);
-        $this->setLobbyItems();
-        $this->updateNameTag();
-        $this->setScoreboard(new LobbyScoreboard($this));
 
-        $this->player->teleport(Server::getInstance()->getWorldManager()->getWorldByName(ConfigGetter::getLobbyWorldName())->getSafeSpawn());
+        Portal::getInstance()->transferPlayer($this->getPlayer(), "Hub", "Hub-1", null);
+
     }
 
     public function setMatchItems(): void {
@@ -320,8 +312,6 @@ class Session {
 
         $inventory = $this->player->getInventory();
         $inventory->setItem(0, new ShopItem());
-        $inventory->setItem(1, new ReplayItem());
-        $inventory->setItem(2, new SpectateItem());
         $inventory->setItem(4, new GameSelectorItem());
         $inventory->setItem(6, new PartyItem());
         $inventory->setItem(7, new ProfileItem());

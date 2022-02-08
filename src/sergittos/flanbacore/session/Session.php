@@ -208,7 +208,7 @@ class Session {
 
     public function teleportToLobby(): void {
 
-        Portal::getInstance()->transferPlayer($this->getPlayer(), "Hub", "Hub-1", null);
+        //Portal::getInstance()->transferPlayer($this->getPlayer(), "Hub", "Hub-1", null);
 
     }
 
@@ -307,15 +307,11 @@ class Session {
         $menu->send($this->player);
     }
 
-    private function setLobbyItems(): void {
+    public function setLobbyItems(): void {
         $this->clearInventory();
 
         $inventory = $this->player->getInventory();
-        $inventory->setItem(0, new ShopItem());
         $inventory->setItem(4, new GameSelectorItem());
-        $inventory->setItem(6, new PartyItem());
-        $inventory->setItem(7, new ProfileItem());
-        $inventory->setItem(8, new SettingsItem());
     }
 
     private function clearInventory(): void {

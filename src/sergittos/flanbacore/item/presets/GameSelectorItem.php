@@ -16,7 +16,9 @@ use pocketmine\item\ItemUseResult;
 use pocketmine\math\Vector3;
 use pocketmine\player\Player;
 use sergittos\flanbacore\form\queue\GameSelectorForm;
+use sergittos\flanbacore\form\queue\PlayForm;
 use sergittos\flanbacore\item\FlanbaItem;
+use sergittos\flanbacore\utils\ConfigGetter;
 
 class GameSelectorItem extends FlanbaItem {
 
@@ -25,7 +27,7 @@ class GameSelectorItem extends FlanbaItem {
     }
 
     public function onClickAir(Player $player, Vector3 $directionVector): ItemUseResult {
-        $player->sendForm(new GameSelectorForm());
+        $player->sendForm(new PlayForm(ConfigGetter::getGamemodeMax()));
         return ItemUseResult::SUCCESS();
     }
 

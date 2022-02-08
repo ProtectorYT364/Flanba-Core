@@ -268,6 +268,7 @@ class FlanbaMatch {
                 } elseif($this->countdown === 6) {
                     foreach($this->getPlayersAndSpectators() as $session) {
                         $session->setMatch(null);
+                        $session->setLobbyItems();
                         $session->message("If you want to play a different mode for this gamemode, please go back to hub using the bed or /hub.");
                         $session->getPlayer()->sendForm(new PlayForm(ConfigGetter::getGamemodeMax()));
                     }

@@ -311,6 +311,7 @@ class Session {
         $this->clearInventory();
 
         $inventory = $this->player->getInventory();
+        $inventory->clearAll();
         $inventory->setItem(4, new GameSelectorItem());
     }
 

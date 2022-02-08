@@ -208,7 +208,7 @@ class Session {
 
     public function teleportToLobby(): void {
 
-        //Portal::getInstance()->transferPlayer($this->getPlayer(), "Hub", "Hub-1", null);
+        Portal::getInstance()->transferPlayer($this->getPlayer(), "Hub", "Hub-1", null);
 
     }
 

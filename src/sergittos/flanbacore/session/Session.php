@@ -312,7 +312,9 @@ class Session {
 
         $inventory = $this->player->getInventory();
         $inventory->clearAll();
+        $inventory->setItem(0, new SpectateItem());
         $inventory->setItem(4, new GameSelectorItem());
+        $inventory->setItem(8, new LeaveMatchItem());
     }
 
     private function clearInventory(): void {

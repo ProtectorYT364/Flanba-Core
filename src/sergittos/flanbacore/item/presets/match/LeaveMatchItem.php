@@ -24,15 +24,11 @@ use sergittos\flanbacore\utils\scoreboard\presets\match\WaitingPlayersScoreboard
 class LeaveMatchItem extends FlanbaItem {
 
     public function __construct() {
-        parent::__construct("{RED}Leave match", ItemIds::BED, DyeColor::RED()->id());
+        parent::__construct("{RED}Return to hub", ItemIds::BED, DyeColor::RED()->id());
     }
 
     public function onClickAir(Player $player, Vector3 $directionVector): ItemUseResult {
         $session = SessionFactory::getSession($player);
-        if(!$session->hasMatch()) {
-            $session->message("{RED}You must be on a match to do this!");
-            return ItemUseResult::FAIL();
-        }
         $session->setMatch(null);
         $session->teleportToLobby();
         return ItemUseResult::SUCCESS();

@@ -43,6 +43,10 @@ use sergittos\flanbacore\utils\cooldown\Cooldown;
 use sergittos\flanbacore\utils\cooldown\GappleCooldown;
 
 class MatchListener implements Listener {
+	
+	public array $position_before_break;
+
+	public array $block_position_when_place;
 
 	public function onDrop(PlayerDropItemEvent $event){
 		$event->cancel();
@@ -266,7 +270,19 @@ class MatchListener implements Listener {
 		$block = $event->getBlock();
         
 
-        if($block->getId() !== 159 && !in_array($block->getMeta(), [11, 0, 14])) $event->cancel();
+        	if($block->getId() !== 159 && !in_array($block->getMeta(), [11, 0, 14])) $event->cancel();
+		 
+		 if(!isset($this->block_position_when_place[$player->getUniqueId()->toString()])){
+			 if($block->getId() !== 159 && !in_array($block->getMeta(), [11, 0, 14])){
+				$player->teleport($this->position_before_break[$player->getUniqueId()->toString()]);
+			 }
+		}else{
+			if(!$blockp == $this->block_position_when_place[$player->getUniqueId()->toString()]){
+				if($block->getId() !== 159 && !in_array($block->getMeta(), [11, 0, 14])){
+					$player->teleport($this->position_before_break[$player->getUniqueId()->toString()]);
+				}
+			}
+		}
 	 }
   
     public function onQuit(PlayerQuitEvent $event): void {

@@ -8,6 +8,7 @@ namespace sergittos\flanbacore\queue;
 
 use sergittos\flanbacore\map\Map;
 use sergittos\flanbacore\map\MapFactory;
+use sergittos\flanbacore\utils\ConfigGetter;
 
 class QueueManager {
 
@@ -26,12 +27,11 @@ class QueueManager {
     }
 
     public function getQueueByCapacity(int $capacity): ?Queue {
+        $queues = null;
         foreach($this->queues as $queue) {
-            if($queue->getPlayerTeamCapacity() === $capacity) {
-                return $queue;
-            }
+            $queues[] = $queue;
         }
-        return null;
+        return $queues[rand(0, count($queues) - 1)];
     }
 
     public function getQueueByCapacityAndMap(int $capacity, Map $map): ?Queue {
@@ -49,10 +49,7 @@ class QueueManager {
 
     private function createQueues(): void {
         foreach(MapFactory::getMaps() as $map) {
-            $this->addQueue(new Queue($map, 1));
-            $this->addQueue(new Queue($map, 2));
-            $this->addQueue(new Queue($map, 3));
-            $this->addQueue(new Queue($map, 4));
+            $this->addQueue(new Queue($map, ConfigGetter::getGamemodeMax()));
         }
     }
 

@@ -93,7 +93,10 @@ class FlanbaListener implements Listener {
 		$player->sendTitle(TextFormat::YELLOW . TextFormat::BOLD . "Flanba " . TextFormat::GOLD . "Network");
 		$player->sendSubTitle(TextFormat::YELLOW . TextFormat::BOLD . "Welcome to Flanba Network,\nPlease join our discord server!\n" . TextFormat::GREEN . "discord.gg/flanba");
         SessionFactory::getSession($player)->setLobbyItems();
-        $player->sendForm(new PlayForm(ConfigGetter::getGamemodeMax()));
+
+        FlanbaCore::getInstance()->getQueueManager()->getQueueByCapacity(ConfigGetter::getGamemodeMax())->addSession(
+            SessionFactory::getSession($player)
+        );
 	}
 
 	public function onLeave(PlayerQuitEvent $ev){

@@ -44,6 +44,12 @@ class Queue {
         }
     }
 
+    public function getMatch(): FlanbaMatch {
+
+        return $this->match;
+
+    }
+
     private function reset(): void {
         $this->match = FlanbaCore::getInstance()->getMatchManager()->getRandomMatch($this);
     }

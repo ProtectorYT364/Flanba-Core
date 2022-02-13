@@ -31,6 +31,15 @@ class QueueManager {
         foreach($this->queues as $queue) {
             $queues[] = $queue;
         }
+
+        foreach ($queues as $queue) {
+
+            if(count($queue->getMatch()->getPlayers()) > 0 && count($queue->getMatch()->getPlayers()) <= ConfigGetter::getGamemodeMax()) {
+                return $queue;
+            }
+
+        }
+
         return $queues[rand(0, count($queues) - 1)];
     }
 

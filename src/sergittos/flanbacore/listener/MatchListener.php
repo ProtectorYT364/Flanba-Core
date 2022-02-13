@@ -43,6 +43,10 @@ use sergittos\flanbacore\utils\cooldown\Cooldown;
 use sergittos\flanbacore\utils\cooldown\GappleCooldown;
 
 class MatchListener implements Listener {
+	
+	public array $position_before_break;
+
+	public array $block_position_when_place;
 
 	public function onDrop(PlayerDropItemEvent $event){
 		$event->cancel();

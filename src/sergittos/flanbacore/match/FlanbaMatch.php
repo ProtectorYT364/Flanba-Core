@@ -270,7 +270,6 @@ class FlanbaMatch {
                         $session->setMatch(null);
                         $session->setLobbyItems();
                         $session->message("If you want to play a different mode for this gamemode, please go back to hub using the bed or /hub.");
-                        $session->getPlayer()->sendForm(new PlayForm(ConfigGetter::getGamemodeMax()));
                     }
                 }
                 break;

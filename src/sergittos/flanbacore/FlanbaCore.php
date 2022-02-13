@@ -13,6 +13,7 @@ namespace sergittos\flanbacore;
 
 use muqsit\invmenu\InvMenuHandler;
 use muqsit\simplepackethandler\SimplePacketHandler;
+use paroxity\portal\Portal;
 use pocketmine\command\Command;
 use pocketmine\event\Listener;
 use pocketmine\network\mcpe\NetworkSession;
@@ -107,6 +108,10 @@ class FlanbaCore extends PluginBase {
     protected function onDisable(): void {
         foreach(SessionFactory::getSessions() as $session) {
             $session->save();
+        }
+
+        foreach ($this->getServer()->getOnlinePlayers() as $player) {
+            Portal::getInstance()->transferPlayer($player, 'Hub', 'Hub-1', null);
         }
     }
 

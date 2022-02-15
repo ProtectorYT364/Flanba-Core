@@ -363,15 +363,15 @@ class Session {
     }
 
     public function popup(string $popup): void {
-        if($this->player->isOnline()) $this->player->sendPopup(ColorUtils::translate($popup));
+        if($this->player->isConnected()) $this->player->sendPopup(ColorUtils::translate($popup));
     }
 
     public function title(string $title, string $subtitle = ""): void {
-	if($this->player->isOnline()) $this->player->sendTitle(ColorUtils::translate($title), ColorUtils::translate($subtitle));
+	if($this->player->isConnected()) $this->player->sendTitle(ColorUtils::translate($title), ColorUtils::translate($subtitle));
     }
 
     public function message(string $message): void {
-        if($this->player->isOnline()) $this->player->sendMessage(ColorUtils::translate($message));
+        if($this->player->isConnected()) $this->player->sendMessage(ColorUtils::translate($message));
     }
 
     public function save(): void {

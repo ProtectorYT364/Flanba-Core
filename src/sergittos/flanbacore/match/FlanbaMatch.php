@@ -238,8 +238,7 @@ class FlanbaMatch {
                 $this->updatePlayersScoreboard();
                 break;
 
-            case self::PLAYING_STAGE:
-                $session->getPlayer()->setGamemode(Gamemode::SURVIVAL());
+		case self::PLAYING_STAGE:         
                 $this->updatePlayersScoreboard();
                 break;
 
@@ -250,7 +249,7 @@ class FlanbaMatch {
                     $this->stage = self::PLAYING_STAGE;
                     $this->countdown = ConfigGetter::getOpeningCagesSeconds();
                     foreach($players as $session) {
-                        $session->getPlayer()->setGamemode(GameMode::ADVENTURE());
+                        $session->getPlayer()->setGamemode(GameMode::SURVIVAL());
                     }
                 } else {
                     $this->broadcastTitle(

@@ -148,12 +148,11 @@ class FlanbaMatch {
                 $team = $teams[1];
             }
             $team->addMember($session);
-
+            $session->getPlayer()->setGamemode(Gamemode::ADVENTURE());
             $session->setMatch($this);
             $session->setTeam($team);
             $session->setMatchItems();
             $session->getPlayer()->teleport($team->getWaitingPoint());
-
             $players_count = $this->getPlayersCount();
             $max_players = $this->player_team_capacity * 2;
             if($players_count >= $max_players) {
@@ -231,7 +230,7 @@ class FlanbaMatch {
                     $this->stage = self::PLAYING_STAGE;
                     $this->countdown = ConfigGetter::getOpeningCagesSeconds();
                     foreach($players as $session) {
-                        $session->getPlayer()->setGamemode(GameMode::SURVIVAL()); // TODO: Make a function for this
+                        $session->getPlayer()->setGamemode(GameMode::ADVENTURE()); // TODO: Make a function for this
                     }
                 } else {
                     $this->broadcastSubTitle("{GRAY}Cages open in {GREEN}{$this->countdown}s{GRAY}...");
@@ -239,8 +238,11 @@ class FlanbaMatch {
                 $this->updatePlayersScoreboard();
                 break;
 
-            case self::PLAYING_STAGE:
-                $this->updatePlayersScoreboard();
+		case self::PLAYING_STAGE:         
+                $this->updatePlayersScoreboard();	
+                foreach($players as $session) {
+                        $session->getPlayer()->setGamemode(GameMode::SURVIVAL());
+		}
                 break;
 
             case self::OPENING_CAGES_STAGE:
@@ -269,6 +271,7 @@ class FlanbaMatch {
                     foreach($this->getPlayersAndSpectators() as $session) {
                         $session->setMatch(null);
                         $session->setLobbyItems();
+			$session->getPlayer()->setGamemode(Gamemode::ADVENTURE());
                         $session->message("If you want to play a different mode for this gamemode, please go back to hub using the bed or /hub.");
                     }
                 }

@@ -305,6 +305,7 @@ class MatchListener implements Listener
     function onQuit(PlayerQuitEvent $event): void
     {
         $session = SessionFactory::getSession($event->getPlayer());
+        /*
         $match = $session->getMatch();
         $stage = $match->getStage();
         if ($stage !== $match::PLAYING_STAGE) {
@@ -312,6 +313,11 @@ class MatchListener implements Listener
         }
         foreach ($match->getTeams() as $team) {
             $session->getMatch()->finish($session->getTeam(), $team);
+        }
+        */
+        //Hello serg's simpler method
+        if($session->hasMatch()) {
+            $session->setMatch(null);
         }
     }
 }

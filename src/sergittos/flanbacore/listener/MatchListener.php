@@ -302,7 +302,7 @@ class MatchListener implements Listener
         */
     }
 
-    function onQuit(PlayerQuitEvent $event): void
+    public function onQuit(PlayerQuitEvent $event): void
     {
         $session = SessionFactory::getSession($event->getPlayer());
         if($session->hasMatch()) {

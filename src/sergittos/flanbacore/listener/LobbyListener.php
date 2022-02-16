@@ -28,7 +28,6 @@ class LobbyListener implements Listener {
 
     public function onJoin(PlayerJoinEvent $event): void {
         $session = SessionFactory::getSession($event->getPlayer());
-        $session->teleportToLobby();
         $session->updateNameTag();
     }
 

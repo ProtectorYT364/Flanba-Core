@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace sergittos\flanbacore;
 
 
+use alemiz\sga\StarGateAtlantis;
 use muqsit\invmenu\InvMenuHandler;
 use muqsit\simplepackethandler\SimplePacketHandler;
 use paroxity\portal\Portal;
@@ -111,7 +112,7 @@ class FlanbaCore extends PluginBase {
         }
 
         foreach ($this->getServer()->getOnlinePlayers() as $player) {
-            Portal::getInstance()->transferPlayer($player, 'Hub', 'Hub-1', null);
+            StarGateAtlantis::getInstance()->transferPlayer($player, "Hub-1");
         }
     }
 

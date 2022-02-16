@@ -302,6 +302,29 @@ class MatchListener implements Listener
         */
     }
 
+    public function onInteract(PlayerInteractEvent $event)
+    {
+        $session = SessionFactory::getSession($event->getPlayer());
+        $player = $event->getPlayer();
+        if (!$session->hasMatch()) return;
+        if($event->getAction() !== PlayerInteractEvent::RIGHT_CLICK_BLOCK) return;
+        if($player->isSneaking()) return;
+        $block = $event->getBlock();
+        switch($block->getId()){
+            case 58:
+            case 61:
+            case 116:
+            case 145:
+            case 379:
+            case 459:
+                $event->cancel();
+                break;
+            case 23:
+                if($block->getMeta() === 3) $event->cancel();
+                break;
+        }
+    }
+
     public function onQuit(PlayerQuitEvent $event): void
     {
         $session = SessionFactory::getSession($event->getPlayer());
@@ -309,4 +332,5 @@ class MatchListener implements Listener
             $session->setMatch(null);
         }
     }
+
 }

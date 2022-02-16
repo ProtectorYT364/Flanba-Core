@@ -42,30 +42,33 @@ use sergittos\flanbacore\utils\cooldown\BowCooldown;
 use sergittos\flanbacore\utils\cooldown\Cooldown;
 use sergittos\flanbacore\utils\cooldown\GappleCooldown;
 
-class MatchListener implements Listener {
-	
-	public array $position_before_break = [];
+class MatchListener implements Listener
+{
 
-	public array $block_position_when_place = [];
+    public array $position_before_break = [];
 
-	public function onDrop(PlayerDropItemEvent $event){
-		$event->cancel();
-	}
+    public array $block_position_when_place = [];
 
-	public function onDeath(SessionDeathEvent $event): void {
+    public function onDrop(PlayerDropItemEvent $event)
+    {
+        $event->cancel();
+    }
+
+    public function onDeath(SessionDeathEvent $event): void
+    {
         $session = $event->getSession();
         $cause = $session->getPlayer()->getLastDamageCause();
         $session->teleportToTeamSpawnPoint();
-        if($cause instanceof EntityDamageByEntityEvent) {
+        if ($cause instanceof EntityDamageByEntityEvent) {
             $damager = $cause->getDamager();
-            if(!$damager instanceof Player) {
+            if (!$damager instanceof Player) {
                 return;
             }
             $damager_session = SessionFactory::getSession($damager);
-            if(!$damager_session->hasMatch()) {
+            if (!$damager_session->hasMatch()) {
                 return;
             }
-            if($damager_session->getMatch()->getId() === $session->getMatch()->getId()) {
+            if ($damager_session->getMatch()->getId() === $session->getMatch()->getId()) {
                 $damage_event = new EntityDamageEvent($damager_session->getPlayer(), EntityDamageEvent::CAUSE_VOID, 0);
                 $damager_session->getPlayer()->setLastDamageCause($damage_event);
                 $damager_session->getTeam()->addKill();
@@ -73,108 +76,115 @@ class MatchListener implements Listener {
         }
     }
 
-    public function onDamage(EntityDamageEvent $event): void {
+    public function onDamage(EntityDamageEvent $event): void
+    {
         $entity = $event->getEntity();
-        if(!$entity instanceof Player) {
+        if (!$entity instanceof Player) {
             return;
         }
         $session = SessionFactory::getSession($entity);
         $session->updateNameTag();
-        if($session->hasMatch() and $session->getMatch()->getStage() === FlanbaMatch::WAITING_STAGE) {
+        if ($session->hasMatch() and $session->getMatch()->getStage() === FlanbaMatch::WAITING_STAGE) {
             $event->cancel();
             return;
         }
-        if($event->getCause() === EntityDamageEvent::CAUSE_FALL) {
-                $event->cancel();
+        if ($event->getCause() === EntityDamageEvent::CAUSE_FALL) {
+            $event->cancel();
             return;
         }
 
 
-		if($event instanceof EntityDamageByEntityEvent){
-			if($session->hasMatch() and $entity->getHealth() - $event->getFinalDamage() <= 0) {
-				foreach($entity->getWorld()->getPlayers() as $players){
-					if($session->getTeam()->getColor() == "{RED}"){
-						$players->sendMessage(TextFormat::RED . " {$entity->getName()}" . TextFormat::GRAY .  " was killed by " . TextFormat::BLUE . "{$event->getDamager()->getName()}.");
-					}
-					if($session->getTeam()->getColor() == "{BLUE}"){
-						$players->sendMessage(TextFormat::BLUE . " {$entity->getName()}" . TextFormat::GRAY .  " was killed by " . TextFormat::RED . "{$event->getDamager()->getName()}.");
-					}
-				}
-				$death_event = new SessionDeathEvent($session);
-				$death_event->call();
-				$event->cancel();
-			}
-		}
+        if ($event instanceof EntityDamageByEntityEvent) {
+            if ($session->hasMatch() and $entity->getHealth() - $event->getFinalDamage() <= 0) {
+                foreach ($entity->getWorld()->getPlayers() as $players) {
+                    if ($session->getTeam()->getColor() == "{RED}") {
+                        $players->sendMessage(TextFormat::RED . " {$entity->getName()}" . TextFormat::GRAY . " was killed by " . TextFormat::BLUE . "{$event->getDamager()->getName()}.");
+                    }
+                    if ($session->getTeam()->getColor() == "{BLUE}") {
+                        $players->sendMessage(TextFormat::BLUE . " {$entity->getName()}" . TextFormat::GRAY . " was killed by " . TextFormat::RED . "{$event->getDamager()->getName()}.");
+                    }
+                }
+                $death_event = new SessionDeathEvent($session);
+                $death_event->call();
+                $event->cancel();
+            }
+        }
     }
 
-    public function onRegainHealth(EntityRegainHealthEvent $event): void {
+    public function onRegainHealth(EntityRegainHealthEvent $event): void
+    {
         $entity = $event->getEntity();
-        if($entity instanceof Player) {
+        if ($entity instanceof Player) {
             SessionFactory::getSession($entity)->updateNameTag();
         }
     }
 
-    public function onConsume(PlayerItemConsumeEvent $event): void {
+    public function onConsume(PlayerItemConsumeEvent $event): void
+    {
         $session = SessionFactory::getSession($player = $event->getPlayer());
-        if(!$session->hasMatch()) {
+        if (!$session->hasMatch()) {
             return;
         }
-        if($event->getItem() instanceof GoldenApple) {
+        if ($event->getItem() instanceof GoldenApple) {
             $player->setHealth($player->getMaxHealth());
             $player->getEffects()->clear();
             $session->updateNameTag();
         }
     }
 
-    public function onShoot(EntityShootBowEvent $event): void {
+    public function onShoot(EntityShootBowEvent $event): void
+    {
         $entity = $event->getEntity();
-        if(!$entity instanceof Player) {
+        if (!$entity instanceof Player) {
             return;
         }
         $session = SessionFactory::getSession($entity);
-        if(!$session->hasMatch()) {
+        if (!$session->hasMatch()) {
             return;
         }
-        if($session->hasCooldown(Cooldown::BOW)) {
+        if ($session->hasCooldown(Cooldown::BOW)) {
             $event->cancel();
             return;
         }
         $session->addCooldown(new BowCooldown());
     }
 
-    public function onHitEntity(ProjectileHitEntityEvent $event): void {
+    public function onHitEntity(ProjectileHitEntityEvent $event): void
+    {
         $owning_entity = $event->getEntity()->getOwningEntity();
-        if($owning_entity instanceof Player) {
+        if ($owning_entity instanceof Player) {
             SessionFactory::getSession($owning_entity)->sendOrbSound();
-			$owning_entity->sendMessage("§b{$event->getEntityHit()->getName()} §ais on §c{$event->getEntityHit()->getHealth()}!");
+            $owning_entity->sendMessage("§b{$event->getEntityHit()->getName()} §ais on §c{$event->getEntityHit()->getHealth()}!");
         }
     }
 
-    public function onHitBlock(ProjectileHitBlockEvent $event): void {
+    public function onHitBlock(ProjectileHitBlockEvent $event): void
+    {
         $entity = $event->getEntity();
-        if($entity instanceof Arrow) {
+        if ($entity instanceof Arrow) {
             $entity->kill();
         }
     }
 
-    public function onMove(PlayerMoveEvent $event): void {
+    public function onMove(PlayerMoveEvent $event): void
+    {
         $session = SessionFactory::getSession($player = $event->getPlayer());
-		$position = $player->getPosition();
-        if(!$session->hasMatch()) {
-			if($position->getY() <= 10){
-				$player->teleport(FlanbaCore::getInstance()->getServer()->getWorldManager()->getDefaultWorld()->getSpawnLocation());
-			}
+        $position = $player->getPosition();
+        if (!$session->hasMatch()) {
+            if ($position->getY() <= 10) {
+                $player->teleport(FlanbaCore::getInstance()->getServer()->getWorldManager()->getDefaultWorld()->getSpawnLocation());
+            }
             return;
         }
         $match = $session->getMatch();
         $stage = $match->getStage();
         $session_team = $session->getTeam();
-        if($position->getY() <= $match->getArena()->getVoidLimit()) {
-            if($stage === FlanbaMatch::WAITING_STAGE or $stage === FlanbaMatch::COUNTDOWN_STAGE) {
+        if ($position->getY() <= $match->getArena()->getVoidLimit()) {
+            if ($stage === FlanbaMatch::WAITING_STAGE or $stage === FlanbaMatch::COUNTDOWN_STAGE) {
                 $session->teleportToTeamSpawnPoint(false);
             } else {
 
-                if($player->getLastDamageCause() instanceof EntityDamageByEntityEvent && $player->getLastDamageCause()->getDamager() !== null) {
+                if ($player->getLastDamageCause() instanceof EntityDamageByEntityEvent && $player->getLastDamageCause()->getDamager() !== null) {
                     $damager = $player->getLastDamageCause()->getDamager();
                     $damage_session = SessionFactory::getSession($damager);
                     $damage_team = $damage_session->getTeam();
@@ -183,38 +193,38 @@ class MatchListener implements Listener {
                     $session->teleportToTeamSpawnPoint(true);
                     $death_event = new SessionDeathEvent($session);
                     $death_event->call();
-            } else {
+                } else {
 
                     $session->teleportToTeamSpawnPoint(true);
                     $match->broadcastMessage($session_team->getColor() . " " . $session->getUsername() . " {GRAY}fell into the void.");
 
-              }
+                }
             }
             return;
         }
 
-        if($stage !== $match::PLAYING_STAGE) {
+        if ($stage !== $match::PLAYING_STAGE) {
             return;
         }
 
         $players = $match->getPlayers();
-        foreach($match->getTeams() as $team) {
-            if(!$team->getGoalArea()->isInside($position, true)) {
+        foreach ($match->getTeams() as $team) {
+            if (!$team->getGoalArea()->isInside($position, true)) {
                 continue;
             }
             $color = $session_team->getColor();
-            if($color === $team->getColor()) {
+            if ($color === $team->getColor()) {
                 $session->teleportToTeamSpawnPoint();
                 return;
             }
             $session_team->addScore();
-            if($session_team->getScoreNumber() >= 5) {
+            if ($session_team->getScoreNumber() >= 5) {
                 $match->finish($session_team, $team);
                 return;
             } else {
                 $match->setSessionScored($session);
                 $match->setStage($match::OPENING_CAGES_STAGE);
-                foreach($players as $player) {
+                foreach ($players as $player) {
                     $player->getPlayer()->setGamemode(GameMode::ADVENTURE());
                 }
             }
@@ -222,7 +232,7 @@ class MatchListener implements Listener {
             $countdown = $match->getCountdown();
             $countdown--;
             $match->setCountdown($countdown);
-            foreach($players as $player) {
+            foreach ($players as $player) {
                 $player->setImmobile();
                 $player->teleportToTeamSpawnPoint();
                 $player->updateScoreboard();
@@ -236,24 +246,26 @@ class MatchListener implements Listener {
         }
     }
 
-    public function onPlace(BlockPlaceEvent $event): void {
+    public function onPlace(BlockPlaceEvent $event): void
+    {
         $session = SessionFactory::getSession($event->getPlayer());
-        if(!$session->hasMatch()) {
+        if (!$session->hasMatch()) {
             return;
         }
-        if($event->getBlock()->getPosition()->getY() >= $session->getMatch()->getArena()->getHeightLimit()) {
+        if ($event->getBlock()->getPosition()->getY() >= $session->getMatch()->getArena()->getHeightLimit()) {
             $session->message("§8» §cHeight Limit");
             $event->cancel();
         }
         $block = $event->getBlock();
         if (in_array($block->getId(), [205, 459, 58, 145, 154])) {
-          $event->cancel();
-        } 
+            $event->cancel();
+        }
     }
 
-    public function onHeld(PlayerItemHeldEvent $event) {
+    public function onHeld(PlayerItemHeldEvent $event)
+    {
 
-        if($event->getPlayer() !== null and $event->getPlayer()->isSpectator() and $event->getItem() instanceof LeaveSpectatorItem) {
+        if ($event->getPlayer() !== null and $event->getPlayer()->isSpectator() and $event->getItem() instanceof LeaveSpectatorItem) {
 
             $event->getItem()->onClickAir($event->getPlayer(), $event->getPlayer()->getDirectionVector());
 
@@ -261,37 +273,45 @@ class MatchListener implements Listener {
 
     }
 
-	
-	 public function onBreak(BlockBreakEvent $event){
-		$session = SessionFactory::getSession($event->getPlayer());
-        $player = $event->getPlayer();
-		if(!$session->hasMatch()) {
-			return;
-		}
-		$block = $event->getBlock();
-        
 
-        	if($block->getId() !== 159 && !in_array($block->getMeta(), [11, 0, 14])) {$event->cancel();}
-		 
-		/* if(!isset($this->block_position_when_place[$player->getUniqueId()->toString()])){
-			 if($block->getId() !== 159 && !in_array($block->getMeta(), [11, 0, 14])){
-				$player->teleport($this->position_before_break[$player->getUniqueId()->toString()]);
-			 }
-		}else{
-			if(!$blockp == $this->block_position_when_place[$player->getUniqueId()->toString()]){
-				if($block->getId() !== 159 && !in_array($block->getMeta(), [11, 0, 14])){
-					$player->teleport($this->position_before_break[$player->getUniqueId()->toString()]);
-				}
-			}
-		}
-	 }
-  
-    public function onQuit(PlayerQuitEvent $event): void {
+    public function onBreak(BlockBreakEvent $event)
+    {
         $session = SessionFactory::getSession($event->getPlayer());
-        if($session->hasMatch()) {
-            $session->setMatch(null);
+        $player = $event->getPlayer();
+        if (!$session->hasMatch()) {
+            return;
         }
-    }*/
+        $block = $event->getBlock();
 
-}
+
+        if ($block->getId() !== 159 && !in_array($block->getMeta(), [11, 0, 14])) {
+            $event->cancel();
+        }
+
+        /* if(!isset($this->block_position_when_place[$player->getUniqueId()->toString()])){
+             if($block->getId() !== 159 && !in_array($block->getMeta(), [11, 0, 14])){
+                $player->teleport($this->position_before_break[$player->getUniqueId()->toString()]);
+             }
+        }else{
+            if(!$blockp == $this->block_position_when_place[$player->getUniqueId()->toString()]){
+                if($block->getId() !== 159 && !in_array($block->getMeta(), [11, 0, 14])){
+                    $player->teleport($this->position_before_break[$player->getUniqueId()->toString()]);
+                }
+            }
+        }
+        */
     }
+
+    function onQuit(PlayerQuitEvent $event): void
+    {
+        $session = SessionFactory::getSession($event->getPlayer());
+        $match = $session->getMatch();
+        $stage = $match->getStage();
+        if ($stage !== $match::PLAYING_STAGE) {
+            return;
+        }
+        foreach ($match->getTeams() as $team) {
+            $session->getMatch()->finish($session->getTeam(), $team);
+        }
+    }
+}

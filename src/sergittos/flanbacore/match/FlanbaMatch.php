@@ -163,7 +163,7 @@ class FlanbaMatch {
             } else {
                 $session->setScoreboard(new WaitingPlayersScoreboard($session, $this));
             }
-            $this->broadcastMessage("§l§a» §r§a§k{$session->getUsername()} §r§7joined [§8{$players_count}/{$max_players}]!");
+            $this->broadcastMessage("§l§a» §r§a§k{$session->getUsername()} §r§7 joined §8[{$players_count}/{$max_players}]!");
         }
 
         // TODO: Clean this

@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace sergittos\flanbacore\session;
 
 
+use alemiz\sga\StarGateAtlantis;
 use muqsit\invmenu\InvMenu;
 use muqsit\invmenu\transaction\InvMenuTransaction;
 use muqsit\invmenu\transaction\InvMenuTransactionResult;
@@ -208,7 +209,7 @@ class Session {
 
     public function teleportToLobby(): void {
 
-        Portal::getInstance()->transferPlayer($this->getPlayer(), "Hub", "Hub-1", null);
+       StarGateAtlantis::getInstance()->transferPlayer($this->getPlayer(), 'Hub1');
 
     }
 

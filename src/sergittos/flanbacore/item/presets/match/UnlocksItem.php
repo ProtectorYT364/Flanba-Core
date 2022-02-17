@@ -12,7 +12,7 @@ class SettingsItem extends LobbyItem
 {
     public function __construct()
     {
-        parent::__construct("§6Settings §7[Use]", 347);
+        parent::__construct("§6Unlocks §8[Use]", 450);
     }
 
     /**
@@ -22,6 +22,7 @@ class SettingsItem extends LobbyItem
      */
     public function onClickAir(Player $player, Vector3 $directionVector): ItemUseResult
     {
+        $player->sendMessage(TextFormat::RED . "Coming soon...");
         return ItemUseResult::SUCCESS();
     }
 }

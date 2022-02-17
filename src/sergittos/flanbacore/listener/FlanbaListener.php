@@ -13,6 +13,7 @@ namespace sergittos\flanbacore\listener;
 
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerExhaustEvent;
 use sergittos\flanbacore\form\queue\GameSelectorForm;
 use sergittos\flanbacore\form\queue\PlayForm;
 use sergittos\flanbacore\session\SessionFactory;
@@ -98,6 +99,10 @@ class FlanbaListener implements Listener {
             SessionFactory::getSession($player)
         );
 	}
+
+    public function onExhaust(PlayerExhaustEvent $event){
+        $event->cancel();
+    }
 
 	public function onLeave(PlayerQuitEvent $ev){
 		$ev->setQuitMessage(" §gGoodbye, §c{$ev->getPlayer()->getDisplayName()}.");

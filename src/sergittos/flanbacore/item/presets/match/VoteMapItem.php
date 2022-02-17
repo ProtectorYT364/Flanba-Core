@@ -8,11 +8,11 @@ use pocketmine\item\ItemUseResult;
 use pocketmine\math\Vector3;
 use pocketmine\player\Player;
 
-class SettingsItem extends LobbyItem
+class VoteMapItem extends LobbyItem
 {
     public function __construct()
     {
-        parent::__construct("§6Settings §7[Use]", 347);
+        parent::__construct("§eVote Map §8[Use]", 434);
     }
 
     /**
@@ -22,6 +22,7 @@ class SettingsItem extends LobbyItem
      */
     public function onClickAir(Player $player, Vector3 $directionVector): ItemUseResult
     {
+        $player->sendMessage(TextFormat::RED . "Coming soon...");
         return ItemUseResult::SUCCESS();
     }
 }

@@ -217,7 +217,7 @@ class Session {
         $this->clearInventory();
 
         $inventory = $this->player->getInventory();
-        $inventory->setItem(2, new EditKitItem());
+        $inventory->setItem(1, new EditKitItem());
         $inventory->setItem(7, new LeaveMatchItem());
     }
 

@@ -8,8 +8,8 @@ use pocketmine\item\ItemUseResult;
 use pocketmine\math\Vector3;
 use pocketmine\player\Player;
 
-class UnlocksItem extends LobbyItem
-{
+class UnlocksItem extends LobbyItem {
+    
     public function __construct()
     {
         parent::__construct("§6Unlocks §8[Use]", 450);

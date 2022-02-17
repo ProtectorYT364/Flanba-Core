@@ -8,7 +8,7 @@ use pocketmine\item\ItemUseResult;
 use pocketmine\math\Vector3;
 use pocketmine\player\Player;
 
-class SettingsItem extends LobbyItem
+class UnlocksItem extends LobbyItem
 {
     public function __construct()
     {

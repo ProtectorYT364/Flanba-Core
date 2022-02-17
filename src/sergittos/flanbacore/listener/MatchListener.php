@@ -284,7 +284,7 @@ class MatchListener implements Listener
         $block = $event->getBlock();
 
 
-        if ($block->getId() !== 159 && !in_array($block->getMeta(), [11, 0, 14])) {
+        if ($block->getId() !== 159 or  $block->getId() == 159 and !in_array($block->getMeta(), [11, 0, 14])) {
             $event->cancel();
         }
 

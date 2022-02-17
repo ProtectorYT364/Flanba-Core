@@ -214,10 +214,8 @@ class Session {
         $this->clearInventory();
 
         $inventory = $this->player->getInventory();
-        $inventory->setItem(7, new EditKitItem());
+        $inventory->setItem(1, new EditKitItem());
         $inventory->setItem(8, new LeaveMatchItem());
-        $inventory->setItem(0, new UnlocksItem());
-	$inventory->setItem(1, new VoteMapItem());
     }
 
     public function setSpectatorItems(): void {

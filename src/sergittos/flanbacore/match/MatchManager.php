@@ -66,7 +66,7 @@ class MatchManager {
         if($matches === null)
         return $this->addMatch(new FlanbaMatch(ArenaUtils::generateArena($map), $capacity));
         else
-        return $matches[rand(0, count($matches))];
+        return $matches[array_rand($matches)];
     }
 
     public function addMatch(FlanbaMatch $match): FlanbaMatch {

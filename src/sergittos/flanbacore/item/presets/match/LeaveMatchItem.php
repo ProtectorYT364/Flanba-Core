@@ -24,7 +24,7 @@ use sergittos\flanbacore\utils\scoreboard\presets\match\WaitingPlayersScoreboard
 class LeaveMatchItem extends FlanbaItem {
 
     public function __construct() {
-        parent::__construct("{RED}Return to hub", 373, 21);
+        parent::__construct("{RED}Return to hub", ItemIds::BED, DyeColor::RED()->id());
     }
 
     public function onClickAir(Player $player, Vector3 $directionVector): ItemUseResult {

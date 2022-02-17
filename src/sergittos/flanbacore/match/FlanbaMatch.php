@@ -268,14 +268,14 @@ class FlanbaMatch {
             case self::ENDING_STAGE:
                 $this->countdown--;
                 if($this->countdown <= 0) {
-					foreach($this->getPlayersAndSpectators() as $session) {
-						$session->setLobbyItems();
+					foreach($this->getPlayersAndSpectators() as $session) {						
 						StarGateAtlantis::getInstance()->transferPlayer($session->getPlayer(), 'Hub1');
 					}
                     $this->reset();
                 } elseif($this->countdown === 6) {
                     foreach($this->getPlayersAndSpectators() as $session) {
-                        $session->setMatch(null);                        
+                        $session->setMatch(null);              
+			$session->setLobbyItems();
 			$session->getPlayer()->setGamemode(Gamemode::ADVENTURE());
                         $session->message(TextFormat::GREEN . "If you want to play a different mode for this gamemode, please go back to hub using the bed or /hub.");
                     }

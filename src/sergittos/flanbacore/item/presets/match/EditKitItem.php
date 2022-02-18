@@ -21,7 +21,7 @@ use sergittos\flanbacore\session\SessionFactory;
 class EditKitItem extends FlanbaItem {
 
     public function __construct() {
-        parent::__construct("{GOLD}Edit kit", ItemIds::ANVIL);
+        parent::__construct("{GOLD}Edit kit", 130);
     }
 
     public function onClickAir(Player $player, Vector3 $directionVector): ItemUseResult {

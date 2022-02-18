@@ -60,7 +60,12 @@ class MatchManager {
                 $match->getArena()->getMap()->getName() === $map->getName() and
                 $match->getPlayerTeamCapacity() === $queue->getPlayerTeamCapacity()) {
                 $matches[] = $match;
-            }
+				return $match;
+
+            }elseif($match->getPlayersCount() >= 1){
+				$matches[] = $match;
+				return $match;
+			}
         }
 
         if($matches === null)

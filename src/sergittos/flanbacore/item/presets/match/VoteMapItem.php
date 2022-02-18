@@ -2,13 +2,13 @@
 
 namespace sergittos\flanbacore\item\presets\match;
 
-use DidntPot\items\LobbyItem;
+use sergittos\flanbacore\item\FlanbaItem;
 use pocketmine\item\ItemIds;
 use pocketmine\item\ItemUseResult;
 use pocketmine\math\Vector3;
 use pocketmine\player\Player;
 
-class VoteMapItem extends FlanbaItem
+class VoteMapItem extends LobbyItem
 {
     public function __construct()
     {

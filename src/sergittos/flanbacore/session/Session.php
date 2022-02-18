@@ -40,7 +40,6 @@ use pocketmine\Server;
 use sergittos\flanbacore\FlanbaCore;
 use sergittos\flanbacore\item\presets\GameSelectorItem;
 use sergittos\flanbacore\item\presets\match\EditKitItem;
-use sergittos\flanbacore\item\presets\match\UnlocksItem;
 use sergittos\flanbacore\item\presets\match\VoteMapItem;
 use sergittos\flanbacore\item\presets\match\layout\HotbarItem;
 use sergittos\flanbacore\item\presets\match\LeaveMatchItem;
@@ -214,10 +213,9 @@ class Session {
         $this->clearInventory();
 
         $inventory = $this->player->getInventory();
-        $inventory->setItem(7, new EditKitItem());
-        $inventory->setItem(8, new LeaveMatchItem());
-        $inventory->setItem(0, new UnlocksItem());
-	$inventory->setItem(1, new VoteMapItem());
+        $inventory->setItem(0, new EditKitItem());
+        $inventory->setItem(8, new LeaveMatchItem());        
+	$inventory->setItem(7, new VoteMapItem());
     }
 
     public function setSpectatorItems(): void {

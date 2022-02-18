@@ -17,7 +17,7 @@ use sergittos\flanbacore\item\FlanbaItem;
 class SaveLayoutItem extends FlanbaItem {
 
     public function __construct() {
-        parent::__construct("{GREEN}Save layout", ItemIds::CHEST);
+        parent::__construct("{GREEN}Save layout\n§7Save your layout for\n§eFlanba §aThe Bridge\n\n§eClick to save!", ItemIds::CHEST);
     }
 
 }

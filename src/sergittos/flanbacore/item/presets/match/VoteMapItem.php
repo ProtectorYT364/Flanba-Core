@@ -1,6 +1,6 @@
 <?php
 
-namespace DidntPot\items\types;
+namespace sergittos\flanbacore\item\presets\match;
 
 use DidntPot\items\LobbyItem;
 use pocketmine\item\ItemIds;
@@ -8,7 +8,7 @@ use pocketmine\item\ItemUseResult;
 use pocketmine\math\Vector3;
 use pocketmine\player\Player;
 
-class VoteMapItem extends LobbyItem
+class VoteMapItem extends FlanbaItem
 {
     public function __construct()
     {

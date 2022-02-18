@@ -337,9 +337,13 @@ class MatchListener implements Listener
 		$session = SessionFactory::getSession($player = $event->getEntity());
 		$match = $session->getMatch();
 		$stage = $match->getStage();
-		if($stage === FlanbaMatch::WAITING_STAGE){
-			$event->cancel();
-		}
+        if(!is_null($stage)){
+            if($stage === FlanbaMatch::WAITING_STAGE){
+				$event->cancel();
+		    }
+        } else {
+            echo "prob spectating lmao";
+        }
 	}
 
 }

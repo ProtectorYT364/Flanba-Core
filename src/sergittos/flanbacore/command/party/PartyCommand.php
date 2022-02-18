@@ -29,6 +29,8 @@ class PartyCommand extends Command {
             $sender->sendMessage("Please, run this command in-game");
             return;
         }
+        
+        if(!$args[0]) return false;
 
         if($args[0] === 'list') {
 

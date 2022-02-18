@@ -17,7 +17,7 @@ use sergittos\flanbacore\item\FlanbaItem;
 class ResetLayoutItem extends FlanbaItem {
 
     public function __construct() {
-        parent::__construct("{RED}Reset layout", ItemIds::BARRIER);
+        parent::__construct("{RED}Reset layout\n§7Reset your inventory layout for\n§eFlanba §aBridge\n\n§eClick to reset!", ItemIds::BARRIER);
     }
 
 }

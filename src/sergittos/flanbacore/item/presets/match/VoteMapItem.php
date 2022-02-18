@@ -22,7 +22,7 @@ class VoteMapItem extends FlanbaItem
      */
     public function onClickAir(Player $player, Vector3 $directionVector): ItemUseResult
     {
-        $player->sendMessage(TextFormat::RED . "Coming soon...");
+        $player->sendMessage("§cComing soon...");
         return ItemUseResult::SUCCESS();
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace DidntPot\items\types;
+namespace sergittos\flanbacore\item\presets\match;
 
 use DidntPot\items\LobbyItem;
 use pocketmine\item\ItemIds;

@@ -2,7 +2,7 @@
 
 namespace sergittos\flanbacore\item\presets\match;
 
-use DidntPot\items\LobbyItem;
+use sergittos\flanbacore\item\FlanbaItem;
 use pocketmine\item\ItemIds;
 use pocketmine\item\ItemUseResult;
 use pocketmine\math\Vector3;

@@ -182,11 +182,11 @@ class FlanbaMatch {
     }
 
     public function addSpectator(Session $spectator): void {
-        // TODO
+        $this->spectators[$spectator->getPlayer()->getPlayerInfo()->getUuid()->toString()];
     }
 
     public function removeSpectator(Session $spectator): void {
-        // TODO
+		unset($this->spectators[$spectator->getPlayer()->getPlayerInfo()->getUuid()->toString()]);
     }
 
     public function tick(): void {
@@ -267,19 +267,25 @@ class FlanbaMatch {
 
             case self::ENDING_STAGE:
                 $this->countdown--;
-                if($this->countdown <= 0) {
+                if($this->countdown <= 1) {
 					foreach($this->getPlayersAndSpectators() as $session) {						
-						StarGateAtlantis::getInstance()->transferPlayer($session->getPlayer(), 'Hub1');
+						$session->teleportToLobby();
 					}
                     $this->reset();
                 } elseif($this->countdown === 6) {
                     foreach($this->getPlayersAndSpectators() as $session) {
                         $session->setMatch(null);              
-			$session->setLobbyItems();
-			$session->getPlayer()->setGamemode(Gamemode::ADVENTURE());
+						$session->getPlayer()->setGamemode(Gamemode::ADVENTURE());
                         $session->message(TextFormat::GREEN . "If you want to play a different mode for this gamemode, please go back to hub using the bed or /hub.");
                     }
                 }
+
+				if($this->countdown === 10){
+					foreach($this->getPlayersAndSpectators() as $session){
+						$session->setLobbyItems();
+						$session->getPlayer()->setGamemode(Gamemode::ADVENTURE());
+					}
+				}
                 break;
         }
     }

@@ -333,4 +333,13 @@ class MatchListener implements Listener
         }
     }
 
+	public function onHit(EntityDamageByEntityEvent $event){
+		$session = SessionFactory::getSession($player = $event->getEntity());
+		$match = $session->getMatch();
+		$stage = $match->getStage();
+		if($stage === FlanbaMatch::WAITING_STAGE){
+			$event->cancel();
+		}
+	}
+
 }

@@ -36,6 +36,7 @@ use pocketmine\network\mcpe\protocol\ClientboundPacket;
 use pocketmine\network\mcpe\protocol\PlaySoundPacket;
 use pocketmine\player\GameMode;
 use pocketmine\player\Player;
+use pocketmine\scheduler\Task;
 use pocketmine\Server;
 use sergittos\flanbacore\FlanbaCore;
 use sergittos\flanbacore\item\presets\GameSelectorItem;
@@ -55,6 +56,7 @@ use sergittos\flanbacore\utils\cooldown\Cooldown;
 use sergittos\flanbacore\utils\scoreboard\presets\LobbyScoreboard;
 use sergittos\flanbacore\utils\scoreboard\presets\match\WaitingPlayersScoreboard;
 use sergittos\flanbacore\utils\scoreboard\Scoreboard;
+use pocketmine\scheduler\ClosureTask;
 
 class Session {
 
@@ -313,6 +315,12 @@ class Session {
         $inventory->setItem(0, new SpectateItem());
         $inventory->setItem(4, new GameSelectorItem());
         $inventory->setItem(8, new LeaveMatchItem());
+
+        FlanbaCore::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(
+            function(): void {
+                $this->teleportToLobby();
+            }
+            ), ConfigGetter::getEndingSeconds() * 20);
     }
 
     private function clearInventory(): void {

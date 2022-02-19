@@ -36,7 +36,6 @@ use pocketmine\network\mcpe\protocol\ClientboundPacket;
 use pocketmine\network\mcpe\protocol\PlaySoundPacket;
 use pocketmine\player\GameMode;
 use pocketmine\player\Player;
-use pocketmine\scheduler\Task;
 use pocketmine\Server;
 use sergittos\flanbacore\FlanbaCore;
 use sergittos\flanbacore\item\presets\GameSelectorItem;
@@ -45,7 +44,7 @@ use sergittos\flanbacore\item\presets\match\VoteMapItem;
 use sergittos\flanbacore\item\presets\match\layout\HotbarItem;
 use sergittos\flanbacore\item\presets\match\LeaveMatchItem;
 use sergittos\flanbacore\item\presets\match\LeaveSpectatorItem;
-use sergittos\flanbacore\item\presets\SpectateItem;
+//use sergittos\flanbacore\item\presets\SpectateItem;
 use sergittos\flanbacore\kit\Kit;
 use sergittos\flanbacore\kit\Layout;
 use sergittos\flanbacore\match\FlanbaMatch;
@@ -56,7 +55,6 @@ use sergittos\flanbacore\utils\cooldown\Cooldown;
 use sergittos\flanbacore\utils\scoreboard\presets\LobbyScoreboard;
 use sergittos\flanbacore\utils\scoreboard\presets\match\WaitingPlayersScoreboard;
 use sergittos\flanbacore\utils\scoreboard\Scoreboard;
-use pocketmine\scheduler\ClosureTask;
 
 class Session {
 
@@ -128,6 +126,7 @@ class Session {
             $stage = $this->match->getStage();
             if($stage === FlanbaMatch::COUNTDOWN_STAGE) {
                 $this->match->setStage(FlanbaMatch::WAITING_STAGE);
+                $this->match->setCountdown(ConfigGetter::getCountdownSeconds());
                 foreach($this->match->getPlayers() as $player) {
                     $player->setScoreboard(new WaitingPlayersScoreboard($player, $this->match));
                 }
@@ -206,9 +205,7 @@ class Session {
     }
 
     public function teleportToLobby(): void {
-
        StarGateAtlantis::getInstance()->transferPlayer($this->getPlayer(), 'Hub1');
-
     }
 
     public function setMatchItems(): void {
@@ -216,8 +213,8 @@ class Session {
 
         $inventory = $this->player->getInventory();
         $inventory->setItem(0, new EditKitItem());
-        $inventory->setItem(8, new LeaveMatchItem());        
-	$inventory->setItem(7, new VoteMapItem());
+        $inventory->setItem(8, new LeaveMatchItem());
+	    $inventory->setItem(7, new VoteMapItem());
     }
 
     public function setSpectatorItems(): void {
@@ -311,16 +308,8 @@ class Session {
         $this->clearInventory();
 
         $inventory = $this->player->getInventory();
-        $inventory->clearAll();
-        $inventory->setItem(0, new SpectateItem());
-        $inventory->setItem(4, new GameSelectorItem());
-        $inventory->setItem(8, new LeaveMatchItem());
-
-        FlanbaCore::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(
-            function(): void {
-                $this->teleportToLobby();
-            }
-            ), ConfigGetter::getEndingSeconds() * 20);
+        $inventory->setItem(2, new GameSelectorItem());
+        $inventory->setItem(7, new LeaveMatchItem());
     }
 
     private function clearInventory(): void {

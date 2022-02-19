@@ -329,9 +329,6 @@ class MatchListener implements Listener
     {
         $session = SessionFactory::getSession($event->getPlayer());
         if($session->hasMatch()) {
-            if($session->getMatch()->getStage() === FlanbaMatch::COUNTDOWN_STAGE){
-                $session->getMatch()->setCountdown(10);
-            }
             $session->setMatch(null);
         }
     }

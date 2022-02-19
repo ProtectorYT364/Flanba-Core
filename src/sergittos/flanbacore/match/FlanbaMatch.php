@@ -218,6 +218,14 @@ class FlanbaMatch {
                     if($this->countdown <= 4) {
                         $color = "{RED}";
                     }
+			        if($this->countdown === 4) {
+				        foreach($players as $session) {
+                            $player = $session->getPlayer();
+					        if($player->getCurrentWindow() !== null) {
+						        $player->removeCurrentWindow();
+					        }
+				        }
+			        }
                     $this->countdown--;
                     $this->broadcastTitle($color . $this->countdown);
                     $this->broadcastMessage("{YELLOW}The game starts in {RED}" . $this->countdown  . " {YELLOW}seconds!");
@@ -243,8 +251,8 @@ class FlanbaMatch {
 		case self::PLAYING_STAGE:         
                 $this->updatePlayersScoreboard();	
                 foreach($players as $session) {
-                        $session->getPlayer()->setGamemode(GameMode::SURVIVAL());
-		}
+                    $session->getPlayer()->setGamemode(GameMode::SURVIVAL());
+		        }
                 break;
 
             case self::OPENING_CAGES_STAGE:

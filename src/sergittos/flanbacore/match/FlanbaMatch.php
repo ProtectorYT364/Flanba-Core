@@ -215,7 +215,7 @@ class FlanbaMatch {
                     $this->countdown = ConfigGetter::getStartingSeconds();
                 } else {
                     $color = "{YELLOW}";
-                    if($this->countdown <= 3) {
+                    if($this->countdown <= 4) {
                         $color = "{RED}";
                     }
                     $this->countdown--;

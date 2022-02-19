@@ -13,6 +13,7 @@ namespace sergittos\flanbacore\session;
 
 use alemiz\sga\StarGateAtlantis;
 use muqsit\invmenu\InvMenu;
+use pocketmine\scheduler\ClosureTask;
 use muqsit\invmenu\transaction\InvMenuTransaction;
 use muqsit\invmenu\transaction\InvMenuTransactionResult;
 use muqsit\invmenu\type\InvMenuTypeIds;
@@ -310,6 +311,11 @@ class Session {
         $inventory = $this->player->getInventory();
         $inventory->setItem(2, new GameSelectorItem());
         $inventory->setItem(7, new LeaveMatchItem());
+        FlanbaCore::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(
+            function(int $currentTick): void {
+                $this->teleportToLobby();
+            }
+        ), ConfigGetter::getEndingSeconds() * 20);
     }
 
     private function clearInventory(): void {

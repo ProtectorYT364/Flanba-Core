@@ -36,7 +36,7 @@ class ArenaUtils {
         $dir = $data_path . "/worlds/$name-" . self::$j;
         if(!file_exists($dir)) {
             mkdir($dir);
-            $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($data_path . "/worlds/$name", FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::SELF_FIRST);
+            $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($data_path . "worlds/$name", FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::SELF_FIRST);
             /** @var SplFileInfo $fileInfo */
             foreach($files as $fileInfo) {
                 if($filePath = $fileInfo->getRealPath()) {

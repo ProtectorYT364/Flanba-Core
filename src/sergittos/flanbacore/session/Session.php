@@ -126,6 +126,7 @@ class Session {
             $stage = $this->match->getStage();
             if($stage === FlanbaMatch::COUNTDOWN_STAGE) {
                 $this->match->setStage(FlanbaMatch::WAITING_STAGE);
+                $this->match->setCountdown(ConfigGetter::getCountdownSeconds());
                 foreach($this->match->getPlayers() as $player) {
                     $player->setScoreboard(new WaitingPlayersScoreboard($player, $this->match));
                 }

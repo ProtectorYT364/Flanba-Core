@@ -44,7 +44,7 @@ use sergittos\flanbacore\item\presets\match\VoteMapItem;
 use sergittos\flanbacore\item\presets\match\layout\HotbarItem;
 use sergittos\flanbacore\item\presets\match\LeaveMatchItem;
 use sergittos\flanbacore\item\presets\match\LeaveSpectatorItem;
-use sergittos\flanbacore\item\presets\SpectateItem;
+//use sergittos\flanbacore\item\presets\SpectateItem;
 use sergittos\flanbacore\kit\Kit;
 use sergittos\flanbacore\kit\Layout;
 use sergittos\flanbacore\match\FlanbaMatch;
@@ -310,9 +310,9 @@ class Session {
 
         $inventory = $this->player->getInventory();
         $inventory->clearAll();
-        $inventory->setItem(0, new SpectateItem());
-        $inventory->setItem(4, new GameSelectorItem());
-        $inventory->setItem(8, new LeaveMatchItem());
+        //$inventory->setItem(0, new SpectateItem());
+        $inventory->setItem(1, new GameSelectorItem());
+        $inventory->setItem(7, new LeaveMatchItem());
     }
 
     private function clearInventory(): void {

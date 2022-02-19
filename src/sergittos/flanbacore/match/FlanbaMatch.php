@@ -218,6 +218,14 @@ class FlanbaMatch {
                     if($this->countdown <= 4) {
                         $color = "{RED}";
                     }
+			if($this->countdown == 4){
+				foreach($players as $session){
+					$window = $session->getPlayer()->getCurrentWindow();
+					if(!is_null($window)){
+						$session->removeCurrentWindow();
+					}
+				}
+			}
                     $this->countdown--;
                     $this->broadcastTitle($color . $this->countdown);
                     $this->broadcastMessage("{YELLOW}The game starts in {RED}" . $this->countdown  . " {YELLOW}seconds!");

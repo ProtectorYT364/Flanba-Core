@@ -213,7 +213,7 @@ class Session {
 
         $inventory = $this->player->getInventory();
         $inventory->setItem(0, new EditKitItem());
-        $inventory->setItem(8, new LeaveMatchItem());        
+        $inventory->setItem(8, new LeaveMatchItem());
 	    $inventory->setItem(7, new VoteMapItem());
     }
 
@@ -308,9 +308,7 @@ class Session {
         $this->clearInventory();
 
         $inventory = $this->player->getInventory();
-        $inventory->clearAll();
-        //$inventory->setItem(0, new SpectateItem());
-        $inventory->setItem(1, new GameSelectorItem());
+        $inventory->setItem(2, new GameSelectorItem());
         $inventory->setItem(7, new LeaveMatchItem());
     }
 

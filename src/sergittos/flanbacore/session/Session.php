@@ -205,9 +205,7 @@ class Session {
     }
 
     public function teleportToLobby(): void {
-
        StarGateAtlantis::getInstance()->transferPlayer($this->getPlayer(), 'Hub1');
-
     }
 
     public function setMatchItems(): void {
@@ -216,7 +214,7 @@ class Session {
         $inventory = $this->player->getInventory();
         $inventory->setItem(0, new EditKitItem());
         $inventory->setItem(8, new LeaveMatchItem());        
-	$inventory->setItem(7, new VoteMapItem());
+	    $inventory->setItem(7, new VoteMapItem());
     }
 
     public function setSpectatorItems(): void {

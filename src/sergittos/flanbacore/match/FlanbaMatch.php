@@ -251,8 +251,8 @@ class FlanbaMatch {
 		case self::PLAYING_STAGE:         
                 $this->updatePlayersScoreboard();	
                 foreach($players as $session) {
-                        $session->getPlayer()->setGamemode(GameMode::SURVIVAL());
-		}
+                    $session->getPlayer()->setGamemode(GameMode::SURVIVAL());
+		        }
                 break;
 
             case self::OPENING_CAGES_STAGE:

@@ -177,7 +177,7 @@ class FlanbaMatch {
                 $this->finish($this->red_team->hasMember($session) ? $this->blue_team : $this->red_team, $session->getTeam());
             }
             $session->setTeam(null);
-            // TODO: Broadcast message
+            $this->broadcastMessage("{BOLD}{RED}» §r§a§k{$session->getUsername()} §r§7 left!");
         }
     }
 

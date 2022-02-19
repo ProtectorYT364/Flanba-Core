@@ -288,7 +288,9 @@ class FlanbaMatch {
                         $session->message(TextFormat::GREEN . "If you want to play a different mode for this gamemode, please go back to hub using the bed or /hub.");
                         FlanbaCore::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(
                             function() {
-                                $this->teleportToLobby();
+                                foreach($this->getPlayersAndSpectators() as $session) {
+                                    $session->teleportToLobby();
+                                }
                             }
                         ), ConfigGetter::getEndingSeconds() * 20);
                     }

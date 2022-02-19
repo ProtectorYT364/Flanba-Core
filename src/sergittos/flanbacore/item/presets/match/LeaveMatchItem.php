@@ -29,6 +29,9 @@ class LeaveMatchItem extends FlanbaItem {
 
     public function onClickAir(Player $player, Vector3 $directionVector): ItemUseResult {
         $session = SessionFactory::getSession($player);
+        if($session->getMatch()->getStage() === FlanbaMatch::COUNTDOWN_STAGE){
+            $session->getMatch()->setCountdown(10);
+        }
         $session->setMatch(null);
         $session->teleportToLobby();
         return ItemUseResult::SUCCESS();

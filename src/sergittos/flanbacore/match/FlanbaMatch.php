@@ -13,6 +13,7 @@ namespace sergittos\flanbacore\match;
 
 use pocketmine\player\GameMode;
 use alemiz\sga\StarGateAtlantis;
+use pocketmine\scheduler\ClosureTask;
 use pocketmine\utils\TextFormat;
 use sergittos\flanbacore\arena\Arena;
 use sergittos\flanbacore\FlanbaCore;
@@ -285,6 +286,11 @@ class FlanbaMatch {
                         $session->setMatch(null);              
 						$session->getPlayer()->setGamemode(Gamemode::ADVENTURE());
                         $session->message(TextFormat::GREEN . "If you want to play a different mode for this gamemode, please go back to hub using the bed or /hub.");
+                        FlanbaCore::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(
+                            function() {
+                                $this->teleportToLobby();
+                            }
+                        ), ConfigGetter::getEndingSeconds() * 20);
                     }
                 }
 

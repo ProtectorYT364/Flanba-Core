@@ -311,11 +311,6 @@ class Session {
         $inventory = $this->player->getInventory();
         $inventory->setItem(2, new GameSelectorItem());
         $inventory->setItem(7, new LeaveMatchItem());
-        FlanbaCore::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(
-            function() {
-                $this->teleportToLobby();
-            }
-        ), ConfigGetter::getEndingSeconds() * 20);
     }
 
     private function clearInventory(): void {

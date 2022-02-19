@@ -312,7 +312,7 @@ class Session {
         $inventory->setItem(2, new GameSelectorItem());
         $inventory->setItem(7, new LeaveMatchItem());
         FlanbaCore::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(
-            function(int $currentTick): void {
+            function() {
                 $this->teleportToLobby();
             }
         ), ConfigGetter::getEndingSeconds() * 20);

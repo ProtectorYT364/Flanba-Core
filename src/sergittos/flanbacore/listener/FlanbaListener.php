@@ -89,6 +89,7 @@ class FlanbaListener implements Listener {
 
 	public function onJoin(PlayerJoinEvent $ev){
 		$player = $ev->getPlayer();
+        $ev->setJoinMessage("");
 		SessionFactory::getSession($player)->setLobbyItems();
 
         FlanbaCore::getInstance()->getQueueManager()->getQueueByCapacity(ConfigGetter::getGamemodeMax())->addSession(
@@ -98,6 +99,10 @@ class FlanbaListener implements Listener {
 
     public function onExhaust(PlayerExhaustEvent $event){
         $event->cancel();
+    }
+
+    public function onQuit(PlayerQuitEvent $e){
+        $e->setQuitMessage("");
     }
 
 }

@@ -22,6 +22,7 @@ use pocketmine\event\entity\ProjectileHitBlockEvent;
 use pocketmine\event\entity\ProjectileHitEntityEvent;
 use pocketmine\event\inventory\InventoryTransactionEvent;
 use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\event\player\PlayerDropItemEvent;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerItemConsumeEvent;
@@ -325,6 +326,19 @@ class MatchListener implements Listener
                 if($block->getMeta() === 3) $event->cancel();
                 break;
         }
+    }
+
+    public function onChat(PlayerChatEvent $event){
+        $player = $event->getPlayer();
+        $recipients = $event->getRecipients();
+        foreach($recipients as $key => $recipient){
+            if($recipient instanceof Player){
+                if($recipient->getWorld() !== $player->getWorld()){
+                    unset($recipients[$key]);
+                }
+            }
+        }
+        $event->setRecipients($recipients);
     }
 
     public function onQuit(PlayerQuitEvent $event): void {

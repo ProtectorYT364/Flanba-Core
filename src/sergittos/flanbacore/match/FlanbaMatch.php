@@ -288,7 +288,7 @@ class FlanbaMatch {
                         $session->message(TextFormat::GREEN . "If you want to play a different mode for this gamemode, please go back to hub using the bed or /hub.");
                         FlanbaCore::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(
                             function() use ($session) {
-                                $session->teleportToLobby();
+                                StarGateAtlantis::getInstance()->transferPlayer($session->getPlayer(), 'Hub1');
                             }
                         ), ConfigGetter::getEndingSeconds() * 20);
                     }

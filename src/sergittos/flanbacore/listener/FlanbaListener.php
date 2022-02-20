@@ -88,12 +88,8 @@ class FlanbaListener implements Listener {
 	}
 
 	public function onJoin(PlayerJoinEvent $ev){
-		$ev->setJoinMessage(" §gWelcome, §a{$ev->getPlayer()->getDisplayName()}!");
 		$player = $ev->getPlayer();
-		$player->sendMessage(" §f__________________\n     §e§lFLANBA§6MC     \n§l§eSTORE: §r§fflanba.com/store\n§l§eDISCORD: §r§fdiscord.gg/flanba\n§l§eYOUTUBE: §r§fyoutube.com/c/flanba\n§r§f §f__________________");
-		$player->sendTitle(TextFormat::YELLOW . TextFormat::BOLD . "Flanba " . TextFormat::GOLD . "Network");
-		$player->sendSubTitle(TextFormat::YELLOW . TextFormat::BOLD . "Welcome to Flanba Network,\nPlease join our discord server!\n" . TextFormat::GREEN . "discord.gg/flanba");
-        SessionFactory::getSession($player)->setLobbyItems();
+		SessionFactory::getSession($player)->setLobbyItems();
 
         FlanbaCore::getInstance()->getQueueManager()->getQueueByCapacity(ConfigGetter::getGamemodeMax())->addSession(
             SessionFactory::getSession($player)
@@ -104,9 +100,6 @@ class FlanbaListener implements Listener {
         $event->cancel();
     }
 
-	public function onLeave(PlayerQuitEvent $ev){
-		$ev->setQuitMessage(" §gGoodbye, §c{$ev->getPlayer()->getDisplayName()}.");
-	}
 }
 class MotionTask extends Task {
 

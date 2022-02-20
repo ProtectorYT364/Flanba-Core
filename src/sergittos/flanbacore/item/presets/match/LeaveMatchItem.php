@@ -29,7 +29,7 @@ class LeaveMatchItem extends FlanbaItem {
 
     public function onClickAir(Player $player, Vector3 $directionVector): ItemUseResult {
         $session = SessionFactory::getSession($player);
-        $session->setMatch(null);
+        if($session->hasMatch()) $session->setMatch(null);
         $session->teleportToLobby();
         return ItemUseResult::SUCCESS();
     }

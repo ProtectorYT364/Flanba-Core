@@ -51,27 +51,21 @@ class MatchManager {
     }
 
     public function getRandomMatch(Queue $queue): FlanbaMatch {
-        shuffle($this->matches);
         $map = $queue->getMap();
         $capacity = $queue->getPlayerTeamCapacity();
-        $matches = null;
+        $matches = [];
         foreach($this->matches as $match) {
             if($match->getStage() === FlanbaMatch::WAITING_STAGE and
                 $match->getArena()->getMap()->getName() === $map->getName() and
                 $match->getPlayerTeamCapacity() === $queue->getPlayerTeamCapacity()) {
-                $matches[] = $match;
-				return $match;
-
-            }elseif($match->getPlayersCount() >= 1){
 				$matches[] = $match;
-				return $match;
-			}
+            }
         }
-
-        if($matches === null)
-        return $this->addMatch(new FlanbaMatch(ArenaUtils::generateArena($map), $capacity));
-        else
-        return $matches[array_rand($matches)];
+        if(!empty($matches)) {
+            return $matches[array_rand($matches)];
+        } else {
+            return $this->addMatch(new FlanbaMatch(ArenaUtils::generateArena($map), $capacity));
+        }
     }
 
     public function addMatch(FlanbaMatch $match): FlanbaMatch {

@@ -84,8 +84,11 @@ class MatchListener implements Listener
         }
         $session = SessionFactory::getSession($entity);
         $session->updateNameTag();
-        if ($session->hasMatch() and $session->getMatch()->getStage() === FlanbaMatch::WAITING_STAGE) {
-            $event->cancel();
+        if ($session->hasMatch()) {
+            $stage = $session->getMatch()->getStage();
+            if($stage === FlanbaMatch::WAITING_STAGE or $stage === FlanbaMatch::COUNTDOWN_STAGE) {
+                $event->cancel();
+            }
             return;
         }
         if ($event->getCause() === EntityDamageEvent::CAUSE_FALL) {
@@ -277,7 +280,6 @@ class MatchListener implements Listener
     public function onBreak(BlockBreakEvent $event)
     {
         $session = SessionFactory::getSession($event->getPlayer());
-        $player = $event->getPlayer();
         if (!$session->hasMatch()) {
             return;
         }
@@ -325,25 +327,11 @@ class MatchListener implements Listener
         }
     }
 
-    public function onQuit(PlayerQuitEvent $event): void
-    {
+    public function onQuit(PlayerQuitEvent $event): void {
         $session = SessionFactory::getSession($event->getPlayer());
         if($session->hasMatch()) {
             $session->setMatch(null);
         }
     }
-
-	public function onHit(EntityDamageByEntityEvent $event){
-		$session = SessionFactory::getSession($player = $event->getEntity());
-		$match = $session->getMatch();
-		$stage = $match->getStage();
-        if(!is_null($stage)){
-            if($stage === FlanbaMatch::WAITING_STAGE){
-				$event->cancel();
-		    }
-        } else {
-            echo "prob spectating lmao";
-        }
-	}
 
 }

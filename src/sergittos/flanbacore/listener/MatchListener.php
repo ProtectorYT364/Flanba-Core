@@ -88,8 +88,8 @@ class MatchListener implements Listener
             $stage = $session->getMatch()->getStage();
             if($stage === FlanbaMatch::WAITING_STAGE or $stage === FlanbaMatch::COUNTDOWN_STAGE) {
                 $event->cancel();
+                return;
             }
-            return;
         }
         if ($event->getCause() === EntityDamageEvent::CAUSE_FALL) {
             $event->cancel();

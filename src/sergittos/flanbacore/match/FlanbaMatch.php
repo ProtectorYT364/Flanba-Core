@@ -221,7 +221,7 @@ class FlanbaMatch {
                     if($this->countdown <= 4) {
                         $color = "{RED}";
                     }
-			        if($this->countdown === 4) {
+			        if($this->countdown < 4) {
 				        foreach($players as $session) {
                             $player = $session->getPlayer();
 					        if($player->getCurrentWindow() !== null) {

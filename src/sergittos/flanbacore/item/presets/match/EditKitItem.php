@@ -32,6 +32,9 @@ class EditKitItem extends FlanbaItem {
 		if($session->hasMatch()){
 			if($session->getMatch()->getStage() == 1){
 				if($session->getMatch()->getCountdown() < 4){
+					if($player->getCurrentWindow() !== null){
+						$player->removeCurrentWindow();
+					}
 					$session->getPlayer()->sendMessage(TextFormat::RED . "Actions discarded as the game is starting!");
 					return ItemUseResult::FAIL();
 				}

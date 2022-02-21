@@ -35,57 +35,6 @@ class FlanbaListener implements Listener {
 		$this->plugin = $plugin;
 	}
 
-	public function onFight(EntityDamageByEntityEvent $event): void {
-		$event->setKnockBack(ConfigGetter::getKnockback());
-	}
-
-	public function onBlockBreak(BlockBreakEvent $event) {
-		$player = $event->getPlayer();
-		$block = $event->getBlock();
-		if ($player->isCreative() or $player->isSpectator()) return;
-		if ($event->isCancelled()) {
-			$x = $player->getPosition()->getX();
-			$y = $player->getPosition()->getY();
-			$z = $player->getPosition()->getZ();
-			$playerX = $player->getPosition()->getX();
-			$playerZ = $player->getPosition()->getZ();
-			if($playerX < 0) $playerX = $playerX - 1;
-			if($playerZ < 0) $playerZ = $playerZ - 1;
-			if (($block->getPosition()->getX() == (int)$playerX) AND ($block->getPosition()->getZ() == (int)$playerZ) AND ($player->getPosition()->getY() > $block->getPosition()->getY())) { #If block is under the player
-				foreach ($block->getCollisionBoxes() as $blockHitBox) {
-					$y = max([$y, $blockHitBox->maxY]);
-				}
-				$player->teleport(new Vector3($x, $y, $z));
-			} else { #If block is on the side of the player
-				$xb = 0;
-				$zb = 0;
-				foreach ($block->getCollisionBoxes() as $blockHitBox) {
-					if (abs($x - ($blockHitBox->minX + $blockHitBox->maxX) / 2) > abs($z - ($blockHitBox->minZ + $blockHitBox->maxZ) / 2)) {
-						$xb = (5 / ($x - ($blockHitBox->minX + $blockHitBox->maxX) / 2)) / 24;
-					} else {
-						$zb = (5 / ($z - ($blockHitBox->minZ + $blockHitBox->maxZ) / 2)) / 24;
-					}
-				}
-				$player->setMotion(new Vector3($xb, 0, $zb));
-			}
-		}
-	}
-
-	public function onBlockPlace(BlockPlaceEvent $event) {
-		$player = $event->getPlayer();
-		$block = $event->getBlock();
-		if ($player->isCreative() or $player->isSpectator()) return;
-		if ($event->isCancelled()) {
-			$playerX = $player->getPosition()->getX();
-			$playerZ = $player->getPosition()->getZ();
-			if($playerX < 0) $playerX = $playerX - 1;
-			if($playerZ < 0) $playerZ = $playerZ - 1;
-			if (($block->getPosition()->getX() == (int)$playerX) AND ($block->getPosition()->getZ() == (int)$playerZ) AND ($player->getPosition()->getY() > $block->getPosition()->getY())) { #If block is under the player
-				$playerMotion = $player->getMotion();
-				$this->plugin->getScheduler()->scheduleDelayedTask(new MotionTask($player, new Vector3($playerMotion->getX(), -0.1, $playerMotion->getZ())), 2);
-			}
-		}
-	}
 
 	public function onJoin(PlayerJoinEvent $ev){
 		$player = $ev->getPlayer();

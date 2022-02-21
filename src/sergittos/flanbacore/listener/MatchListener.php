@@ -31,6 +31,7 @@ use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\inventory\transaction\action\SlotChangeAction;
 use pocketmine\item\GoldenApple;
+use pocketmine\item\ItemIds;
 use pocketmine\player\GameMode;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
@@ -52,7 +53,7 @@ class MatchListener implements Listener
 
     public function onDrop(PlayerDropItemEvent $event)
     {
-        $event->cancel();
+		if($event->getItem()->getId() !== ItemIds::GOLDEN_APPLE) $event->cancel();
     }
 
     public function onDeath(SessionDeathEvent $event): void

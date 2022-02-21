@@ -35,7 +35,6 @@ class FlanbaListener implements Listener {
 		$this->plugin = $plugin;
 	}
 
-
 	public function onJoin(PlayerJoinEvent $ev){
 		$player = $ev->getPlayer();
         $ev->setJoinMessage("");
@@ -54,19 +53,4 @@ class FlanbaListener implements Listener {
         $e->setQuitMessage("");
     }
 
-}
-class MotionTask extends Task {
-
-	private Entity $entity;
-
-	private Vector3 $vector3;
-
-	public function __construct(Entity $entity, Vector3 $vector3) {
-		$this->entity = $entity;
-		$this->vector3 = $vector3;
-	}
-
-	public function onRun() : void{
-		$this->entity->setMotion($this->vector3);
-	}
 }

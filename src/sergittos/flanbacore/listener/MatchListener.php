@@ -185,7 +185,7 @@ class MatchListener implements Listener
         $stage = $match->getStage();
         $session_team = $session->getTeam();
         if ($position->getY() <= $match->getArena()->getVoidLimit()) {
-            if ($stage === FlanbaMatch::WAITING_STAGE or $stage === FlanbaMatch::COUNTDOWN_STAGE) {
+            if ($stage === FlanbaMatch::WAITING_STAGE or $stage === FlanbaMatch::COUNTDOWN_STAGE or $stage === FlanbaMatch::ENDING_STAGE) {
                 $session->teleportToTeamSpawnPoint(false);
             } else {
 

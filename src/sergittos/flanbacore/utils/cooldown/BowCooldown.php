@@ -32,10 +32,16 @@ class BowCooldown extends Cooldown {
         $on_run = parent::onRun();
         if($on_run) {
 			$player = $this->session->getPlayer();
-			if($player->isOnline()) {
-				$player->getInventory()->setItem(
-					$this->session->getKit()->getLayout()->getArrowSlot(), VanillaItems::ARROW()
-				);
+			if($player->isConnected()) {
+				if($player->getInventory()->isSlotEmpty($this->session->getKit()->getLayout()->getArrowSlot())){
+					$player->getInventory()->setItem(
+						$this->session->getKit()->getLayout()->getArrowSlot(), VanillaItems::ARROW()
+					);
+				} else {
+					$player->getInventory()->addItem(
+						VanillaItems::ARROW()
+					);
+				}
 			}
         }
         return $on_run;

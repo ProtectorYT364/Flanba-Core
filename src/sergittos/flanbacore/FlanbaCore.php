@@ -59,6 +59,8 @@ class FlanbaCore extends PluginBase {
     private MatchManager $match_manager;
     private QueueManager $queue_manager;
     private PartyEngine $partyEngine;
+    public array $dcommands = ["kill", "suicide", "me", "about", "ver", "version", "clear"];
+
 
     protected function onLoad(): void {
         self::setInstance($this);
@@ -76,6 +78,18 @@ class FlanbaCore extends PluginBase {
     }
 
     protected function onEnable(): void {
+	    
+	     foreach ($this->dcommands as $command) {
+            $commandMap = $this->getServer()->getCommandMap();
+            $cmd = $commandMap->getCommand($command);
+            if ($cmd == null) {
+                $this->getLogger()->error("Command /" . $command . " not found");
+            }else{
+                $commandMap->unregister($cmd);
+            }
+        }
+	    
+	    
         ConfigGetter::init();
         $this->getServer()->getWorldManager()->loadWorld(ConfigGetter::getLobbyWorldName(), true);
 

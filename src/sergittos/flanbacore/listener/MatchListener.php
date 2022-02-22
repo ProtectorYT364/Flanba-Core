@@ -122,6 +122,16 @@ class MatchListener implements Listener
         if ($entity instanceof Player) {
             SessionFactory::getSession($entity)->updateNameTag();
         }
+
+		$reason = $event->getRegainReason();
+
+		if($reason === EntityRegainHealthEvent::CAUSE_REGEN) {
+			$event->cancel();
+		}
+		if($reason === EntityRegainHealthEvent::CAUSE_SATURATION) {
+			$event->cancel();
+		}
+
     }
 
     public function onConsume(PlayerItemConsumeEvent $event): void

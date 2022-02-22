@@ -56,9 +56,9 @@ class ArenaUtils {
 
         $world = $world_manager->getWorldByName($world_name);
         if(is_null($world)) echo "\n\n\n\n Ayo this world is naughty {$world_name}\n\n\n\n\n";
-            $world->setAutoSave(false);
-            $world->setTime(World::TIME_DAY);
-            $world->stopTime();
+        $world->setAutoSave(false);
+        $world->setTime(World::TIME_DAY);
+        $world->stopTime();
 
 
         $plugin = FlanbaCore::getInstance();
